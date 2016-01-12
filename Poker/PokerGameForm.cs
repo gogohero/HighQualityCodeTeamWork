@@ -51,11 +51,11 @@ namespace Poker
         private double b3Type = -1;
         private double b4Type = -1;
         private double b5Type = -1;
-        private bool b1Turn = false;
-        private bool b2Turn = false;
-        private bool b3Turn = false;
-        private bool b4Turn = false;
-        private bool b5Turn = false;
+        private bool firstBotMove = false;
+        private bool secondBotMove = false;
+        private bool thirdBotMove = false;
+        private bool fourtBotMove = false;
+        private bool fifthBotMove = false;
         private bool b1Fturn = false;
         private bool b2Fturn = false;
         private bool b3Fturn = false;
@@ -143,12 +143,12 @@ namespace Poker
             tbBotChips3.Enabled = false;
             tbBotChips4.Enabled = false;
             tbBotChips5.Enabled = false;
-            tableChips.Text = @"playerMaxChips : " + playerMaxChips.ToString();
-            tbBotChips1.Text = "playerMaxChips : " + firstBotMaxChips.ToString();
-            tbBotChips2.Text = "playerMaxChips : " + secondBotMaxChips.ToString();
-            tbBotChips3.Text = "playerMaxChips : " + thirdBotMaxchips.ToString();
-            tbBotChips4.Text = "playerMaxChips : " + fourthBotMaxChips.ToString();
-            tbBotChips5.Text = "playerMaxChips : " + fifthBotMaxChips.ToString();
+            tableChips.Text =  @"Chips : " + playerMaxChips;
+            tbBotChips1.Text = @"Chips : " + firstBotMaxChips;
+            tbBotChips2.Text = @"Chips : " + secondBotMaxChips;
+            tbBotChips3.Text = @"Chips : " + thirdBotMaxchips;
+            tbBotChips4.Text = @"Chips : " + fourthBotMaxChips;
+            tbBotChips5.Text = @"Chips : " + fifthBotMaxChips;
             timer.Interval = (1 * 1 * 1000);
             timer.Tick += timer_Tick;
             updates.Interval = (1 * 1 * 100);
@@ -170,10 +170,10 @@ namespace Poker
         async Task Shuffle()
         {
             bools.Add(pFturn); bools.Add(b1Fturn); bools.Add(b2Fturn); bools.Add(b3Fturn); bools.Add(b4Fturn); bools.Add(b5Fturn);
-            bCall.Enabled = false;
-            bRaise.Enabled = false;
-            bFold.Enabled = false;
-            bCheck.Enabled = false;
+            buttonCall.Enabled = false;
+            buttonRaise.Enabled = false;
+            buttonFold.Enabled = false;
+            buttonCheck.Enabled = false;
             MaximizeBox = false;
             MinimizeBox = false;
             bool check = false;
@@ -539,11 +539,11 @@ namespace Poker
             }
             if (i == 17)
             {
-                bRaise.Enabled = true;
-                bCall.Enabled = true;
-                bRaise.Enabled = true;
-                bRaise.Enabled = true;
-                bFold.Enabled = true;
+                buttonRaise.Enabled = true;
+                buttonCall.Enabled = true;
+                buttonRaise.Enabled = true;
+                buttonRaise.Enabled = true;
+                buttonFold.Enabled = true;
             }
         }
         async Task Turns()
@@ -555,16 +555,16 @@ namespace Poker
                 {
                     FixCall(pStatus, ref pCall, ref pRaise, 1);
                     //MessageBox.Show("Player's Turn");
-                    pbTimer.Visible = true;
-                    pbTimer.Value = 1000;
+                    progressBarTimer.Visible = true;
+                    progressBarTimer.Value = 1000;
                     t = 60;
                     up = 10000000;
                     timer.Start();
-                    bRaise.Enabled = true;
-                    bCall.Enabled = true;
-                    bRaise.Enabled = true;
-                    bRaise.Enabled = true;
-                    bFold.Enabled = true;
+                    buttonRaise.Enabled = true;
+                    buttonCall.Enabled = true;
+                    buttonRaise.Enabled = true;
+                    buttonRaise.Enabled = true;
+                    buttonFold.Enabled = true;
                     turnCount++;
                     FixCall(pStatus, ref pCall, ref pRaise, 2);
                 }
@@ -574,7 +574,7 @@ namespace Poker
                 await AllIn();
                 if (pFturn && !pFolded)
                 {
-                    if (bCall.Text.Contains("All in") == false || bRaise.Text.Contains("All in") == false)
+                    if (buttonCall.Text.Contains("All in") == false || buttonRaise.Text.Contains("All in") == false)
                     {
                         bools.RemoveAt(0);
                         bools.Insert(0, null);
@@ -583,27 +583,27 @@ namespace Poker
                     }
                 }
                 await CheckRaise(0, 0);
-                pbTimer.Visible = false;
-                bRaise.Enabled = false;
-                bCall.Enabled = false;
-                bRaise.Enabled = false;
-                bRaise.Enabled = false;
-                bFold.Enabled = false;
+                progressBarTimer.Visible = false;
+                buttonRaise.Enabled = false;
+                buttonCall.Enabled = false;
+                buttonRaise.Enabled = false;
+                buttonRaise.Enabled = false;
+                buttonFold.Enabled = false;
                 timer.Stop();
-                b1Turn = true;
+                firstBotMove = true;
                 if (!b1Fturn)
                 {
-                    if (b1Turn)
+                    if (firstBotMove)
                     {
                         FixCall(b1Status, ref b1Call, ref b1Raise, 1);
                         FixCall(b1Status, ref b1Call, ref b1Raise, 2);
                         Rules(2, 3, "Bot 1", ref b1Type, ref firstBotPowerHand, b1Fturn);
                         MessageBox.Show("Bot 1's Turn");
-                        Ai(2, 3, ref firstBotMaxChips, ref b1Turn, ref b1Fturn, b1Status, 0, firstBotPowerHand, b1Type);
+                        Ai(2, 3, ref firstBotMaxChips, ref firstBotMove, ref b1Fturn, b1Status, 0, firstBotPowerHand, b1Type);
                         turnCount++;
                         Last = 1;
-                        b1Turn = false;
-                        b2Turn = true;
+                        firstBotMove = false;
+                        secondBotMove = true;
                     }
                 }
                 if (b1Fturn && !b1Folded)
@@ -613,24 +613,24 @@ namespace Poker
                     maxLeft--;
                     b1Folded = true;
                 }
-                if (b1Fturn || !b1Turn)
+                if (b1Fturn || !firstBotMove)
                 {
                     await CheckRaise(1, 1);
-                    b2Turn = true;
+                    secondBotMove = true;
                 }
                 if (!b2Fturn)
                 {
-                    if (b2Turn)
+                    if (secondBotMove)
                     {
                         FixCall(b2Status, ref b2Call, ref b2Raise, 1);
                         FixCall(b2Status, ref b2Call, ref b2Raise, 2);
                         Rules(4, 5, "Bot 2", ref b2Type, ref secondBotPowerHand, b2Fturn);
                         MessageBox.Show("Bot 2's Turn");
-                        Ai(4, 5, ref secondBotMaxChips, ref b2Turn, ref b2Fturn, b2Status, 1, secondBotPowerHand, b2Type);
+                        Ai(4, 5, ref secondBotMaxChips, ref secondBotMove, ref b2Fturn, b2Status, 1, secondBotPowerHand, b2Type);
                         turnCount++;
                         Last = 2;
-                        b2Turn = false;
-                        b3Turn = true;
+                        secondBotMove = false;
+                        thirdBotMove = true;
                     }
                 }
                 if (b2Fturn && !b2Folded)
@@ -640,24 +640,24 @@ namespace Poker
                     maxLeft--;
                     b2Folded = true;
                 }
-                if (b2Fturn || !b2Turn)
+                if (b2Fturn || !secondBotMove)
                 {
                     await CheckRaise(2, 2);
-                    b3Turn = true;
+                    thirdBotMove = true;
                 }
                 if (!b3Fturn)
                 {
-                    if (b3Turn)
+                    if (thirdBotMove)
                     {
                         FixCall(b3Status, ref b3Call, ref b3Raise, 1);
                         FixCall(b3Status, ref b3Call, ref b3Raise, 2);
                         Rules(6, 7, "Bot 3", ref b3Type, ref thirdBotPowerHand, b3Fturn);
                         MessageBox.Show("Bot 3's Turn");
-                        Ai(6, 7, ref thirdBotMaxchips, ref b3Turn, ref b3Fturn, b3Status, 2, thirdBotPowerHand, b3Type);
+                        Ai(6, 7, ref thirdBotMaxchips, ref thirdBotMove, ref b3Fturn, b3Status, 2, thirdBotPowerHand, b3Type);
                         turnCount++;
                         Last = 3;
-                        b3Turn = false;
-                        b4Turn = true;
+                        thirdBotMove = false;
+                        fourtBotMove = true;
                     }
                 }
                 if (b3Fturn && !b3Folded)
@@ -667,24 +667,24 @@ namespace Poker
                     maxLeft--;
                     b3Folded = true;
                 }
-                if (b3Fturn || !b3Turn)
+                if (b3Fturn || !thirdBotMove)
                 {
                     await CheckRaise(3, 3);
-                    b4Turn = true;
+                    fourtBotMove = true;
                 }
                 if (!b4Fturn)
                 {
-                    if (b4Turn)
+                    if (fourtBotMove)
                     {
                         FixCall(b4Status, ref b4Call, ref b4Raise, 1);
                         FixCall(b4Status, ref b4Call, ref b4Raise, 2);
                         Rules(8, 9, "Bot 4", ref b4Type, ref fourtBotPowerHand, b4Fturn);
                         MessageBox.Show("Bot 4's Turn");
-                        Ai(8, 9, ref fourthBotMaxChips, ref b4Turn, ref b4Fturn, b4Status, 3, fourtBotPowerHand, b4Type);
+                        Ai(8, 9, ref fourthBotMaxChips, ref fourtBotMove, ref b4Fturn, b4Status, 3, fourtBotPowerHand, b4Type);
                         turnCount++;
                         Last = 4;
-                        b4Turn = false;
-                        b5Turn = true;
+                        fourtBotMove = false;
+                        fifthBotMove = true;
                     }
                 }
                 if (b4Fturn && !b4Folded)
@@ -694,23 +694,23 @@ namespace Poker
                     maxLeft--;
                     b4Folded = true;
                 }
-                if (b4Fturn || !b4Turn)
+                if (b4Fturn || !fourtBotMove)
                 {
                     await CheckRaise(4, 4);
-                    b5Turn = true;
+                    fifthBotMove = true;
                 }
                 if (!b5Fturn)
                 {
-                    if (b5Turn)
+                    if (fifthBotMove)
                     {
                         FixCall(b5Status, ref b5Call, ref b5Raise, 1);
                         FixCall(b5Status, ref b5Call, ref b5Raise, 2);
                         Rules(10, 11, "Bot 5", ref b5Type, ref fiftBotPowerHand, b5Fturn);
                         MessageBox.Show("Bot 5's Turn");
-                        Ai(10, 11, ref fifthBotMaxChips, ref b5Turn, ref b5Fturn, b5Status, 4, fiftBotPowerHand, b5Type);
+                        Ai(10, 11, ref fifthBotMaxChips, ref fifthBotMove, ref b5Fturn, b5Status, 4, fiftBotPowerHand, b5Type);
                         turnCount++;
                         Last = 5;
-                        b5Turn = false;
+                        fifthBotMove = false;
                     }
                 }
                 if (b5Fturn && !b5Folded)
@@ -720,14 +720,14 @@ namespace Poker
                     maxLeft--;
                     b5Folded = true;
                 }
-                if (b5Fturn || !b5Turn)
+                if (b5Fturn || !fifthBotMove)
                 {
                     await CheckRaise(5, 5);
                     pturn = true;
                 }
                 if (pFturn && !pFolded)
                 {
-                    if (bCall.Text.Contains("All in") == false || bRaise.Text.Contains("All in") == false)
+                    if (buttonCall.Text.Contains("All in") == false || buttonRaise.Text.Contains("All in") == false)
                     {
                         bools.RemoveAt(0);
                         bools.Insert(0, null);
@@ -2050,10 +2050,10 @@ namespace Poker
                         fifthBotMaxChips += f2.A;
                         pFturn = false;
                         pturn = true;
-                        bRaise.Enabled = true;
-                        bFold.Enabled = true;
-                        bCheck.Enabled = true;
-                        bRaise.Text = "Raise";
+                        buttonRaise.Enabled = true;
+                        buttonFold.Enabled = true;
+                        buttonCheck.Enabled = true;
+                        buttonRaise.Text = "Raise";
                     }
                 }
                 playerPanel.Visible = false; firstBotPanel.Visible = false; secondBotPanel.Visible = false; thirdBotPanel.Visible = false; fourthBotPanel.Visible = false; fifthBotPanel.Visible = false;
@@ -2125,8 +2125,8 @@ namespace Poker
                     if (cRaise == raise && raise > 0)
                     {
                         call = 0;
-                        bCall.Enabled = false;
-                        bCall.Text = "Callisfuckedup";
+                        buttonCall.Enabled = false;
+                        buttonCall.Text = "Callisfuckedup";
                     }
                 }
             }
@@ -2279,7 +2279,7 @@ namespace Poker
             foldedPlayers = 5;
             type = 0; rounds = 0; firstBotPowerHand = 0; secondBotPowerHand = 0; thirdBotPowerHand = 0; fourtBotPowerHand = 0; fiftBotPowerHand = 0; playerPowerHand = 0; playerType = -1; raise = 0;
             b1Type = -1; b2Type = -1; b3Type = -1; b4Type = -1; b5Type = -1;
-            b1Turn = false; b2Turn = false; b3Turn = false; b4Turn = false; b5Turn = false;
+            firstBotMove = false; secondBotMove = false; thirdBotMove = false; fourtBotMove = false; fifthBotMove = false;
             b1Fturn = false; b2Fturn = false; b3Fturn = false; b4Fturn = false; b5Fturn = false;
             pFolded = false; b1Folded = false; b2Folded = false; b3Folded = false; b4Folded = false; b5Folded = false;
             pFturn = false; pturn = true; restart = false; raising = false;
@@ -2314,10 +2314,10 @@ namespace Poker
                     fifthBotMaxChips += f2.A;
                     pFturn = false;
                     pturn = true;
-                    bRaise.Enabled = true;
-                    bFold.Enabled = true;
-                    bCheck.Enabled = true;
-                    bRaise.Text = "Raise";
+                    buttonRaise.Enabled = true;
+                    buttonFold.Enabled = true;
+                    buttonCheck.Enabled = true;
+                    buttonRaise.Text = "Raise";
                 }
             }
             imgLocation = Directory.GetFiles("Assets\\Cards", "*.png", SearchOption.TopDirectoryOnly);
@@ -2789,7 +2789,7 @@ namespace Poker
         #region UI
         private async void timer_Tick(object sender, object e)
         {
-            if (pbTimer.Value <= 0)
+            if (progressBarTimer.Value <= 0)
             {
                 pFturn = true;
                 await Turns();
@@ -2797,7 +2797,7 @@ namespace Poker
             if (t > 0)
             {
                 t--;
-                pbTimer.Value = (t / 6) * 100;
+                progressBarTimer.Value = (t / 6) * 100;
             }
         }
         private void Update_Tick(object sender, object e)
@@ -2836,10 +2836,10 @@ namespace Poker
             {
                 pturn = false;
                 pFturn = true;
-                bCall.Enabled = false;
-                bRaise.Enabled = false;
-                bFold.Enabled = false;
-                bCheck.Enabled = false;
+                buttonCall.Enabled = false;
+                buttonRaise.Enabled = false;
+                buttonFold.Enabled = false;
+                buttonCheck.Enabled = false;
             }
             if (up > 0)
             {
@@ -2847,26 +2847,26 @@ namespace Poker
             }
             if (playerMaxChips >= call)
             {
-                bCall.Text = "Call " + call.ToString();
+                buttonCall.Text = "Call " + call.ToString();
             }
             else
             {
-                bCall.Text = "All in";
-                bRaise.Enabled = false;
+                buttonCall.Text = "All in";
+                buttonRaise.Enabled = false;
             }
             if (call > 0)
             {
-                bCheck.Enabled = false;
+                buttonCheck.Enabled = false;
             }
             if (call <= 0)
             {
-                bCheck.Enabled = true;
-                bCall.Text = "Call";
-                bCall.Enabled = false;
+                buttonCheck.Enabled = true;
+                buttonCall.Text = "Call";
+                buttonCall.Enabled = false;
             }
             if (playerMaxChips <= 0)
             {
-                bRaise.Enabled = false;
+                buttonRaise.Enabled = false;
             }
             int parsedValue;
 
@@ -2874,16 +2874,16 @@ namespace Poker
             {
                 if (playerMaxChips <= int.Parse(tbRaise.Text))
                 {
-                    bRaise.Text = "All in";
+                    buttonRaise.Text = "All in";
                 }
                 else
                 {
-                    bRaise.Text = "Raise";
+                    buttonRaise.Text = "Raise";
                 }
             }
             if (playerMaxChips < call)
             {
-                bRaise.Enabled = false;
+                buttonRaise.Enabled = false;
             }
         }
         private async void bFold_Click(object sender, EventArgs e)
@@ -2904,7 +2904,7 @@ namespace Poker
             {
                 //pStatus.Text = "All in " + playerMaxChips;
 
-                bCheck.Enabled = false;
+                buttonCheck.Enabled = false;
             }
             await Turns();
         }
@@ -2934,7 +2934,7 @@ namespace Poker
                 playerMaxChips = 0;
                 tableChips.Text = "playerMaxChips : " + playerMaxChips.ToString();
                 pturn = false;
-                bFold.Enabled = false;
+                buttonFold.Enabled = false;
                 pCall = playerMaxChips;
             }
             await Turns();
@@ -2961,7 +2961,7 @@ namespace Poker
                             raise = int.Parse(tbRaise.Text);
                             pStatus.Text = "Raise " + call.ToString();
                             tbPot.Text = (int.Parse(tbPot.Text) + call).ToString();
-                            bCall.Text = "Call";
+                            buttonCall.Text = "Call";
                             playerMaxChips -= int.Parse(tbRaise.Text);
                             raising = true;
                             Last = 0;
