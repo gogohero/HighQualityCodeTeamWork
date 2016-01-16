@@ -51,7 +51,10 @@
       <DependentUpon>AddChips.cs</DependentUpon>
     </Compile>
     <Compile Include="Enumerations\BoardState.cs" />
+    <Compile Include="Models\Bot.cs" />
     <Compile Include="Models\Participant.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="Models\Player.cs" />
     <Compile Include="PokerGameForm.cs">
       <SubType>Form</SubType>
     </Compile>

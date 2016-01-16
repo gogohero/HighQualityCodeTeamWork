@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using Poker.Models;
 
 namespace Poker
 {
@@ -19,13 +20,19 @@ namespace Poker
         #region Variables
         readonly ProgressBar progresBar = new ProgressBar();
         // TODO 
-        private int nm;
+        private const int InitialCardsToBeDealt = 17;
+
+
+
+
+
         readonly Panel playerPanel = new Panel();
         readonly Panel firstBotPanel = new Panel();
         readonly Panel secondBotPanel = new Panel();
         readonly Panel thirdBotPanel = new Panel();
         readonly Panel fourthBotPanel = new Panel();
         readonly Panel fifthBotPanel = new Panel();
+
         // TODO 
         private int call = 500;
         private int foldedPlayers = 5;
@@ -56,11 +63,11 @@ namespace Poker
         private bool thirdBotMove = false;
         private bool fourtBotMove = false;
         private bool fifthBotMove = false;
-        private bool b1Fturn = false;
-        private bool b2Fturn = false;
-        private bool b3Fturn = false;
-        private bool b4Fturn = false;
-        private bool b5Fturn = false;
+        private bool b1isOutOfGame = false;
+        private bool b2IsOutOfGame = false;
+        private bool b3IsOutOfGame = false;
+        private bool b4IsOutOfGame = false;
+        private bool b5IsOutOfGame = false;
         private bool pFolded;
         private bool b1Folded;
         private bool b2Folded;
@@ -91,14 +98,18 @@ namespace Poker
         private int maxLeft = 6;
         protected static int Last = 123;
         private int raisedTurn = 1;
+
+        //First use in Turn
         private readonly List<bool?> bools = new List<bool?>();
         private readonly List<Type> win = new List<Type>();
         private readonly List<string> checkWinners = new List<string>();
         private readonly List<int> ints = new List<int>();
+
         private bool pFturn = false;
         private bool pturn = true;
         private bool restart = false;
         private bool raising = false;
+
         private Poker.Type sorted;
         private string[] imgLocation = Directory.GetFiles("Assets\\Cards", "*.png", SearchOption.TopDirectoryOnly);
         /*string[] ImgLocation ={
@@ -112,9 +123,11 @@ namespace Poker
                     "Assets\\Cards\\12.png",
                     "Assets\\Cards\\8.png","Assets\\Cards\\18.png",
                     "Assets\\Cards\\15.png","Assets\\Cards\\27.png"};*/
+
         private readonly int[] reserve = new int[17];
         private readonly Image[] deck = new Image[52];
         private readonly PictureBox[] holder = new PictureBox[52];
+
         private readonly Timer timer = new Timer();
         private readonly Timer updates = new Timer();
 
@@ -125,9 +138,25 @@ namespace Poker
         private int up = 10000000;
         int turnCount = 0;
 
+        //Testing 
+
+        List<Participant> participants = new List<Participant>()
+            {
+                new Player(new Panel()),
+                new Bot(new Panel()),
+                new Bot(new Panel()),
+                new Bot(new Panel()),
+                new Bot(new Panel()),
+                new Bot(new Panel())
+
+            };
+
         #endregion
         public PokerGameForm()
         {
+
+
+
             //bools.Add(PFturn); bools.Add(B1Fturn); bools.Add(B2Fturn); bools.Add(B3Fturn); bools.Add(B4Fturn); bools.Add(B5Fturn);
             call = bigBlind;
 
@@ -181,297 +210,302 @@ namespace Poker
         async Task Shuffle()
         {
             bools.Add(pFturn);
-            bools.Add(b1Fturn);
-            bools.Add(b2Fturn);
-            bools.Add(b3Fturn);
-            bools.Add(b4Fturn);
-            bools.Add(b5Fturn);
+            bools.Add(b1isOutOfGame);
+            bools.Add(b2IsOutOfGame);
+            bools.Add(b3IsOutOfGame);
+            bools.Add(b4IsOutOfGame);
+            bools.Add(b5IsOutOfGame);
 
             buttonCall.Enabled = false;
             buttonRaise.Enabled = false;
             buttonFold.Enabled = false;
             buttonCheck.Enabled = false;
+
             MaximizeBox = false;
             MinimizeBox = false;
+
+            ShuffleTheDeck();
+
+            #region Dealing Cards
+
             bool check = false;
 
+            int horizontalPosition = 580;
+            int vertical = 480;
+
             Bitmap backImage = new Bitmap("Assets\\Back\\Back.png");
+            int dealtCards = 0;
+            var charsToRemove = new string[] { "Assets\\Cards\\", ".png" };
 
-            int horizontal = 580, vertical = 480;
-
-            Random r = new Random();
-
-            for (i = imgLocation.Length; i > 0; i--)
-            {
-                int j = r.Next(i);
-                var k = imgLocation[j];
-                imgLocation[j] = imgLocation[i - 1];
-                imgLocation[i - 1] = k;
-            }
-
-            for (i = 0; i < 17; i++)
+            // Dealing Cards
+            for (int dealingCard = 0; dealingCard < InitialCardsToBeDealt; dealingCard++, dealtCards++)
             {
 
-                deck[i] = Image.FromFile(imgLocation[i]);
-
-                var charsToRemove = new string[] { "Assets\\Cards\\", ".png" };
+                deck[dealingCard] = Image.FromFile(imgLocation[dealingCard]);
 
                 foreach (var c in charsToRemove)
                 {
-                    imgLocation[i] = imgLocation[i].Replace(c, string.Empty);
+                    imgLocation[dealingCard] = imgLocation[dealingCard].Replace(c, string.Empty);
                 }
 
-                reserve[i] = int.Parse(imgLocation[i]) - 1;
-                holder[i] = new PictureBox();
-                holder[i].SizeMode = PictureBoxSizeMode.StretchImage;
-                holder[i].Height = 130;
-                holder[i].Width = 80;
-                this.Controls.Add(holder[i]);
+                reserve[dealingCard] = int.Parse(imgLocation[dealingCard]) - 1;
 
-                holder[i].Name = "pb" + i.ToString();
+                holder[dealingCard] = new PictureBox();
+                holder[dealingCard].SizeMode = PictureBoxSizeMode.StretchImage;
+                holder[dealingCard].Height = 130;
+                holder[dealingCard].Width = 80;
 
-                await Task.Delay(200);
+                this.Controls.Add(holder[dealingCard]);
+
+                holder[dealingCard].Name = "pb" + dealingCard;
+
 
                 #region Throwing Cards
-                if (i < 2)
+                if (dealingCard < 2)
                 {
-                    if (holder[0].Tag != null)
-                    {
-                        holder[1].Tag = reserve[1];
-                    }
-
-                    holder[0].Tag = reserve[0];
-                    holder[i].Image = deck[i];
-
-                    holder[i].Anchor = (AnchorStyles.Bottom);
-
-                    //Holder[i].Dock = DockStyle.Top;
-
-                    holder[i].Location = new Point(horizontal, vertical);
-                    horizontal += holder[i].Width;
-
-                    this.Controls.Add(playerPanel);
-                    playerPanel.Location = new Point(holder[0].Left - 10, holder[0].Top - 10);
-                    playerPanel.BackColor = Color.DarkBlue;
-                    playerPanel.Height = 150;
-                    playerPanel.Width = 180;
-                    playerPanel.Visible = false;
+                    DealingSingleCard(ref horizontalPosition, ref vertical, dealingCard, 0, 1);
                 }
 
                 if (firstBotMaxChips > 0)
                 {
                     foldedPlayers--;
-                    if (i >= 2 && i < 4)
+
+                    if (dealingCard >= 2 && dealingCard < 4)
                     {
-                        if (holder[2].Tag != null)
-                        {
-                            holder[3].Tag = reserve[3];
-                        }
-                        holder[2].Tag = reserve[2];
                         if (!check)
                         {
-                            horizontal = 15;
+                            horizontalPosition = 15;
                             vertical = 420;
                         }
-                        check = true;
 
-                        holder[i].Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
-                        holder[i].Image = backImage;
+                        DealingSingleCard(ref check, ref horizontalPosition, ref vertical,
+                           backImage, dealingCard, 2, 3, AnchorStyles.Bottom, AnchorStyles.Left);
 
-                        //Holder[i].Image = Deck[i];
+                        #region notUsed
+                        //if (holder[2].Tag != null)
+                        //{
+                        //    holder[3].Tag = reserve[3];
+                        //}
 
-                        holder[i].Location = new Point(horizontal, vertical);
-                        horizontal += holder[i].Width;
-                        holder[i].Visible = true;
+                        //holder[2].Tag = reserve[2];
 
-                        this.Controls.Add(firstBotPanel);
-                        firstBotPanel.Location = new Point(holder[2].Left - 10, holder[2].Top - 10);
-                        firstBotPanel.BackColor = Color.DarkBlue;
-                        firstBotPanel.Height = 150;
-                        firstBotPanel.Width = 180;
-                        firstBotPanel.Visible = false;
 
-                        if (i == 3)
-                        {
-                            check = false;
-                        }
+
+                        //check = true;
+
+                        //holder[dealingCard].Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+                        //holder[dealingCard].Image = backImage;
+
+                        ////Holder[i].Image = Deck[i];
+
+                        //holder[dealingCard].Location = new Point(horizontalPosition, vertical);
+                        //horizontalPosition += holder[dealingCard].Width;
+                        //holder[dealingCard].Visible = true;
+
+                        //this.Controls.Add(firstBotPanel);
+                        //firstBotPanel.Location = new Point(holder[2].Left - 10, holder[2].Top - 10);
+                        //firstBotPanel.BackColor = Color.DarkBlue;
+                        //firstBotPanel.Height = 150;
+                        //firstBotPanel.Width = 180;
+                        //firstBotPanel.Visible = false;
+                        #endregion
+
                     }
                 }
 
                 if (secondBotMaxChips > 0)
                 {
                     foldedPlayers--;
-                    if (i >= 4 && i < 6)
+
+                    if (dealingCard >= 4 && dealingCard < 6)
                     {
-                        if (holder[4].Tag != null)
-                        {
-                            holder[5].Tag = reserve[5];
-                        }
-                        holder[4].Tag = reserve[4];
                         if (!check)
                         {
-                            horizontal = 75;
+                            horizontalPosition = 75;
                             vertical = 65;
                         }
 
-                        check = true;
-                        holder[i].Anchor = (AnchorStyles.Top | AnchorStyles.Left);
-                        holder[i].Image = backImage;
-                        //Holder[i].Image = Deck[i];
-                        holder[i].Location = new Point(horizontal, vertical);
-                        horizontal += holder[i].Width;
-                        holder[i].Visible = true;
-                        this.Controls.Add(secondBotPanel);
-                        secondBotPanel.Location = new Point(holder[4].Left - 10, holder[4].Top - 10);
-                        secondBotPanel.BackColor = Color.DarkBlue;
-                        secondBotPanel.Height = 150;
-                        secondBotPanel.Width = 180;
-                        secondBotPanel.Visible = false;
-                        if (i == 5)
-                        {
-                            check = false;
-                        }
+                        DealingSingleCard(ref check, ref horizontalPosition, ref vertical,
+                           backImage, dealingCard, 4, 5, AnchorStyles.Top, AnchorStyles.Left);
+
+                        #region NotUsed
+                        //if (holder[4].Tag != null)
+                        //{
+                        //    holder[5].Tag = reserve[5];
+                        //}
+                        //holder[4].Tag = reserve[4];
+                        //check = true;
+                        //holder[dealingCard].Anchor = (AnchorStyles.Top | AnchorStyles.Left);
+                        //holder[dealingCard].Image = backImage;
+                        ////Holder[i].Image = Deck[i];
+                        //holder[dealingCard].Location = new Point(horizontalPosition, vertical);
+                        //horizontalPosition += holder[dealingCard].Width;
+                        //holder[dealingCard].Visible = true;
+                        //this.Controls.Add(secondBotPanel);
+                        //secondBotPanel.Location = new Point(holder[4].Left - 10, holder[4].Top - 10);
+                        //secondBotPanel.BackColor = Color.DarkBlue;
+                        //secondBotPanel.Height = 150;
+                        //secondBotPanel.Width = 180;
+                        //secondBotPanel.Visible = false;
+                        //if (dealingCard == 5)
+                        //{
+                        //    check = false;
+                        //}
+                        #endregion
+
                     }
                 }
                 if (thirdBotMaxchips > 0)
                 {
                     foldedPlayers--;
-                    if (i >= 6 && i < 8)
+
+
+
+                    if (dealingCard >= 6 && dealingCard < 8)
                     {
-                        if (holder[6].Tag != null)
-                        {
-                            holder[7].Tag = reserve[7];
-                        }
-                        holder[6].Tag = reserve[6];
                         if (!check)
                         {
-                            horizontal = 590;
+                            horizontalPosition = 590;
                             vertical = 25;
                         }
-                        check = true;
-                        holder[i].Anchor = (AnchorStyles.Top);
-                        holder[i].Image = backImage;
-                        //Holder[i].Image = Deck[i];
-                        holder[i].Location = new Point(horizontal, vertical);
-                        horizontal += holder[i].Width;
-                        holder[i].Visible = true;
-                        this.Controls.Add(thirdBotPanel);
-                        thirdBotPanel.Location = new Point(holder[6].Left - 10, holder[6].Top - 10);
-                        thirdBotPanel.BackColor = Color.DarkBlue;
-                        thirdBotPanel.Height = 150;
-                        thirdBotPanel.Width = 180;
-                        thirdBotPanel.Visible = false;
-                        if (i == 7)
-                        {
-                            check = false;
-                        }
+
+                        DealingSingleCard(ref check, ref horizontalPosition, ref vertical,
+                            backImage, dealingCard, 6, 7, AnchorStyles.Top, AnchorStyles.Top);
                     }
                 }
+
                 if (fourthBotMaxChips > 0)
                 {
                     foldedPlayers--;
-                    if (i >= 8 && i < 10)
+                    if (dealingCard >= 8 && dealingCard < 10)
                     {
-                        if (holder[8].Tag != null)
-                        {
-                            holder[9].Tag = reserve[9];
-                        }
-                        holder[8].Tag = reserve[8];
                         if (!check)
                         {
-                            horizontal = 1115;
+                            horizontalPosition = 1115;
                             vertical = 65;
                         }
-                        check = true;
-                        holder[i].Anchor = (AnchorStyles.Top | AnchorStyles.Right);
-                        holder[i].Image = backImage;
-                        //Holder[i].Image = Deck[i];
-                        holder[i].Location = new Point(horizontal, vertical);
-                        horizontal += holder[i].Width;
-                        holder[i].Visible = true;
-                        this.Controls.Add(fourthBotPanel);
-                        fourthBotPanel.Location = new Point(holder[8].Left - 10, holder[8].Top - 10);
-                        fourthBotPanel.BackColor = Color.DarkBlue;
-                        fourthBotPanel.Height = 150;
-                        fourthBotPanel.Width = 180;
-                        fourthBotPanel.Visible = false;
-                        if (i == 9)
-                        {
-                            check = false;
-                        }
+
+                        DealingSingleCard(ref check, ref horizontalPosition, ref vertical,
+                            backImage, dealingCard, 8, 9, AnchorStyles.Top, AnchorStyles.Right);
+
+                        #region NotUsed
+                        //if (holder[8].Tag != null)
+                        //{
+                        //    holder[9].Tag = reserve[9];
+                        //}
+                        //holder[8].Tag = reserve[8];
+
+
+
+                        //check = true;
+
+                        //holder[dealingCard].Anchor = (AnchorStyles.Top | AnchorStyles.Right);
+                        //holder[dealingCard].Image = backImage;
+                        ////Holder[i].Image = Deck[i];
+                        //holder[dealingCard].Location = new Point(horizontalPosition, vertical);
+                        //horizontalPosition += holder[dealingCard].Width;
+                        //holder[dealingCard].Visible = true;
+                        //this.Controls.Add(fourthBotPanel);
+                        //fourthBotPanel.Location = new Point(holder[8].Left - 10, holder[8].Top - 10);
+                        //fourthBotPanel.BackColor = Color.DarkBlue;
+                        //fourthBotPanel.Height = 150;
+                        //fourthBotPanel.Width = 180;
+                        //fourthBotPanel.Visible = false;
+
+                        //if (dealingCard == 9)
+                        //{
+                        //    check = false;
+                        //}
+                        #endregion
                     }
                 }
+
                 if (fifthBotMaxChips > 0)
                 {
                     foldedPlayers--;
-                    if (i >= 10 && i < 12)
+
+                    if (dealingCard >= 10 && dealingCard < 12)
                     {
-                        if (holder[10].Tag != null)
-                        {
-                            holder[11].Tag = reserve[11];
-                        }
-                        holder[10].Tag = reserve[10];
                         if (!check)
                         {
-                            horizontal = 1160;
+                            horizontalPosition = 1160;
                             vertical = 420;
                         }
-                        check = true;
-                        holder[i].Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-                        holder[i].Image = backImage;
-                        //Holder[i].Image = Deck[i];
-                        holder[i].Location = new Point(horizontal, vertical);
-                        horizontal += holder[i].Width;
-                        holder[i].Visible = true;
-                        this.Controls.Add(fifthBotPanel);
-                        fifthBotPanel.Location = new Point(holder[10].Left - 10, holder[10].Top - 10);
-                        fifthBotPanel.BackColor = Color.DarkBlue;
-                        fifthBotPanel.Height = 150;
-                        fifthBotPanel.Width = 180;
-                        fifthBotPanel.Visible = false;
-                        if (i == 11)
-                        {
-                            check = false;
-                        }
+
+                        DealingSingleCard(ref check, ref horizontalPosition, ref vertical,
+                            backImage, dealingCard, 10, 11, AnchorStyles.Bottom, AnchorStyles.Right);
+
+                        #region NotUsed
+                        //if (holder[10].Tag != null)
+                        //{
+                        //    holder[11].Tag = reserve[11];
+                        //}
+                        //holder[10].Tag = reserve[10];
+
+
+                        //check = true;
+
+                        //holder[dealingCard].Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+                        //holder[dealingCard].Image = backImage;
+                        ////Holder[i].Image = Deck[i];
+                        //holder[dealingCard].Location = new Point(horizontalPosition, vertical);
+                        //horizontalPosition += holder[dealingCard].Width;
+                        //holder[dealingCard].Visible = true;
+                        //this.Controls.Add(fifthBotPanel);
+                        //fifthBotPanel.Location = new Point(holder[10].Left - 10, holder[10].Top - 10);
+                        //fifthBotPanel.BackColor = Color.DarkBlue;
+                        //fifthBotPanel.Height = 150;
+                        //fifthBotPanel.Width = 180;
+                        //fifthBotPanel.Visible = false;
+
+                        //if (dealingCard == 11)
+                        //{
+                        //    check = false;
+                        //}
+                        #endregion
                     }
                 }
-                if (i >= 12)
+                if (dealingCard >= 12)
                 {
                     holder[12].Tag = reserve[12];
-                    if (i > 12) holder[13].Tag = reserve[13];
-                    if (i > 13) holder[14].Tag = reserve[14];
-                    if (i > 14) holder[15].Tag = reserve[15];
-                    if (i > 15)
+                    if (dealingCard > 12) holder[13].Tag = reserve[13];
+                    if (dealingCard > 13) holder[14].Tag = reserve[14];
+                    if (dealingCard > 14) holder[15].Tag = reserve[15];
+                    if (dealingCard > 15)
                     {
                         holder[16].Tag = reserve[16];
 
                     }
                     if (!check)
                     {
-                        horizontal = 410;
+                        horizontalPosition = 410;
                         vertical = 265;
                     }
+
                     check = true;
-                    if (holder[i] != null)
+
+                    if (holder[dealingCard] != null)
                     {
-                        holder[i].Anchor = AnchorStyles.None;
-                        holder[i].Image = backImage;
+                        holder[dealingCard].Anchor = AnchorStyles.None;
+                        holder[dealingCard].Image = backImage;
                         //Holder[i].Image = Deck[i];
-                        holder[i].Location = new Point(horizontal, vertical);
-                        horizontal += 110;
+                        holder[dealingCard].Location = new Point(horizontalPosition, vertical);
+                        horizontalPosition += 110;
                     }
                 }
                 #endregion
+
+                #region CheckIfParticipantOutOfTheGame
                 if (firstBotMaxChips <= 0)
                 {
-                    b1Fturn = true;
+                    b1isOutOfGame = true;
                     holder[2].Visible = false;
                     holder[3].Visible = false;
                 }
                 else
                 {
-                    b1Fturn = false;
-                    if (i == 3)
+                    b1isOutOfGame = false;
+                    if (dealingCard == 3)
                     {
                         if (holder[3] != null)
                         {
@@ -480,16 +514,17 @@ namespace Poker
                         }
                     }
                 }
+
                 if (secondBotMaxChips <= 0)
                 {
-                    b2Fturn = true;
+                    b2IsOutOfGame = true;
                     holder[4].Visible = false;
                     holder[5].Visible = false;
                 }
                 else
                 {
-                    b2Fturn = false;
-                    if (i == 5)
+                    b2IsOutOfGame = false;
+                    if (dealingCard == 5)
                     {
                         if (holder[5] != null)
                         {
@@ -498,16 +533,17 @@ namespace Poker
                         }
                     }
                 }
+
                 if (thirdBotMaxchips <= 0)
                 {
-                    b3Fturn = true;
+                    b3IsOutOfGame = true;
                     holder[6].Visible = false;
                     holder[7].Visible = false;
                 }
                 else
                 {
-                    b3Fturn = false;
-                    if (i == 7)
+                    b3IsOutOfGame = false;
+                    if (dealingCard == 7)
                     {
                         if (holder[7] != null)
                         {
@@ -516,16 +552,17 @@ namespace Poker
                         }
                     }
                 }
+
                 if (fourthBotMaxChips <= 0)
                 {
-                    b4Fturn = true;
+                    b4IsOutOfGame = true;
                     holder[8].Visible = false;
                     holder[9].Visible = false;
                 }
                 else
                 {
-                    b4Fturn = false;
-                    if (i == 9)
+                    b4IsOutOfGame = false;
+                    if (dealingCard == 9)
                     {
                         if (holder[9] != null)
                         {
@@ -534,16 +571,17 @@ namespace Poker
                         }
                     }
                 }
+
                 if (fifthBotMaxChips <= 0)
                 {
-                    b5Fturn = true;
+                    b5IsOutOfGame = true;
                     holder[10].Visible = false;
                     holder[11].Visible = false;
                 }
                 else
                 {
-                    b5Fturn = false;
-                    if (i == 11)
+                    b5IsOutOfGame = false;
+                    if (dealingCard == 11)
                     {
                         if (holder[11] != null)
                         {
@@ -552,16 +590,23 @@ namespace Poker
                         }
                     }
                 }
-                if (i == 16)
+                #endregion
+
+                if (dealingCard == 16)
                 {
                     if (!restart)
                     {
                         MaximizeBox = true;
                         MinimizeBox = true;
                     }
+
                     timer.Start();
                 }
+
+                await Task.Delay(200);
             }
+            #endregion
+
             if (foldedPlayers == 5)
             {
                 DialogResult dialogResult = MessageBox.Show("Would You Like To Play Again ?", "You Won , Congratulations ! ", MessageBoxButtons.YesNo);
@@ -578,7 +623,8 @@ namespace Poker
             {
                 foldedPlayers = 5;
             }
-            if (i == 17)
+
+            if (dealtCards == 17)
             {
                 buttonRaise.Enabled = true;
                 buttonCall.Enabled = true;
@@ -587,6 +633,84 @@ namespace Poker
                 buttonFold.Enabled = true;
             }
         }
+
+        private void DealingSingleCard(ref bool check, ref int horizontal, ref int vertical, Bitmap backImage, int dealingCard,
+            int firstCard, int secondCard, AnchorStyles first, AnchorStyles second)
+        {
+            if (holder[firstCard].Tag != null)
+            {
+                holder[secondCard].Tag = reserve[secondCard];
+            }
+            holder[firstCard].Tag = reserve[firstCard];
+
+
+
+            check = true;
+
+
+            holder[dealingCard].Anchor = (first | second);
+            holder[dealingCard].Image = backImage;
+            //Holder[i].Image = Deck[i];
+            holder[dealingCard].Location = new Point(horizontal, vertical);
+            horizontal += holder[dealingCard].Width;
+            holder[dealingCard].Visible = true;
+            this.Controls.Add(thirdBotPanel);
+            thirdBotPanel.Location = new Point(holder[firstCard].Left - 10, holder[firstCard].Top - 10);
+            thirdBotPanel.BackColor = Color.DarkBlue;
+            thirdBotPanel.Height = 150;
+            thirdBotPanel.Width = 180;
+            thirdBotPanel.Visible = false;
+
+            if (dealingCard == secondCard)
+            {
+                check = false;
+            }
+        }
+
+        private void DealingSingleCard(ref int horizontal, ref int vertical, int dealingCard, int firstCardPos, int secondCardPos)
+        {
+            if (holder[firstCardPos].Tag != null)
+            {
+                holder[secondCardPos].Tag = reserve[secondCardPos];
+            }
+
+            holder[firstCardPos].Tag = reserve[firstCardPos];
+            holder[dealingCard].Image = deck[dealingCard];
+
+            holder[dealingCard].Anchor = (AnchorStyles.Bottom);
+
+            //Holder[i].Dock = DockStyle.Top;
+
+            holder[dealingCard].Location = new Point(horizontal, vertical);
+            horizontal += holder[dealingCard].Width;
+
+            this.Controls.Add(playerPanel);
+            playerPanel.Location = new Point(holder[0].Left - 10, holder[0].Top - 10);
+            playerPanel.BackColor = Color.DarkBlue;
+            playerPanel.Height = 150;
+            playerPanel.Width = 180;
+            playerPanel.Visible = false;
+
+
+
+        }
+
+        private void ShuffleTheDeck()
+        {
+            Random numberGenerator = new Random();
+            // Shuffle the deck.
+            for (int cardsInDeck = imgLocation.Length; cardsInDeck > 0; cardsInDeck--)
+            {
+                int randomCardPosition = numberGenerator.Next(cardsInDeck);
+
+                var randomCard = imgLocation[randomCardPosition];
+
+                // switch positions of random card with the last card;
+                imgLocation[randomCardPosition] = imgLocation[cardsInDeck - 1];
+                imgLocation[cardsInDeck - 1] = randomCard;
+            }
+        }
+
         async Task Turns()
         {
             #region Rotating
@@ -632,136 +756,136 @@ namespace Poker
                 buttonFold.Enabled = false;
                 timer.Stop();
                 firstBotMove = true;
-                if (!b1Fturn)
+                if (!b1isOutOfGame)
                 {
                     if (firstBotMove)
                     {
                         FixCall(b1Status, ref b1Call, ref b1Raise, 1);
                         FixCall(b1Status, ref b1Call, ref b1Raise, 2);
-                        Rules(2, 3, "Bot 1", ref b1Type, ref firstBotPowerHand, b1Fturn);
+                        Rules(2, 3, "Bot 1", ref b1Type, ref firstBotPowerHand, b1isOutOfGame);
                         MessageBox.Show("Bot 1's Turn");
-                        Ai(2, 3, ref firstBotMaxChips, ref firstBotMove, ref b1Fturn, b1Status, 0, firstBotPowerHand, b1Type);
+                        Ai(2, 3, ref firstBotMaxChips, ref firstBotMove, ref b1isOutOfGame, b1Status, 0, firstBotPowerHand, b1Type);
                         turnCount++;
                         Last = 1;
                         firstBotMove = false;
                         secondBotMove = true;
                     }
                 }
-                if (b1Fturn && !b1Folded)
+                if (b1isOutOfGame && !b1Folded)
                 {
                     bools.RemoveAt(1);
                     bools.Insert(1, null);
                     maxLeft--;
                     b1Folded = true;
                 }
-                if (b1Fturn || !firstBotMove)
+                if (b1isOutOfGame || !firstBotMove)
                 {
                     await CheckRaise(1, 1);
                     secondBotMove = true;
                 }
-                if (!b2Fturn)
+                if (!b2IsOutOfGame)
                 {
                     if (secondBotMove)
                     {
                         FixCall(b2Status, ref b2Call, ref b2Raise, 1);
                         FixCall(b2Status, ref b2Call, ref b2Raise, 2);
-                        Rules(4, 5, "Bot 2", ref b2Type, ref secondBotPowerHand, b2Fturn);
+                        Rules(4, 5, "Bot 2", ref b2Type, ref secondBotPowerHand, b2IsOutOfGame);
                         MessageBox.Show("Bot 2's Turn");
-                        Ai(4, 5, ref secondBotMaxChips, ref secondBotMove, ref b2Fturn, b2Status, 1, secondBotPowerHand, b2Type);
+                        Ai(4, 5, ref secondBotMaxChips, ref secondBotMove, ref b2IsOutOfGame, b2Status, 1, secondBotPowerHand, b2Type);
                         turnCount++;
                         Last = 2;
                         secondBotMove = false;
                         thirdBotMove = true;
                     }
                 }
-                if (b2Fturn && !b2Folded)
+                if (b2IsOutOfGame && !b2Folded)
                 {
                     bools.RemoveAt(2);
                     bools.Insert(2, null);
                     maxLeft--;
                     b2Folded = true;
                 }
-                if (b2Fturn || !secondBotMove)
+                if (b2IsOutOfGame || !secondBotMove)
                 {
                     await CheckRaise(2, 2);
                     thirdBotMove = true;
                 }
-                if (!b3Fturn)
+                if (!b3IsOutOfGame)
                 {
                     if (thirdBotMove)
                     {
                         FixCall(b3Status, ref b3Call, ref b3Raise, 1);
                         FixCall(b3Status, ref b3Call, ref b3Raise, 2);
-                        Rules(6, 7, "Bot 3", ref b3Type, ref thirdBotPowerHand, b3Fturn);
+                        Rules(6, 7, "Bot 3", ref b3Type, ref thirdBotPowerHand, b3IsOutOfGame);
                         MessageBox.Show("Bot 3's Turn");
-                        Ai(6, 7, ref thirdBotMaxchips, ref thirdBotMove, ref b3Fturn, b3Status, 2, thirdBotPowerHand, b3Type);
+                        Ai(6, 7, ref thirdBotMaxchips, ref thirdBotMove, ref b3IsOutOfGame, b3Status, 2, thirdBotPowerHand, b3Type);
                         turnCount++;
                         Last = 3;
                         thirdBotMove = false;
                         fourtBotMove = true;
                     }
                 }
-                if (b3Fturn && !b3Folded)
+                if (b3IsOutOfGame && !b3Folded)
                 {
                     bools.RemoveAt(3);
                     bools.Insert(3, null);
                     maxLeft--;
                     b3Folded = true;
                 }
-                if (b3Fturn || !thirdBotMove)
+                if (b3IsOutOfGame || !thirdBotMove)
                 {
                     await CheckRaise(3, 3);
                     fourtBotMove = true;
                 }
-                if (!b4Fturn)
+                if (!b4IsOutOfGame)
                 {
                     if (fourtBotMove)
                     {
                         FixCall(b4Status, ref b4Call, ref b4Raise, 1);
                         FixCall(b4Status, ref b4Call, ref b4Raise, 2);
-                        Rules(8, 9, "Bot 4", ref b4Type, ref fourtBotPowerHand, b4Fturn);
+                        Rules(8, 9, "Bot 4", ref b4Type, ref fourtBotPowerHand, b4IsOutOfGame);
                         MessageBox.Show("Bot 4's Turn");
-                        Ai(8, 9, ref fourthBotMaxChips, ref fourtBotMove, ref b4Fturn, b4Status, 3, fourtBotPowerHand, b4Type);
+                        Ai(8, 9, ref fourthBotMaxChips, ref fourtBotMove, ref b4IsOutOfGame, b4Status, 3, fourtBotPowerHand, b4Type);
                         turnCount++;
                         Last = 4;
                         fourtBotMove = false;
                         fifthBotMove = true;
                     }
                 }
-                if (b4Fturn && !b4Folded)
+                if (b4IsOutOfGame && !b4Folded)
                 {
                     bools.RemoveAt(4);
                     bools.Insert(4, null);
                     maxLeft--;
                     b4Folded = true;
                 }
-                if (b4Fturn || !fourtBotMove)
+                if (b4IsOutOfGame || !fourtBotMove)
                 {
                     await CheckRaise(4, 4);
                     fifthBotMove = true;
                 }
-                if (!b5Fturn)
+                if (!b5IsOutOfGame)
                 {
                     if (fifthBotMove)
                     {
                         FixCall(b5Status, ref b5Call, ref b5Raise, 1);
                         FixCall(b5Status, ref b5Call, ref b5Raise, 2);
-                        Rules(10, 11, "Bot 5", ref b5Type, ref fiftBotPowerHand, b5Fturn);
+                        Rules(10, 11, "Bot 5", ref b5Type, ref fiftBotPowerHand, b5IsOutOfGame);
                         MessageBox.Show("Bot 5's Turn");
-                        Ai(10, 11, ref fifthBotMaxChips, ref fifthBotMove, ref b5Fturn, b5Status, 4, fiftBotPowerHand, b5Type);
+                        Ai(10, 11, ref fifthBotMaxChips, ref fifthBotMove, ref b5IsOutOfGame, b5Status, 4, fiftBotPowerHand, b5Type);
                         turnCount++;
                         Last = 5;
                         fifthBotMove = false;
                     }
                 }
-                if (b5Fturn && !b5Folded)
+                if (b5IsOutOfGame && !b5Folded)
                 {
                     bools.RemoveAt(5);
                     bools.Insert(5, null);
                     maxLeft--;
                     b5Folded = true;
                 }
-                if (b5Fturn || !fifthBotMove)
+                if (b5IsOutOfGame || !fifthBotMove)
                 {
                     await CheckRaise(5, 5);
                     pturn = true;
@@ -1971,15 +2095,15 @@ namespace Poker
                         rounds++;
                         if (!pFturn)
                             pStatus.Text = "";
-                        if (!b1Fturn)
+                        if (!b1isOutOfGame)
                             b1Status.Text = "";
-                        if (!b2Fturn)
+                        if (!b2IsOutOfGame)
                             b2Status.Text = "";
-                        if (!b3Fturn)
+                        if (!b3IsOutOfGame)
                             b3Status.Text = "";
-                        if (!b4Fturn)
+                        if (!b4IsOutOfGame)
                             b4Status.Text = "";
-                        if (!b5Fturn)
+                        if (!b5IsOutOfGame)
                             b5Status.Text = "";
                     }
                 }
@@ -2043,27 +2167,27 @@ namespace Poker
                 if (!b1Status.Text.Contains("Fold"))
                 {
                     fixedLast = "Bot 1";
-                    Rules(2, 3, "Bot 1", ref b1Type, ref firstBotPowerHand, b1Fturn);
+                    Rules(2, 3, "Bot 1", ref b1Type, ref firstBotPowerHand, b1isOutOfGame);
                 }
                 if (!b2Status.Text.Contains("Fold"))
                 {
                     fixedLast = "Bot 2";
-                    Rules(4, 5, "Bot 2", ref b2Type, ref secondBotPowerHand, b2Fturn);
+                    Rules(4, 5, "Bot 2", ref b2Type, ref secondBotPowerHand, b2IsOutOfGame);
                 }
                 if (!b3Status.Text.Contains("Fold"))
                 {
                     fixedLast = "Bot 3";
-                    Rules(6, 7, "Bot 3", ref b3Type, ref thirdBotPowerHand, b3Fturn);
+                    Rules(6, 7, "Bot 3", ref b3Type, ref thirdBotPowerHand, b3IsOutOfGame);
                 }
                 if (!b4Status.Text.Contains("Fold"))
                 {
                     fixedLast = "Bot 4";
-                    Rules(8, 9, "Bot 4", ref b4Type, ref fourtBotPowerHand, b4Fturn);
+                    Rules(8, 9, "Bot 4", ref b4Type, ref fourtBotPowerHand, b4IsOutOfGame);
                 }
                 if (!b5Status.Text.Contains("Fold"))
                 {
                     fixedLast = "Bot 5";
-                    Rules(10, 11, "Bot 5", ref b5Type, ref fiftBotPowerHand, b5Fturn);
+                    Rules(10, 11, "Bot 5", ref b5Type, ref fiftBotPowerHand, b5IsOutOfGame);
                 }
                 Winner(playerType, playerPowerHand, "Player", playerMaxChips, fixedLast);
                 Winner(b1Type, firstBotPowerHand, "Bot 1", firstBotMaxChips, fixedLast);
@@ -2075,11 +2199,11 @@ namespace Poker
                 restart = true;
                 pturn = true;
                 pFturn = false;
-                b1Fturn = false;
-                b2Fturn = false;
-                b3Fturn = false;
-                b4Fturn = false;
-                b5Fturn = false;
+                b1isOutOfGame = false;
+                b2IsOutOfGame = false;
+                b3IsOutOfGame = false;
+                b4IsOutOfGame = false;
+                b5IsOutOfGame = false;
 
                 if (playerMaxChips <= 0)
                 {
@@ -2102,22 +2226,47 @@ namespace Poker
                     }
                 }
 
-                playerPanel.Visible = false; firstBotPanel.Visible = false; secondBotPanel.Visible = false; thirdBotPanel.Visible = false; fourthBotPanel.Visible = false; fifthBotPanel.Visible = false;
-                pCall = 0; pRaise = 0;
-                b1Call = 0; b1Raise = 0;
-                b2Call = 0; b2Raise = 0;
-                b3Call = 0; b3Raise = 0;
-                b4Call = 0; b4Raise = 0;
-                b5Call = 0; b5Raise = 0;
+                playerPanel.Visible = false;
+                firstBotPanel.Visible = false;
+                secondBotPanel.Visible = false;
+                thirdBotPanel.Visible = false;
+                fourthBotPanel.Visible = false;
+                fifthBotPanel.Visible = false;
+
+                pCall = 0;
+                pRaise = 0;
+                b1Call = 0;
+                b1Raise = 0;
+                b2Call = 0;
+                b2Raise = 0;
+                b3Call = 0;
+                b3Raise = 0;
+                b4Call = 0;
+                b4Raise = 0;
+                b5Call = 0;
+                b5Raise = 0;
+
                 Last = 0;
                 call = bigBlind;
                 raise = 0;
                 imgLocation = Directory.GetFiles("Assets\\Cards", "*.png", SearchOption.TopDirectoryOnly);
                 bools.Clear();
                 rounds = 0;
-                playerPowerHand = 0; playerType = -1;
-                type = 0; firstBotPowerHand = 0; secondBotPowerHand = 0; thirdBotPowerHand = 0; fourtBotPowerHand = 0; fiftBotPowerHand = 0;
-                b1Type = -1; b2Type = -1; b3Type = -1; b4Type = -1; b5Type = -1;
+                playerPowerHand = 0;
+                playerType = -1;
+
+                type = 0;
+                firstBotPowerHand = 0;
+                secondBotPowerHand = 0;
+                thirdBotPowerHand = 0;
+                fourtBotPowerHand = 0;
+                fiftBotPowerHand = 0;
+                b1Type = -1;
+                b2Type = -1;
+                b3Type = -1;
+                b4Type = -1;
+                b5Type = -1;
+
                 ints.Clear();
                 checkWinners.Clear();
                 winners = 0;
@@ -2194,7 +2343,7 @@ namespace Poker
                 }
             }
             intsadded = false;
-            if (firstBotMaxChips <= 0 && !b1Fturn)
+            if (firstBotMaxChips <= 0 && !b1isOutOfGame)
             {
                 if (!intsadded)
                 {
@@ -2203,7 +2352,7 @@ namespace Poker
                 }
                 intsadded = false;
             }
-            if (secondBotMaxChips <= 0 && !b2Fturn)
+            if (secondBotMaxChips <= 0 && !b2IsOutOfGame)
             {
                 if (!intsadded)
                 {
@@ -2212,7 +2361,7 @@ namespace Poker
                 }
                 intsadded = false;
             }
-            if (thirdBotMaxchips <= 0 && !b3Fturn)
+            if (thirdBotMaxchips <= 0 && !b3IsOutOfGame)
             {
                 if (!intsadded)
                 {
@@ -2221,7 +2370,7 @@ namespace Poker
                 }
                 intsadded = false;
             }
-            if (fourthBotMaxChips <= 0 && !b4Fturn)
+            if (fourthBotMaxChips <= 0 && !b4IsOutOfGame)
             {
                 if (!intsadded)
                 {
@@ -2230,7 +2379,7 @@ namespace Poker
                 }
                 intsadded = false;
             }
-            if (fifthBotMaxChips <= 0 && !b5Fturn)
+            if (fifthBotMaxChips <= 0 && !b5IsOutOfGame)
             {
                 if (!intsadded)
                 {
@@ -2320,17 +2469,77 @@ namespace Poker
             {
                 FixWinners();
             }
-            playerPanel.Visible = false; firstBotPanel.Visible = false; secondBotPanel.Visible = false; thirdBotPanel.Visible = false; fourthBotPanel.Visible = false; fifthBotPanel.Visible = false;
-            call = bigBlind; raise = 0;
+            playerPanel.Visible = false;
+            firstBotPanel.Visible = false;
+            secondBotPanel.Visible = false;
+            thirdBotPanel.Visible = false;
+            fourthBotPanel.Visible = false;
+            fifthBotPanel.Visible = false;
+
+            call = bigBlind;
+            raise = 0;
+
             foldedPlayers = 5;
-            type = 0; rounds = 0; firstBotPowerHand = 0; secondBotPowerHand = 0; thirdBotPowerHand = 0; fourtBotPowerHand = 0; fiftBotPowerHand = 0; playerPowerHand = 0; playerType = -1; raise = 0;
-            b1Type = -1; b2Type = -1; b3Type = -1; b4Type = -1; b5Type = -1;
-            firstBotMove = false; secondBotMove = false; thirdBotMove = false; fourtBotMove = false; fifthBotMove = false;
-            b1Fturn = false; b2Fturn = false; b3Fturn = false; b4Fturn = false; b5Fturn = false;
-            pFolded = false; b1Folded = false; b2Folded = false; b3Folded = false; b4Folded = false; b5Folded = false;
-            pFturn = false; pturn = true; restart = false; raising = false;
-            pCall = 0; b1Call = 0; b2Call = 0; b3Call = 0; b4Call = 0; b5Call = 0; pRaise = 0; b1Raise = 0; b2Raise = 0; b3Raise = 0; b4Raise = 0; b5Raise = 0;
-            height = 0; width = 0; winners = 0; flop = 1; turn = 2; river = 3; end = 4; maxLeft = 6;
+
+            type = 0;
+            rounds = 0;
+            firstBotPowerHand = 0;
+            secondBotPowerHand = 0;
+            thirdBotPowerHand = 0;
+            fourtBotPowerHand = 0;
+            fiftBotPowerHand = 0;
+            playerPowerHand = 0;
+            raise = 0;
+            playerType = -1;
+            b1Type = -1;
+            b2Type = -1;
+            b3Type = -1;
+            b4Type = -1;
+            b5Type = -1;
+
+            firstBotMove = false;
+            secondBotMove = false;
+            thirdBotMove = false;
+            fourtBotMove = false;
+            fifthBotMove = false;
+            b1isOutOfGame = false;
+            b2IsOutOfGame = false;
+            b3IsOutOfGame = false;
+            b4IsOutOfGame = false;
+            b5IsOutOfGame = false;
+            pFolded = false;
+            b1Folded = false;
+            b2Folded = false;
+            b3Folded = false;
+            b4Folded = false;
+            b5Folded = false;
+            pFturn = false;
+            pturn = true;
+            restart = false;
+            raising = false;
+
+            pCall = 0;
+            b1Call = 0;
+            b2Call = 0;
+            b3Call = 0;
+            b4Call = 0;
+            b5Call = 0;
+            pRaise = 0;
+            b1Raise = 0;
+            b2Raise = 0;
+            b3Raise = 0;
+            b4Raise = 0;
+            b5Raise = 0;
+
+            height = 0;
+            width = 0;
+            winners = 0;
+            flop = 1;
+            turn = 2;
+            river = 3;
+            end = 4;
+            maxLeft = 6;
+
             Last = 123; raisedTurn = 1;
             bools.Clear();
             checkWinners.Clear();
@@ -2390,27 +2599,27 @@ namespace Poker
             if (!b1Status.Text.Contains("Fold"))
             {
                 fixedLast = "Bot 1";
-                Rules(2, 3, "Bot 1", ref b1Type, ref firstBotPowerHand, b1Fturn);
+                Rules(2, 3, "Bot 1", ref b1Type, ref firstBotPowerHand, b1isOutOfGame);
             }
             if (!b2Status.Text.Contains("Fold"))
             {
                 fixedLast = "Bot 2";
-                Rules(4, 5, "Bot 2", ref b2Type, ref secondBotPowerHand, b2Fturn);
+                Rules(4, 5, "Bot 2", ref b2Type, ref secondBotPowerHand, b2IsOutOfGame);
             }
             if (!b3Status.Text.Contains("Fold"))
             {
                 fixedLast = "Bot 3";
-                Rules(6, 7, "Bot 3", ref b3Type, ref thirdBotPowerHand, b3Fturn);
+                Rules(6, 7, "Bot 3", ref b3Type, ref thirdBotPowerHand, b3IsOutOfGame);
             }
             if (!b4Status.Text.Contains("Fold"))
             {
                 fixedLast = "Bot 4";
-                Rules(8, 9, "Bot 4", ref b4Type, ref fourtBotPowerHand, b4Fturn);
+                Rules(8, 9, "Bot 4", ref b4Type, ref fourtBotPowerHand, b4IsOutOfGame);
             }
             if (!b5Status.Text.Contains("Fold"))
             {
                 fixedLast = "Bot 5";
-                Rules(10, 11, "Bot 5", ref b5Type, ref fiftBotPowerHand, b5Fturn);
+                Rules(10, 11, "Bot 5", ref b5Type, ref fiftBotPowerHand, b5IsOutOfGame);
             }
             Winner(playerType, playerPowerHand, "Player", playerMaxChips, fixedLast);
             Winner(b1Type, firstBotPowerHand, "Bot 1", firstBotMaxChips, fixedLast);
