@@ -1,4 +1,6 @@
-﻿namespace Poker
+﻿using System.Drawing;
+
+namespace Poker
 {
     using System;
     using System.Windows.Forms;
@@ -13,15 +15,31 @@
         private double powerHand;
         private readonly Panel panel;
 
-
         protected Participant(Panel panel)
         {
             this.panel = panel;
+            this.Type = -1;
             this.currentChips = StartingChips;
+            this.Call = 0;
             this.powerHand = 0;
+            this.Turn = false;
+            this.FoldedTurn = false;
+            this.Folded = false;
             this.isInGame = true;
 
         }
+
+        public double Type { get; set; }
+
+        public int Call { get; set; }
+
+        public int Raise { get; set; }
+
+        public bool Turn { get; set; }
+
+        public bool FoldedTurn { get; set; }
+
+        public bool Folded { get; set; }
 
         public int CurrentChips
         {
@@ -67,6 +85,14 @@
             }
 
             this.IsInGame = true;
+        }
+        internal void SetupPanel(Point location)
+        {
+            this.Panel.Location = location;
+            this.Panel.BackColor = Color.Transparent;
+            this.Panel.Height = 150;
+            this.Panel.Width = 180;
+            this.Panel.Visible = false;
         }
     }
 }

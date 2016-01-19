@@ -51,6 +51,8 @@
       <DependentUpon>AddChips.cs</DependentUpon>
     </Compile>
     <Compile Include="Enumerations\BoardState.cs" />
+    <Compile Include="Enumerations\Players.cs" />
+    <Compile Include="Enumerations\TurnParts.cs" />
     <Compile Include="Models\Bot.cs" />
     <Compile Include="Models\Participant.cs" />
     <Compile Include="Engine.cs" />

@@ -18,3 +18,6 @@ E:\Programirane\Repo KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.AddChips.
 E:\Programirane\Repo KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.PokerGameForm.resources
 E:\Programirane\Repo KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.Properties.Resources.resources
 E:\Programirane\Repo KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
+C:\Users\user1\Documents\Visual Studio 2015\Projects\KPK\HighQualityCodeTeamWork\Poker\bin\Debug\Poker.exe.config
+C:\Users\user1\Documents\Visual Studio 2015\Projects\KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.exe
+C:\Users\user1\Documents\Visual Studio 2015\Projects\KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.pdb
