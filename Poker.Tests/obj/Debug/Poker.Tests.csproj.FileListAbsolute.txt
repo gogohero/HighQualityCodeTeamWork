@@ -1,0 +1,8 @@
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\bin\Debug\Poker.Tests.dll
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\bin\Debug\Poker.Tests.pdb
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\bin\Debug\Poker.exe
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\bin\Debug\Poker.pdb
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\obj\Debug\Poker.Tests.csprojResolveAssemblyReference.cache
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\obj\Debug\Poker.Tests.dll
+E:\VS projects\HighQualityCodeTeamWork\Poker.Tests\obj\Debug\Poker.Tests.pdb

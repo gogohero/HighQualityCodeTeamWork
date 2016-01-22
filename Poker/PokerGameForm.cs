@@ -3367,42 +3367,13 @@
 
         private void UpdateTick(object sender, object e)
         {
-            if (this.players[Players.Player].CurrentChips <= 0)
-            {
-                this.textBoxChips.Text = "Chips : 0";
-            }
-
-            if (this.players[Players.Bot1].CurrentChips <= 0)
-            {
-                this.textBoxBotChips1.Text = "Chips : 0";
-            }
-
-            if (this.players[Players.Bot2].CurrentChips <= 0)
-            {
-                this.textBoxBotChips2.Text = "Chips : 0";
-            }
-
-            if (this.players[Players.Bot3].CurrentChips <= 0)
-            {
-                this.textBoxBotChips3.Text = "Chips : 0";
-            }
-
-            if (this.players[Players.Bot4].CurrentChips <= 0)
-            {
-                this.textBoxBotChips4.Text = "Chips : 0";
-            }
-
-            if (this.players[Players.Bot5].CurrentChips <= 0)
-            {
-                this.textBoxBotChips5.Text = "Chips : 0";
-            }
-
             this.textBoxChips.Text = "Chips : " + this.players[Players.Player].CurrentChips.ToString();
             this.textBoxBotChips1.Text = "Chips : " + this.players[Players.Bot1].CurrentChips.ToString();
             this.textBoxBotChips2.Text = "Chips : " + this.players[Players.Bot2].CurrentChips.ToString();
             this.textBoxBotChips3.Text = "Chips : " + this.players[Players.Bot3].CurrentChips.ToString();
             this.textBoxBotChips4.Text = "Chips : " + this.players[Players.Bot4].CurrentChips.ToString();
             this.textBoxBotChips5.Text = "Chips : " + this.players[Players.Bot5].CurrentChips.ToString();
+
             if (this.players[Players.Player].CurrentChips <= 0)
             {
                 this.players[Players.Player].Turn = false;

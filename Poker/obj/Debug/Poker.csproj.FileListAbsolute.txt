@@ -21,3 +21,13 @@ E:\Programirane\Repo KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.csproj.Ge
 C:\Users\user1\Documents\Visual Studio 2015\Projects\KPK\HighQualityCodeTeamWork\Poker\bin\Debug\Poker.exe.config
 C:\Users\user1\Documents\Visual Studio 2015\Projects\KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.exe
 C:\Users\user1\Documents\Visual Studio 2015\Projects\KPK\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.pdb
+E:\VS projects\HighQualityCodeTeamWork\Poker\bin\Debug\Poker.exe.config
+E:\VS projects\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.exe
+E:\VS projects\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.pdb
+E:\VS projects\HighQualityCodeTeamWork\Poker\bin\Debug\Poker.exe
+E:\VS projects\HighQualityCodeTeamWork\Poker\bin\Debug\Poker.pdb
+E:\VS projects\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
+E:\VS projects\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.AddChips.resources
+E:\VS projects\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.PokerGameForm.resources
+E:\VS projects\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.Properties.Resources.resources
+E:\VS projects\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache

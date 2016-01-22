@@ -2,8 +2,10 @@
 
 namespace Poker
 {
-    using System;
     using System.Windows.Forms;
+
+    using Poker.Interfaces;
+    using Poker.TestingAlgorithms;
 
     public abstract class Participant
     {
@@ -11,7 +13,6 @@ namespace Poker
 
         private int call;
         private int currentChips;
-        private bool isInGame;
         private double powerHand;
         private readonly Panel panel;
 
@@ -22,12 +23,9 @@ namespace Poker
             this.currentChips = StartingChips;
             this.Call = 0;
             this.powerHand = 0;
-            this.Turn = false;
-            this.FoldedTurn = false;
-            this.Folded = false;
-            this.isInGame = true;
-
         }
+
+        public IHand Hand { get; set; }
 
         public double Type { get; set; }
 
@@ -64,18 +62,7 @@ namespace Poker
 
         public double PowerHand { get; set; }
 
-        public bool IsInGame
-        {
-            get
-            {
-                return this.isInGame;
-            }
-
-             set
-            {
-                this.isInGame = value;
-            }
-        }
+        public bool IsInGame { get; set; }
 
         private void CheckIsParticipantInGame()
         {
