@@ -23,10 +23,12 @@
 
             // ---------------------------------------------------------
             // check for straigth, flush, straigth flush and royal flush
+
             participantVisibleHand.CurrentCards = participantVisibleHand.CurrentCards.OrderBy(c => c.Rank).ToList();
             int sequentialCards = 0;
             int sameSuites = 0;
-            ICard highestInSequence = new Card(0, 'S');
+            ICard highestInSequenceWithoutPairs = new Card(0, 'S');
+            HandStrengthEnum strengthWithoutPairs = HandStrengthEnum.HighCard;
 
             for (int i = 1; i < participantVisibleHand.CurrentCards.Count - 1; i++)
             {
@@ -62,7 +64,7 @@
                         == participantVisibleHand.CurrentCards[i - 1].Rank)
                 {
                     sequentialCards += 1;
-                    highestInSequence = participantVisibleHand.CurrentCards[i];
+                    highestInSequenceWithoutPairs = participantVisibleHand.CurrentCards[i];
                     if (participantVisibleHand.CurrentCards[i].Rank + 1 == participantVisibleHand.CurrentCards[i + 1].Rank)
                     {
                         foundHigherSequential = true;
@@ -79,50 +81,46 @@
                          == participantVisibleHand.CurrentCards[i - 1].Suit)
                 {
                     sameSuites += 1;
-                    if (highestInSequence.Rank < participantVisibleHand.CurrentCards[i].Rank)
+                    if (highestInSequenceWithoutPairs.Rank < participantVisibleHand.CurrentCards[i].Rank)
                     {
-                        highestInSequence = participantVisibleHand.CurrentCards[i];
+                        highestInSequenceWithoutPairs = participantVisibleHand.CurrentCards[i];
                     }
                 }
 
                 if (foundHigherSequential)
                 {
-                    highestInSequence = participantVisibleHand.CurrentCards[i + 1];
+                    highestInSequenceWithoutPairs = participantVisibleHand.CurrentCards[i + 1];
                 }
             }
 
             // royal flush check -> if not check straight flush -> if not check flush -> if not check straigth
             if (sequentialCards >= 5 && sameSuites >= 5)
             {
-                if (highestInSequence.Rank == 12)
+                if (highestInSequenceWithoutPairs.Rank == 12)
                 {
-                    participantVisibleHand.Strength = HandStrengthEnum.RoyalFlush;
-                    participantVisibleHand.HighCard = highestInSequence;
+                    strengthWithoutPairs = HandStrengthEnum.RoyalFlush;
                 }
                 else
                 {
-                    participantVisibleHand.Strength = HandStrengthEnum.StraightFlush;
-                    participantVisibleHand.HighCard = highestInSequence;
+                    strengthWithoutPairs = HandStrengthEnum.StraightFlush;
                 }
             }
             else if (sameSuites >= 5 && (int)participantVisibleHand.Strength < (int)HandStrengthEnum.Flush)
             {
-                participantVisibleHand.Strength = HandStrengthEnum.Flush;
-                participantVisibleHand.HighCard = highestInSequence;
+                strengthWithoutPairs = HandStrengthEnum.Flush;
             }
             else if (sequentialCards >= 5 && (int)participantVisibleHand.Strength < (int)HandStrengthEnum.Straight)
             {
-                participantVisibleHand.Strength = HandStrengthEnum.Straight;
-                participantVisibleHand.HighCard = highestInSequence;
+                strengthWithoutPairs = HandStrengthEnum.Straight;
             }
-            else if ((int)participantVisibleHand.Strength < (int)HandStrengthEnum.Pair)
-            {
-                // last check is if no winning set of cards has been found -> set the highest card to the highest in the player hand
-                participantVisibleHand.HighCard = startingTwoCards[0].Rank > startingTwoCards[1].Rank
-                                                      ? startingTwoCards[0]
-                                                      : startingTwoCards[1];
-                participantVisibleHand.Strength = HandStrengthEnum.HighCard;
-            }
+            //else if ((int)participantVisibleHand.Strength < (int)HandStrengthEnum.Pair)
+            //{
+            //    // last check is if no winning set of cards has been found -> set the highest card to the highest in the player hand
+            //    participantVisibleHand.HighCard = startingTwoCards[0].Rank > startingTwoCards[1].Rank
+            //                                          ? startingTwoCards[0]
+            //                                          : startingTwoCards[1];
+            //    participantVisibleHand.Strength = HandStrengthEnum.HighCard;
+            //}
 
             // ----------------------------------------------------------
             // begin search for pairs, two pairs, three of a kind, full house, four of a kind
@@ -138,6 +136,9 @@
                 differentCards.Add(card);
             }
 
+            HandStrengthEnum strengthPairs = HandStrengthEnum.HighCard;
+            ICard highestCardPairs = new Card(0, 'S');
+
             // Check for pair, two pair, three of a kind, full house or four of a kind
             for (int i = 0; i < differentCards.Count; i++)
             {
@@ -148,44 +149,68 @@
                     // four of a kind check
                     if (pairedCardsCounter == 4)
                     {
-                        participantVisibleHand.Strength = HandStrengthEnum.FourOfAKind;
-                        participantVisibleHand.HighCard = differentCards[i];
+                        strengthPairs = HandStrengthEnum.FourOfAKind;
+                        highestCardPairs = differentCards[i];
                         break;
                     }
 
 
                     // check full house -> if not check two pair -> if not results in simple pair
                     if (pairedCardsCounter == 3 
-                        && (participantVisibleHand.Strength == HandStrengthEnum.Pair
-                        || participantVisibleHand.Strength == HandStrengthEnum.TwoPair)
-                        && (int)participantVisibleHand.Strength < (int)HandStrengthEnum.FourOfAKind)
+                        && (strengthPairs == HandStrengthEnum.Pair
+                        || strengthPairs == HandStrengthEnum.TwoPair)
+                        && strengthPairs < HandStrengthEnum.FourOfAKind)
                     {
-                        participantVisibleHand.Strength = HandStrengthEnum.FullHouse;
+                        strengthPairs = HandStrengthEnum.FullHouse;
+                        highestCardPairs = differentCards[i];
                     }
-                    else if (pairedCardsCounter == 3 && (int)participantVisibleHand.Strength < pairedCardsCounter)
+                    else if (pairedCardsCounter == 3 && (int)strengthPairs < pairedCardsCounter)
                     {
-                        participantVisibleHand.Strength = HandStrengthEnum.ThreeOfAKind;
-                        participantVisibleHand.HighCard = differentCards[i];
+                        strengthPairs = HandStrengthEnum.ThreeOfAKind;
+                        highestCardPairs = differentCards[i];
                     }
                     else if (pairedCardsCounter == 2
-                            && participantVisibleHand.Strength == HandStrengthEnum.ThreeOfAKind
-                            && (int)participantVisibleHand.Strength < (int)HandStrengthEnum.FourOfAKind)
+                            && strengthPairs == HandStrengthEnum.ThreeOfAKind
+                            && strengthPairs < HandStrengthEnum.FourOfAKind)
                     {
-                        participantVisibleHand.Strength = HandStrengthEnum.FullHouse;
+                        strengthPairs = HandStrengthEnum.FullHouse;
                     }
-                    else if (participantVisibleHand.Strength == HandStrengthEnum.Pair)
+                    else if (strengthPairs == HandStrengthEnum.Pair)
                     {
-                        participantVisibleHand.Strength = HandStrengthEnum.TwoPair;
-                        if (participantVisibleHand.HighCard.Rank < differentCards[i].Rank)
+                        strengthPairs = HandStrengthEnum.TwoPair;
+                        if (highestCardPairs.Rank < differentCards[i].Rank)
                         {
-                            participantVisibleHand.HighCard = differentCards[i];
+                            highestCardPairs = differentCards[i];
                         }
                     }
-                    else if(participantVisibleHand.Strength < HandStrengthEnum.Pair)
+                    else if(strengthPairs < HandStrengthEnum.Pair)
                     {
-                        participantVisibleHand.Strength = HandStrengthEnum.Pair;
-                        participantVisibleHand.HighCard = differentCards[i];
+                        strengthPairs= HandStrengthEnum.Pair;
+                        highestCardPairs = differentCards[i];
                     }
+                }
+            }
+
+            if (strengthPairs > strengthWithoutPairs)
+            {
+                participantVisibleHand.Strength = strengthPairs;
+                participantVisibleHand.HighCard = highestCardPairs;
+            }
+            else if (strengthWithoutPairs > strengthPairs)
+            {
+                participantVisibleHand.Strength = strengthWithoutPairs;
+                participantVisibleHand.HighCard = highestInSequenceWithoutPairs;
+            }
+            else
+            {
+                participantVisibleHand.Strength = HandStrengthEnum.HighCard;
+                if (highestCardPairs.Rank >= highestInSequenceWithoutPairs.Rank)
+                {
+                    participantVisibleHand.HighCard = highestCardPairs;
+                }
+                else
+                {
+                    participantVisibleHand.HighCard = highestInSequenceWithoutPairs;
                 }
             }
         }
