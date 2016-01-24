@@ -2,6 +2,7 @@
 
 namespace Poker
 {
+    using System.Collections.Generic;
     using System.Windows.Forms;
 
     using Poker.Constants;
@@ -14,17 +15,23 @@ namespace Poker
 
         private int chipsPlaced;
 
-        private readonly Panel panel;
-
-        protected Participant(Panel panel)
+        protected Participant(string name)
         {
-            this.panel = panel;
             this.Chips = StartingChips;
+            this.Name = name;
+            this.Controls = new Dictionary<string, Control>();
+            this.Hand = new Hand();
         }
+
+        public Dictionary<string, Control> Controls { get; set; }
+
+        public string Name { get; set; }
 
         public int Chips { get; set; }
 
         public IHand Hand { get; set; }
+
+        public Point PlaceOnBoard { get; set; }
 
         public bool HasActed
         {
@@ -48,12 +55,7 @@ namespace Poker
         {
             get
             {
-                if (this.Chips <= 0)
-                {
-                    return false;
-                }
-
-                return true;
+                return this.Chips > 0;
             }
         }
 
@@ -79,18 +81,11 @@ namespace Poker
             }
         }
 
-        public Panel Panel
-        {
-            get
-            {
-                return this.panel;
-            }
-        }
-
         public virtual void Call(int callAmount)
         {
             this.ChipsPlaced -= callAmount;
             this.HasCalled = true;
+            this.Controls["StatusBox"].Text = "Called: " + callAmount;
         }
 
         public virtual void Raise(int raiseAmount)
@@ -99,12 +94,14 @@ namespace Poker
             {
                 this.ChipsPlaced -= raiseAmount;
                 this.HasRaised = true;
+                this.Controls["StatusBox"].Text = "Raised: " + raiseAmount;
             }
         }
 
         public virtual void Check()
         {
             this.HasChecked = true;
+            this.Controls["StatusBox"].Text = "Checked";
         }
 
         public void ResetFlags()
@@ -119,15 +116,6 @@ namespace Poker
             this.ResetFlags();
             this.HasFolded = false;
             this.WinsRound = false;
-        }
-
-        internal void SetupPanel(Point location)
-        {
-            this.Panel.Location = location;
-            this.Panel.BackColor = Color.Transparent;
-            this.Panel.Height = 150;
-            this.Panel.Width = 180;
-            this.Panel.Visible = false;
         }
     }
 }

@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Constants\GlobalConstants.cs" />
     <Compile Include="Enumerations\TurnParts.cs" />
+    <Compile Include="Interfaces\IBot.cs" />
     <Compile Include="Interfaces\ICard.cs" />
     <Compile Include="Interfaces\IDeck.cs" />
     <Compile Include="Interfaces\IHand.cs" />

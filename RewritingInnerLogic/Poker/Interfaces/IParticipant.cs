@@ -1,10 +1,17 @@
 ﻿namespace Poker.Interfaces
 {
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+
     public interface IParticipant
     {
+        string Name { get; set; }
+
         int Chips { get; set; }
 
         IHand Hand { get; set; }
+
+        Dictionary<string, Control> Controls { get; set; }
 
         bool HasActed { get; }
 

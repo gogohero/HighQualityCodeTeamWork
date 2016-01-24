@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Poker.Tests
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Poker.Interfaces;
     using Poker.TestingAlgorithms;
@@ -338,6 +339,14 @@ namespace Poker.Tests
             hand.CurrentCards = combination;
             CardPowerCalculator.GetCurrentStrengthOfCards(hand);
             Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
+        }
+
+        [TestMethod]
+        public void TestingAlgorithm_Check_Deck_InitializesCardsCorrectly_ShouldPass()
+        {
+            IDeck deck = new Deck();
+            int differentCardsCounter = deck.Cards.Count(card => deck.Cards.Count(c => c.Rank == card.Rank && c.Suit == card.Suit) == 1);
+            Assert.AreEqual(52, differentCardsCounter);
         }
     }
 }

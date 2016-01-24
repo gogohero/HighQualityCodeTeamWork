@@ -4,8 +4,8 @@ namespace Poker.Models
     public class Bot : Participant
     {
 
-        public Bot(Panel panel)
-            : base(panel)
+        public Bot(string name)
+            : base(name)
         {
 
         }

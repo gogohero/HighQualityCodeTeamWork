@@ -20,21 +20,23 @@
 
         private int currentHighestBet;
 
-        private Participant[] players;
+        private IParticipant[] players;
 
         private IDeck deck;
 
-        Timer timer = new Timer();
+        private ICard[] cardsOnBoard;
 
-        Timer Updates = new Timer();
+        readonly Timer timer = new Timer();
 
-        private int time = 60;
+        readonly Timer Updates = new Timer();
+
+        private decimal time = 60M;
 
         private int bigBlind = 500;
 
         private int smallBlind = 250;
 
-        private int up = 10000000;
+        private int currentPlayerIndex = 0;
 
         #endregion
 
@@ -46,9 +48,13 @@
 
             this.deck = new Deck();
 
+            this.cardsOnBoard = new ICard[5];
+
             this.currentHighestBet = this.bigBlind;
+
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+
             this.textBoxPot.Enabled = false;
             this.textBoxChips.Enabled = false;
             this.textBoxBotChips1.Enabled = false;
@@ -56,53 +62,55 @@
             this.textBoxBotChips3.Enabled = false;
             this.textBoxBotChips4.Enabled = false;
             this.textBoxBotChips5.Enabled = false;
-            this.textBoxChips.Text = "Chips : " + this.players[0].Chips;
-            this.textBoxBotChips1.Text = "Chips : " + this.players[1].Chips;
-            this.textBoxBotChips2.Text = "Chips : " + this.players[2].Chips;
-            this.textBoxBotChips3.Text = "Chips : " + this.players[3].Chips;
-            this.textBoxBotChips4.Text = "Chips : " + this.players[4].Chips;
-            this.textBoxBotChips5.Text = "Chips : " + this.players[5].Chips;
-            this.timer.Interval = 1000;
+            this.textBoxBigBlind.Visible = false;
+            this.textBoxSmallBlind.Visible = false;
+            this.buttonBigBlind.Visible = false;
+            this.buttoneSmallBlind.Visible = false;
+
+            this.timer.Interval = 500;
             this.timer.Tick += this.TimerTick;
             this.timer.Start();
             this.Updates.Interval = 100;
             this.Updates.Tick += this.UpdateTick;
             this.Updates.Start();
-            this.textBoxBigBlind.Visible = true;
-            this.textBoxSmallBlind.Visible = true;
-            this.buttonBigBlind.Visible = true;
-            this.buttoneSmallBlind.Visible = true;
-            this.textBoxBigBlind.Visible = true;
-            this.textBoxSmallBlind.Visible = true;
-            this.buttonBigBlind.Visible = true;
-            this.buttoneSmallBlind.Visible = true;
-            this.textBoxBigBlind.Visible = false;
-            this.textBoxSmallBlind.Visible = false;
-            this.buttonBigBlind.Visible = false;
-            this.buttoneSmallBlind.Visible = false;
+
             this.textBoxRaise.Text = (this.bigBlind * 2).ToString();
+            this.progressBarTimer.Maximum = 120;
         }
 
         private void InitializePlayers()
         {
             this.players = new Participant[6];
+            // Assigning players
+            this.players[0] = new Player("Gosho");
+            this.players[1] = new Bot("Bot 1");
+            this.players[2] = new Bot("Bot 2");
+            this.players[3] = new Bot("Bot 3");
+            this.players[4] = new Bot("Bot 4");
+            this.players[5] = new Bot("Bot 5");
 
-            this.players[0] = new Player(new Panel());
+            // Adding Chips display control to each player
+            this.players[0].Controls.Add("ChipsBox", this.textBoxChips);
+            this.players[1].Controls.Add("ChipsBox", this.textBoxBotChips1);
+            this.players[2].Controls.Add("ChipsBox", this.textBoxBotChips2);
+            this.players[3].Controls.Add("ChipsBox", this.textBoxBotChips3);
+            this.players[4].Controls.Add("ChipsBox", this.textBoxBotChips4);
+            this.players[5].Controls.Add("ChipsBox", this.textBoxBotChips5);
 
-            this.players[1] = new Bot(new Panel());
-
-            this.players[2] = new Bot(new Panel());
-
-            this.players[3] = new Bot(new Panel());
-
-            this.players[4] = new Bot(new Panel());
-
-            this.players[5] = new Bot(new Panel());
+            // Adding Status control to each player
+            this.players[0].Controls.Add("StatusBox", this.playerStatus);
+            this.players[1].Controls.Add("StatusBox", this.bot1Status);
+            this.players[2].Controls.Add("StatusBox", this.bot2Status);
+            this.players[3].Controls.Add("StatusBox", this.bot3Status);
+            this.players[4].Controls.Add("StatusBox", this.bot4Status);
+            this.players[5].Controls.Add("StatusBox", this.bot5Status);
         }
 
         private void EndRound()
         {
-            this.deck.Shuffle();
+            this.players.ToList().ForEach(p => p.Hand.CurrentCards.Clear());
+            this.deck.Deal(this.players, this.cardsOnBoard);
+
             if (this.players.Count(p => !(p is Player) && !p.IsInGame) == 5)
             {
                 DialogResult dialogResult = MessageBox.Show(
@@ -120,8 +128,12 @@
             }
         }
 
-        private void Turns()
+        private void Turn()
         {
+            foreach (var player in this.players)
+            {
+                player.Controls["ChipsBox"].Text = string.Format($"{player.Name} Chips: {player.Chips}");
+            }
         }
 
         private void TimerTick(object sender, object e)
@@ -133,13 +145,17 @@
 
             if (this.time > 0)
             {
-                this.time--;
-                this.progressBarTimer.Value = this.time;
+                this.time -= 0.5M;
+                this.progressBarTimer.Value = (int)(2*this.time);
             }
         }
 
         private void UpdateTick(object sender, object e)
         {
+            foreach (var player in this.players)
+            {
+                player.Hand.CurrentCards.ToList().Where(h => h != null).ToList().ForEach(c => this.Controls.Add(c.PictureBox));
+            }
         }
 
         private void ButtonFoldClick(object sender, EventArgs e)

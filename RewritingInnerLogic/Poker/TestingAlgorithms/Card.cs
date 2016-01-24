@@ -86,7 +86,7 @@
         {
             string path;
             string ending = "";
-            switch (this.suit)
+            switch (this.Suit)
             {
                 case 'S':
                     ending = "_of_spades.png";
@@ -102,9 +102,9 @@
                     break;
             }
 
-            if (this.rank != 12)
+            if (this.Rank != 12)
             {
-                path = (this.rank + 2) + ending;
+                path = (this.Rank + 2) + ending;
 
             }
             else
@@ -121,7 +121,6 @@
                                       Width = 80,
                                       SizeMode = PictureBoxSizeMode.StretchImage
                                   };
-            this.pictureBox.Location = new Point(50,50);
         }
     }
 }

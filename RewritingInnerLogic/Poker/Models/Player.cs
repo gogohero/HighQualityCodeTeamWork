@@ -4,8 +4,8 @@ namespace Poker.Models
     public class Player : Participant
     {
 
-        public Player(Panel panel)
-            : base(panel)
+        public Player(string name)
+            : base(name)
         {
 
         }
