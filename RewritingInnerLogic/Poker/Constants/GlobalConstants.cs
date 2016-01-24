@@ -1,24 +1,11 @@
 ﻿namespace Poker.Constants
 {
-    using System.IO;
-
-    using Poker.Interfaces;
-    using Poker.TestingAlgorithms;
-
     public static class GlobalConstants
     {
-        private static ICard[] cards = new ICard[52];
+        public const int StartingChips = 10000;
 
-        public static IDeck Deck = new Deck(cards);
+        public const int StartingBigBlind = 500;
 
-        public static int StartingChips = 10000;
-
-        public static string[] allGameCardsImagesWithLocationsCollection = 
-            Directory.GetFiles(@"..\..\..\Poker\Resources\Assets\Cards\", "*.png", SearchOption.TopDirectoryOnly);
-
-        private static void InitializeCards()
-        {
-
-        }
+        public const int StartingSmallBlind = 250;
     }
 }

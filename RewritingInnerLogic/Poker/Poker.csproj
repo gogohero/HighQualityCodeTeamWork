@@ -51,8 +51,6 @@
       <DependentUpon>AddChips.cs</DependentUpon>
     </Compile>
     <Compile Include="Constants\GlobalConstants.cs" />
-    <Compile Include="Enumerations\BoardState.cs" />
-    <Compile Include="Enumerations\Players.cs" />
     <Compile Include="Enumerations\TurnParts.cs" />
     <Compile Include="Interfaces\ICard.cs" />
     <Compile Include="Interfaces\IDeck.cs" />
@@ -60,7 +58,6 @@
     <Compile Include="Interfaces\IParticipant.cs" />
     <Compile Include="Models\Bot.cs" />
     <Compile Include="Models\Participant.cs" />
-    <Compile Include="Engine.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="PokerGameForm.cs">
       <SubType>Form</SubType>
@@ -69,14 +66,12 @@
       <DependentUpon>PokerGameForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="ProgressBars.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestingAlgorithms\Card.cs" />
     <Compile Include="TestingAlgorithms\CardPowerCalculator.cs" />
     <Compile Include="TestingAlgorithms\Deck.cs" />
     <Compile Include="TestingAlgorithms\Hand.cs" />
     <Compile Include="TestingAlgorithms\HandStrengthEnum.cs" />
-    <Compile Include="Type.cs" />
     <EmbeddedResource Include="AddChips.resx">
       <DependentUpon>AddChips.cs</DependentUpon>
     </EmbeddedResource>
@@ -172,18 +167,18 @@
     <Content Include="Resources\Cards\10_of_diamonds.png" />
     <Content Include="Resources\Cards\10_of_hearts.png" />
     <Content Include="Resources\Cards\10_of_spades.png" />
-    <Content Include="Resources\Cards\11-of_clubs.png" />
-    <Content Include="Resources\Cards\11-of_diamonds.png" />
-    <Content Include="Resources\Cards\11-of_hearts.png" />
-    <Content Include="Resources\Cards\11-of_spades.png" />
-    <Content Include="Resources\Cards\12-of_clubs.png" />
-    <Content Include="Resources\Cards\12-of_diamonds.png" />
-    <Content Include="Resources\Cards\12-of_hearts.png" />
-    <Content Include="Resources\Cards\12-of_spades.png" />
-    <Content Include="Resources\Cards\13-of_clubs.png" />
-    <Content Include="Resources\Cards\13-of_diamonds.png" />
-    <Content Include="Resources\Cards\13-of_hearts.png" />
-    <Content Include="Resources\Cards\13-of_spades.png" />
+    <Content Include="Resources\Cards\11_of_clubs.png" />
+    <Content Include="Resources\Cards\11_of_diamonds.png" />
+    <Content Include="Resources\Cards\11_of_hearts.png" />
+    <Content Include="Resources\Cards\11_of_spades.png" />
+    <Content Include="Resources\Cards\12_of_clubs.png" />
+    <Content Include="Resources\Cards\12_of_diamonds.png" />
+    <Content Include="Resources\Cards\12_of_hearts.png" />
+    <Content Include="Resources\Cards\12_of_spades.png" />
+    <Content Include="Resources\Cards\13_of_clubs.png" />
+    <Content Include="Resources\Cards\13_of_diamonds.png" />
+    <Content Include="Resources\Cards\13_of_hearts.png" />
+    <Content Include="Resources\Cards\13_of_spades.png" />
     <Content Include="Resources\Cards\1_of_clubs.png" />
     <Content Include="Resources\Cards\1_of_diamonds.png" />
     <Content Include="Resources\Cards\1_of_hearts.png" />

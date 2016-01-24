@@ -4,6 +4,6 @@
     {
         ICard[] Cards { get; }
 
-        void Shuffle(ICard[] cards);
+        void Shuffle();
     }
 }

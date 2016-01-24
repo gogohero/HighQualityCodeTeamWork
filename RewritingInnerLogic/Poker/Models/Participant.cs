@@ -13,8 +13,7 @@ namespace Poker
         private int StartingChips = GlobalConstants.StartingChips;
 
         private int chipsPlaced;
-        //private int currentChips;
-        //private double powerHand;
+
         private readonly Panel panel;
 
         protected Participant(Panel panel)
@@ -58,8 +57,6 @@ namespace Poker
             }
         }
 
-        //public double Type { get; set; }
-
         public int ChipsPlaced
         {
             get
@@ -82,16 +79,6 @@ namespace Poker
             }
         }
 
-        //public int Raise { get; set; }
-
-        //public double PowerHand { get; set; }
-
-        //public bool Turn { get; set; }
-
-        //public bool FoldedTurn { get; set; }
-
-        //public bool Folded { get; set; }
-
         public Panel Panel
         {
             get
@@ -99,19 +86,6 @@ namespace Poker
                 return this.panel;
             }
         }
-
-        //public virtual void PlayTurn()
-        //{
-        //    if (!this.IsInGame || this.HasFolded)
-        //    {
-        //        return;
-        //    }
-
-        //    if (this.HasFolded || this.HasChecked)
-        //    {
-        //        return;
-        //    }
-        //}
 
         public virtual void Call(int callAmount)
         {

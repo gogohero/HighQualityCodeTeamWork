@@ -44,3 +44,10 @@ E:\VS projects\abrakadabra\HighQualityCodeTeamWork\Poker\obj\Debug\Poker.csproj.
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb
+E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe
+E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.pdb
+E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
+E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.AddChips.resources
+E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
+E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
+E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache

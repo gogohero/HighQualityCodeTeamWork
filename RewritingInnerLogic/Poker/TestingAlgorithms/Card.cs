@@ -10,12 +10,14 @@
         private int rank;
         private char suit;
 
-        public Card(int rank, char suit, Image img, PictureBox picBox)
+        private PictureBox pictureBox;
+
+        public Card(int rank, char suit)
         {
             this.Rank = rank;
             this.Suit = suit;
-            this.Image = img;
-            this.PictureBox = picBox;
+        
+            this.SetCorrectImage();
         }
 
         public int Rank
@@ -54,9 +56,31 @@
 
         public bool IsFacingUp { get; set; }
 
-        public Image Image { get; set; }
+        public Image FrontImage { get; set; }
 
-        public PictureBox PictureBox { get; set; }
+        public Image BackImage { get; set; }
+
+        public PictureBox PictureBox
+        {
+            get
+            {
+                if (this.IsFacingUp)
+                {
+                    this.pictureBox.Image = this.FrontImage;
+                    return this.pictureBox;
+                }
+                else
+                {
+                    this.pictureBox.Image = this.BackImage;
+                    return this.pictureBox;
+                }
+            }
+
+            set
+            {
+                this.pictureBox = value;
+            }
+        }
 
         private void SetCorrectImage()
         {
@@ -87,6 +111,17 @@
             {
                 path = "1" + ending;
             }
+            
+            this.FrontImage = Image.FromFile(@"..\..\..\Poker\Resources\Cards\" + path);
+            this.BackImage = Image.FromFile(@"..\..\..\Poker\Resources\Assets\Back\Back.png");
+            this.PictureBox = new PictureBox
+                                  {
+                                      Image = this.BackImage,
+                                      Height = 130,
+                                      Width = 80,
+                                      SizeMode = PictureBoxSizeMode.StretchImage
+                                  };
+            this.pictureBox.Location = new Point(50,50);
         }
     }
 }

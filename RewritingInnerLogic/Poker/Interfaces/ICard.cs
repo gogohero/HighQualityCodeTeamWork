@@ -11,7 +11,9 @@
 
         bool IsFacingUp { get; set; }
 
-        Image Image { get; set; }
+        Image FrontImage { get; set; }
+
+        Image BackImage { get; set; }
 
         PictureBox PictureBox { get; set; }
     }
