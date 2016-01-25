@@ -111,16 +111,17 @@
             {
                 path = "1" + ending;
             }
-            
+
             this.FrontImage = Image.FromFile(@"..\..\..\Poker\Resources\Cards\" + path);
             this.BackImage = Image.FromFile(@"..\..\..\Poker\Resources\Assets\Back\Back.png");
             this.PictureBox = new PictureBox
                                   {
-                                      Image = this.BackImage,
-                                      Height = 130,
-                                      Width = 80,
+                                      Visible = true,
+                                      Image = this.FrontImage,
+                                      Height = 120,
+                                      Width = 70,
                                       SizeMode = PictureBoxSizeMode.StretchImage
-                                  };
+                                   };
         }
     }
 }

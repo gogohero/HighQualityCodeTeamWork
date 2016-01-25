@@ -5,6 +5,9 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
@@ -13,6 +16,8 @@
     using Poker.Interfaces;
     using Poker.Models;
     using Poker.TestingAlgorithms;
+
+    using Timer = System.Windows.Forms.Timer;
 
     public partial class PokerGameForm : Form
     {
@@ -30,13 +35,15 @@
 
         readonly Timer Updates = new Timer();
 
+        private Point boardCardsPosition = new Point(300, 180);
+
         private decimal time = 60M;
 
         private int bigBlind = 500;
 
         private int smallBlind = 250;
 
-        private int currentPlayerIndex = 0;
+        private int playerOnTurnIndex = 0;
 
         #endregion
 
@@ -46,7 +53,7 @@
 
             this.InitializePlayers();
 
-            this.deck = new Deck();
+            this.InitializeDeck();
 
             this.cardsOnBoard = new ICard[5];
 
@@ -67,7 +74,7 @@
             this.buttonBigBlind.Visible = false;
             this.buttoneSmallBlind.Visible = false;
 
-            this.timer.Interval = 500;
+            this.timer.Interval = 200;
             this.timer.Tick += this.TimerTick;
             this.timer.Start();
             this.Updates.Interval = 100;
@@ -75,19 +82,28 @@
             this.Updates.Start();
 
             this.textBoxRaise.Text = (this.bigBlind * 2).ToString();
-            this.progressBarTimer.Maximum = 120;
+            this.progressBarTimer.Value = 300;
+        }
+
+        private void InitializeDeck()
+        {
+            this.deck = new Deck();
+            foreach (var card in this.deck.Cards)
+            {
+                this.Controls.Add(card.PictureBox);
+            }
         }
 
         private void InitializePlayers()
         {
             this.players = new Participant[6];
             // Assigning players
-            this.players[0] = new Player("Gosho");
-            this.players[1] = new Bot("Bot 1");
-            this.players[2] = new Bot("Bot 2");
-            this.players[3] = new Bot("Bot 3");
-            this.players[4] = new Bot("Bot 4");
-            this.players[5] = new Bot("Bot 5");
+            this.players[0] = new Player("Gosho", 1);
+            this.players[1] = new Bot("Bot 1", 2);
+            this.players[2] = new Bot("Bot 2", 3);
+            this.players[3] = new Bot("Bot 3", 4);
+            this.players[4] = new Bot("Bot 4", 5);
+            this.players[5] = new Bot("Bot 5", 6);
 
             // Adding Chips display control to each player
             this.players[0].Controls.Add("ChipsBox", this.textBoxChips);
@@ -106,10 +122,25 @@
             this.players[5].Controls.Add("StatusBox", this.bot5Status);
         }
 
-        private void EndRound()
+        private void BeginRound()
         {
-            this.players.ToList().ForEach(p => p.Hand.CurrentCards.Clear());
+            this.playerOnTurnIndex = 0;
+            foreach (var player in this.players)
+            {
+                player.ResetFlags();
+                player.Hand.CurrentCards.ToList().ForEach(c => c.PictureBox.Visible = false);
+                player.Hand.CurrentCards.Clear();
+            }
+
             this.deck.Deal(this.players, this.cardsOnBoard);
+
+            int positionCardChangeX = this.boardCardsPosition.X;
+            foreach (ICard card in this.cardsOnBoard)
+            {
+                Point nextLocation = new Point(positionCardChangeX, this.boardCardsPosition.Y);
+                positionCardChangeX += 90;
+                card.PictureBox.Location = nextLocation;
+            }
 
             if (this.players.Count(p => !(p is Player) && !p.IsInGame) == 5)
             {
@@ -128,14 +159,6 @@
             }
         }
 
-        private void Turn()
-        {
-            foreach (var player in this.players)
-            {
-                player.Controls["ChipsBox"].Text = string.Format($"{player.Name} Chips: {player.Chips}");
-            }
-        }
-
         private void TimerTick(object sender, object e)
         {
             if (this.progressBarTimer.Value <= 0)
@@ -145,21 +168,52 @@
 
             if (this.time > 0)
             {
-                this.time -= 0.5M;
-                this.progressBarTimer.Value = (int)(2*this.time);
+                this.time -= 0.2M;
+                this.progressBarTimer.Value -= 1;
             }
         }
 
-        private void UpdateTick(object sender, object e)
+        private async Task Turns()
         {
+            if (this.players.Any(p => p.WinsRound) || this.players.Any(p => p.HasRaised))
+            {
+                int potSplit = int.Parse(this.textBoxPot.Text) / (this.players.Count(p => p.WinsRound) + 1)
+                                + 1;
+                foreach (var player in this.players)
+                {
+                    if (player.WinsRound)
+                    {
+                        player.Chips += potSplit;
+                        MessageBox.Show($"{player.Name} wins round with {player.Hand.Strength}");
+                    }
+                }
+
+                this.BeginRound();
+
+                if (!this.players[this.playerOnTurnIndex].HasActed)
+                {
+                    this.players[this.playerOnTurnIndex].PlayTurn();
+                }
+                else
+                {
+                    this.playerOnTurnIndex += 1;
+                }
+            }
+        }
+
+        private async void UpdateTick(object sender, object e)
+        {
+            await this.Turns();
             foreach (var player in this.players)
             {
-                player.Hand.CurrentCards.ToList().Where(h => h != null).ToList().ForEach(c => this.Controls.Add(c.PictureBox));
+                player.Controls["ChipsBox"].Text = "Chips: " + player.Chips;
             }
         }
 
         private void ButtonFoldClick(object sender, EventArgs e)
         {
+            this.players[0].HasFolded = true;
+
             //this.playerStatus.Text = "Fold";
             //this.players[Players.Player].Turn = false;
             //this.players[Players.Player].FoldedTurn = true;
@@ -168,6 +222,7 @@
 
         private void ButonCheckClick(object sender, EventArgs e)
         {
+            this.players[0].HasChecked = true;
             //if (this.call <= 0)
             //{
             //    this.players[Players.Player].Turn = false;
@@ -184,46 +239,20 @@
 
         private void ButtonCallClick(object sender, EventArgs e)
         {
-            //this.Rules(0, 1, "Player", this.players[Players.Player]);
-            //if (this.players[Players.Player].CurrentChips >= this.call)
-            //{
-            //    this.players[Players.Player].CurrentChips -= this.call;
-            //    this.textBoxChips.Text = "Chips : " + this.players[Players.Player].CurrentChips.ToString();
-            //    if (this.textBoxPot.Text != string.Empty)
-            //    {
-            //        this.textBoxPot.Text = (int.Parse(this.textBoxPot.Text) + this.call).ToString();
-            //    }
-            //    else
-            //    {
-            //        this.textBoxPot.Text = this.call.ToString();
-            //    }
-
-            //    this.players[Players.Player].Turn = false;
-            //    this.playerStatus.Text = "Call " + this.call;
-            //    this.players[Players.Player].Call = this.call;
-            //}
-            //else if (this.players[Players.Player].CurrentChips <= this.call && this.call > 0)
-            //{
-            //    this.textBoxPot.Text = (int.Parse(this.textBoxPot.Text) + this.players[Players.Player].CurrentChips).ToString();
-            //    this.playerStatus.Text = "All in " + this.players[Players.Player].CurrentChips;
-            //    this.players[Players.Player].CurrentChips = 0;
-            //    this.textBoxChips.Text = "Chips : " + this.players[Players.Player].CurrentChips.ToString();
-            //    this.players[Players.Player].Turn = false;
-            //    this.buttonFold.Enabled = false;
-            //    this.players[Players.Player].Call = this.players[Players.Player].CurrentChips;
-            //}
-
-            //await this.Turns();
+            this.players[0].Call(this.currentHighestBet);
         }
 
         private void ButtonRaiseClick(object sender, EventArgs e)
         {
-            
+            this.players[0].Raise(int.Parse(this.textBoxRaise.Text));
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
         {
-           
+            foreach (var player in this.players)
+            {
+                player.Chips += int.Parse(this.textBoxAdd.Text);
+            }
         }
 
         private void ButtonOptionsClick(object sender, EventArgs e)

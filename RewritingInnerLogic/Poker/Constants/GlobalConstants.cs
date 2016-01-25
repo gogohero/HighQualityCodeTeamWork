@@ -1,5 +1,7 @@
 ﻿namespace Poker.Constants
 {
+    using System.Drawing;
+
     public static class GlobalConstants
     {
         public const int StartingChips = 10000;

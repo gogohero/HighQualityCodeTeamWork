@@ -1,9 +1,13 @@
 ﻿namespace Poker.TestingAlgorithms
 {
     using System;
+    using System.Drawing;
     using System.IO;
+    using System.Linq;
+    using System.Threading;
 
     using Poker.Interfaces;
+    using Poker.Models;
 
     public class Deck : IDeck
     {
@@ -34,19 +38,42 @@
         {
             this.Shuffle();
             int toTakeFromDeckIndex = 0;
-            for (int i = 0; i < players.Length; i++)
+            foreach (IParticipant player in players)
             {
-                for (int j = 0; j < 2; j++)
-                {
-                    players[i].Hand.CurrentCards.Add(this.Cards[toTakeFromDeckIndex]);
-                    toTakeFromDeckIndex += 1;
-                }
+                player.Hand.CurrentCards.Add(this.Cards[toTakeFromDeckIndex]);
+                player.Hand.CurrentCards[0].PictureBox.Location = player.PlaceOnBoard;
+                player.Hand.CurrentCards[0].PictureBox.Visible = true;
+                toTakeFromDeckIndex += 1;
+
+                player.Hand.CurrentCards.Add(this.Cards[toTakeFromDeckIndex]);
+                player.Hand.CurrentCards[1].PictureBox.Location = new Point(player.PlaceOnBoard.X + 90, player.PlaceOnBoard.Y);
+                player.Hand.CurrentCards[1].PictureBox.Visible = true;
+                toTakeFromDeckIndex += 1;
             }
 
             for (int i = 0; i < 5; i++)
             {
                 cardsOnBoard[i] = this.Cards[toTakeFromDeckIndex];
+                cardsOnBoard[i].PictureBox.Visible = true;
+                cardsOnBoard[i].IsFacingUp = false;
                 toTakeFromDeckIndex += 1;
+
+                if (i < 3)
+                {
+                     cardsOnBoard[i].IsFacingUp = true;
+                }
+            }
+
+            foreach (var card in players[0].Hand.CurrentCards)
+            {
+                card.IsFacingUp = true;
+            }
+            for (int i = 1; i < players.Length; i++)
+            {
+                foreach (var card in players[i].Hand.CurrentCards)
+                {
+                    card.IsFacingUp = false;
+                }
             }
         }
 

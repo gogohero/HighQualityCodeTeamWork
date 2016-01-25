@@ -1,6 +1,8 @@
 ﻿namespace Poker.Interfaces
 {
     using System.Collections.Generic;
+    using System.Drawing;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     public interface IParticipant
@@ -12,6 +14,10 @@
         IHand Hand { get; set; }
 
         Dictionary<string, Control> Controls { get; set; }
+
+        Point PlaceOnBoard { get; set; }
+
+        bool Turn { get; set; }
 
         bool HasActed { get; }
 
@@ -29,9 +35,9 @@
 
         void ResetFlags();
 
-        void SetFlagsForNewTurn();
+        void PlayTurn();
 
-        //void PlayTurn();
+        void SetFlagsForNewTurn();
 
         void Call(int callAmount);
 

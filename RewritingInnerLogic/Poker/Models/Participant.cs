@@ -3,6 +3,7 @@
 namespace Poker
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using Poker.Constants;
@@ -15,12 +16,14 @@ namespace Poker
 
         private int chipsPlaced;
 
-        protected Participant(string name)
+        protected Participant(string name, int placeOnBoard)
         {
             this.Chips = StartingChips;
             this.Name = name;
             this.Controls = new Dictionary<string, Control>();
             this.Hand = new Hand();
+
+            this.SetupBoardPlace(placeOnBoard);
         }
 
         public Dictionary<string, Control> Controls { get; set; }
@@ -33,11 +36,13 @@ namespace Poker
 
         public Point PlaceOnBoard { get; set; }
 
+        public bool Turn { get; set; }
+
         public bool HasActed
         {
             get
             {
-                return this.HasCalled || this.HasChecked || this.HasRaised;
+                return this.HasCalled || this.HasChecked || this.HasRaised || this.HasFolded;
             }
         }
 
@@ -83,9 +88,20 @@ namespace Poker
 
         public virtual void Call(int callAmount)
         {
-            this.ChipsPlaced -= callAmount;
-            this.HasCalled = true;
-            this.Controls["StatusBox"].Text = "Called: " + callAmount;
+            if (this.Chips > callAmount)
+            {
+                this.Chips -= callAmount;
+                this.ChipsPlaced += callAmount;
+                this.HasCalled = true;
+                this.Controls["StatusBox"].Text = "Called: " + callAmount;
+            }
+            else
+            {
+                this.ChipsPlaced += this.Chips;
+                this.Chips = 0;
+                this.HasCalled = true;
+                this.Controls["StatusBox"].Text = "All in: " + callAmount;
+            }
         }
 
         public virtual void Raise(int raiseAmount)
@@ -111,11 +127,38 @@ namespace Poker
             this.HasRaised = false;
         }
 
+        public abstract void PlayTurn();
+
         public void SetFlagsForNewTurn()
         {
             this.ResetFlags();
             this.HasFolded = false;
             this.WinsRound = false;
+        }
+
+        private void SetupBoardPlace(int placeOnBoard)
+        {
+            switch (placeOnBoard)
+            {
+                case 1:
+                    this.PlaceOnBoard = new Point(360, 340);
+                    break;
+                case 2:
+                    this.PlaceOnBoard = new Point(120, 280);
+                    break;
+                case 3:
+                    this.PlaceOnBoard = new Point(120, 130);
+                    break;
+                case 4:
+                    this.PlaceOnBoard = new Point(300, 30);
+                    break;
+                case 5:
+                    this.PlaceOnBoard = new Point(780, 130);
+                    break;
+                case 6:
+                    this.PlaceOnBoard = new Point(780, 280);
+                    break;
+            }
         }
     }
 }
