@@ -11,15 +11,15 @@
 
         int Chips { get; set; }
 
+        int ChipsPlaced { get; set; }
+
         IHand Hand { get; set; }
 
         Dictionary<string, Control> Controls { get; set; }
 
         Point PlaceOnBoard { get; set; }
 
-        bool Turn { get; set; }
-
-        bool HasActed { get; }
+        bool IsAllIn { get; set; }
 
         bool HasFolded { get; set; }
 
@@ -33,14 +33,22 @@
 
         bool IsInGame { get; }
 
+        bool HasActed { get; }
+
         void ResetFlags();
 
         void PlayTurn();
 
         void SetFlagsForNewTurn();
 
+        void Check();
+
         void Call(int callAmount);
 
         void Raise(int raiseAmount);
+
+        void Fold();
+
+        void AllIn();
     }
 }

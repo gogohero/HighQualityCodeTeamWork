@@ -7,16 +7,16 @@
     {
         private IList<ICard> currentCards;
 
+        public Hand()
+        {
+            this.currentCards = new List<ICard>();
+        }
+
         public ICard HighCard { get; set; }
 
         public IList<ICard> CurrentCards {
             get
             {
-                if (this.currentCards == null)
-                {
-                    this.currentCards = new List<ICard>();
-                }
-
                 return this.currentCards;
             }
 

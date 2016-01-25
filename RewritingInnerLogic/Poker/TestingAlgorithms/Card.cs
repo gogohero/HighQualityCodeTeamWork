@@ -116,8 +116,7 @@
             this.BackImage = Image.FromFile(@"..\..\..\Poker\Resources\Assets\Back\Back.png");
             this.PictureBox = new PictureBox
                                   {
-                                      Visible = true,
-                                      Image = this.FrontImage,
+                                      Image = this.BackImage,
                                       Height = 120,
                                       Width = 70,
                                       SizeMode = PictureBoxSizeMode.StretchImage

@@ -1,5 +1,6 @@
 ﻿namespace Poker.TestingAlgorithms
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -34,82 +35,77 @@
         // method for setting the strength of any participant current visible hand (his cards in hand + facing up cards from the board)
         public static void GetCurrentStrengthOfCards(IHand participantVisibleHand)
         {
-            // getting initial 2 cards in hand
-            ICard[] startingTwoCards = 
-                 {
-                    participantVisibleHand.CurrentCards[0],
-                    participantVisibleHand.CurrentCards[1]
-                 };
+            IList<ICard> cards = participantVisibleHand.CurrentCards;
 
             // ---------------------------------------------------------
             // check for straigth, flush, straigth flush and royal flush
 
-            participantVisibleHand.CurrentCards = participantVisibleHand.CurrentCards.OrderBy(c => c.Rank).ToList();
+            cards = cards.OrderBy(c => c.Rank).ToList();
             int sequentialCards = 0;
             int sameSuites = 0;
             ICard highestInSequenceWithoutPairs = new Card(0, 'S');
             HandStrengthEnum strengthWithoutPairs = HandStrengthEnum.HighCard;
 
-            for (int i = 1; i < participantVisibleHand.CurrentCards.Count - 1; i++)
+            for (int i = 1; i < cards.Count - 1; i++)
             {
                 bool foundHigherSequential = false;
 
                 // cannot escape the checks for first and last element, otherwise they are skipped
                 if (i == 1)
                 {
-                    if (participantVisibleHand.CurrentCards[i - 1].Rank + 1 == participantVisibleHand.CurrentCards[i].Rank)
+                    if (cards[i - 1].Rank + 1 == cards[i].Rank)
                     {
                         sequentialCards += 1;
                     }
-                    if (participantVisibleHand.CurrentCards[i - 1].Suit == participantVisibleHand.CurrentCards[i].Suit)
+                    if (cards[i - 1].Suit == cards[i].Suit)
                     {
                         sameSuites += 1;
                     }
                 }
-                else if (i == participantVisibleHand.CurrentCards.Count - 2)
+                else if (i == cards.Count - 2)
                 {
-                    if (participantVisibleHand.CurrentCards[i].Rank + 1 == participantVisibleHand.CurrentCards[i + 1].Rank)
+                    if (cards[i].Rank + 1 == cards[i + 1].Rank)
                     {
                         sequentialCards += 1;
                         foundHigherSequential = true;
                     }
-                    if (participantVisibleHand.CurrentCards[i].Suit == participantVisibleHand.CurrentCards[i].Suit)
+                    if (cards[i].Suit == cards[i].Suit)
                     {
                         sameSuites += 1;
                     }
                 }
-                if (participantVisibleHand.CurrentCards[i].Rank + 1
-                        == participantVisibleHand.CurrentCards[i + 1].Rank
-                        || participantVisibleHand.CurrentCards[i].Rank - 1
-                        == participantVisibleHand.CurrentCards[i - 1].Rank)
+                if (cards[i].Rank + 1
+                        == cards[i + 1].Rank
+                        || cards[i].Rank - 1
+                        == cards[i - 1].Rank)
                 {
                     sequentialCards += 1;
-                    highestInSequenceWithoutPairs = participantVisibleHand.CurrentCards[i];
-                    if (participantVisibleHand.CurrentCards[i].Rank + 1 == participantVisibleHand.CurrentCards[i + 1].Rank)
+                    highestInSequenceWithoutPairs = cards[i];
+                    if (cards[i].Rank + 1 == cards[i + 1].Rank)
                     {
                         foundHigherSequential = true;
                     }
-                    if (participantVisibleHand.CurrentCards[i].Suit
-                        == participantVisibleHand.CurrentCards[i + 1].Suit)
+                    if (cards[i].Suit
+                        == cards[i + 1].Suit)
                     {
                         sameSuites += 1;
                     }
                 }
-                else if (participantVisibleHand.CurrentCards[i].Suit
-                         == participantVisibleHand.CurrentCards[i + 1].Suit
-                         || participantVisibleHand.CurrentCards[i].Suit
-                         == participantVisibleHand.CurrentCards[i - 1].Suit)
+                else if (cards[i].Suit
+                         == cards[i + 1].Suit
+                         || cards[i].Suit
+                         == cards[i - 1].Suit)
                 {
                     sameSuites += 1;
-                    if (highestInSequenceWithoutPairs.Rank < participantVisibleHand.CurrentCards[i].Rank)
+                    if (highestInSequenceWithoutPairs.Rank < cards[i].Rank)
                     {
-                        highestInSequenceWithoutPairs = participantVisibleHand.CurrentCards[i];
+                        highestInSequenceWithoutPairs = cards[i];
                     }
                 }
 
                 if (foundHigherSequential)
                 {
-                    highestInSequenceWithoutPairs = participantVisibleHand.CurrentCards[i + 1];
+                    highestInSequenceWithoutPairs = cards[i + 1];
                 }
             }
 
@@ -138,7 +134,7 @@
             // begin search for pairs, two pairs, three of a kind, full house, four of a kind
             IList<ICard> differentCards = new List<ICard>();
 
-            foreach (var card in participantVisibleHand.CurrentCards)
+            foreach (var card in cards)
             {
                 if (differentCards.Any(c => c.Rank == card.Rank))
                 {
@@ -154,7 +150,7 @@
             // Check for pair, two pair, three of a kind, full house or four of a kind
             for (int i = 0; i < differentCards.Count; i++)
             {
-                int pairedCardsCounter = participantVisibleHand.CurrentCards.Count(card => card.Rank == differentCards[i].Rank);
+                int pairedCardsCounter = cards.Count(card => card.Rank == differentCards[i].Rank);
 
                 if (pairedCardsCounter > 1)
                 {
@@ -197,7 +193,7 @@
                     }
                     else if(strengthPairs < HandStrengthEnum.Pair)
                     {
-                        strengthPairs= HandStrengthEnum.Pair;
+                        strengthPairs = HandStrengthEnum.Pair;
                         highestCardPairs = differentCards[i];
                     }
                 }
@@ -216,13 +212,13 @@
             else
             {
                 participantVisibleHand.Strength = HandStrengthEnum.HighCard;
-                if (highestCardPairs.Rank >= highestInSequenceWithoutPairs.Rank)
+                if (participantVisibleHand.CurrentCards[0].Rank >= participantVisibleHand.CurrentCards[1].Rank)
                 {
-                    participantVisibleHand.HighCard = highestCardPairs;
+                    participantVisibleHand.HighCard = participantVisibleHand.CurrentCards[0];
                 }
                 else
                 {
-                    participantVisibleHand.HighCard = highestInSequenceWithoutPairs;
+                    participantVisibleHand.HighCard = participantVisibleHand.CurrentCards[1];
                 }
             }
         }

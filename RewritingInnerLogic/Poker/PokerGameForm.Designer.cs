@@ -30,7 +30,7 @@
     private void InitializeComponent()
     {
             this.buttonFold = new System.Windows.Forms.Button();
-            this.bCheck = new System.Windows.Forms.Button();
+            this.buttonCheck = new System.Windows.Forms.Button();
             this.buttonCall = new System.Windows.Forms.Button();
             this.buttonRaise = new System.Windows.Forms.Button();
             this.progressBarTimer = new System.Windows.Forms.ProgressBar();
@@ -71,18 +71,18 @@
             this.buttonFold.UseVisualStyleBackColor = true;
             this.buttonFold.Click += new System.EventHandler(this.ButtonFoldClick);
             // 
-            // bCheck
+            // buttonCheck
             // 
-            this.bCheck.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.bCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.bCheck.Location = new System.Drawing.Point(573, 632);
-            this.bCheck.Margin = new System.Windows.Forms.Padding(4);
-            this.bCheck.Name = "bCheck";
-            this.bCheck.Size = new System.Drawing.Size(130, 60);
-            this.bCheck.TabIndex = 2;
-            this.bCheck.Text = "Check";
-            this.bCheck.UseVisualStyleBackColor = true;
-            this.bCheck.Click += new System.EventHandler(this.ButonCheckClick);
+            this.buttonCheck.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonCheck.Location = new System.Drawing.Point(573, 632);
+            this.buttonCheck.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonCheck.Name = "buttonCheck";
+            this.buttonCheck.Size = new System.Drawing.Size(130, 60);
+            this.buttonCheck.TabIndex = 2;
+            this.buttonCheck.Text = "Check";
+            this.buttonCheck.UseVisualStyleBackColor = true;
+            this.buttonCheck.Click += new System.EventHandler(this.ButonCheckClick);
             // 
             // buttonCall
             // 
@@ -376,7 +376,7 @@
             this.Controls.Add(this.progressBarTimer);
             this.Controls.Add(this.buttonRaise);
             this.Controls.Add(this.buttonCall);
-            this.Controls.Add(this.bCheck);
+            this.Controls.Add(this.buttonCheck);
             this.Controls.Add(this.buttonFold);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -392,7 +392,7 @@
     #endregion
 
     private System.Windows.Forms.Button buttonFold;
-    private System.Windows.Forms.Button bCheck;
+    private System.Windows.Forms.Button buttonCheck;
     private System.Windows.Forms.Button buttonCall;
     private System.Windows.Forms.Button buttonRaise;
     private System.Windows.Forms.ProgressBar progressBarTimer;

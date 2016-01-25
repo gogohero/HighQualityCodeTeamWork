@@ -2,6 +2,7 @@
 
 namespace Poker
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Windows.Forms;
@@ -36,13 +37,13 @@ namespace Poker
 
         public Point PlaceOnBoard { get; set; }
 
-        public bool Turn { get; set; }
+        public bool IsAllIn { get; set; }
 
         public bool HasActed
         {
             get
             {
-                return this.HasCalled || this.HasChecked || this.HasRaised || this.HasFolded;
+                return this.HasCalled || this.HasChecked || this.HasRaised || this.HasFolded || this.IsAllIn;
             }
         }
 
@@ -73,45 +74,44 @@ namespace Poker
 
             set
             {
-                if (this.Chips - value <= 0)
+                if (value < 0)
                 {
-                    this.chipsPlaced = this.Chips;
-                    this.Chips = 0;
+                    throw new ArgumentException("Chips placed value cannot be negative");
                 }
-                else
-                {
-                    this.chipsPlaced = value;
-                    this.Chips -= value;
-                } 
+
+                this.chipsPlaced = value;
             }
         }
 
         public virtual void Call(int callAmount)
         {
-            if (this.Chips > callAmount)
-            {
-                this.Chips -= callAmount;
-                this.ChipsPlaced += callAmount;
-                this.HasCalled = true;
-                this.Controls["StatusBox"].Text = "Called: " + callAmount;
-            }
-            else
-            {
-                this.ChipsPlaced += this.Chips;
-                this.Chips = 0;
-                this.HasCalled = true;
-                this.Controls["StatusBox"].Text = "All in: " + callAmount;
-            }
+            this.Chips -= callAmount;
+            this.ChipsPlaced += callAmount;
+            this.HasCalled = true;
+            this.Controls["StatusBox"].Text = "Called: " + callAmount;
         }
 
         public virtual void Raise(int raiseAmount)
         {
-            if (this.Chips >= raiseAmount)
-            {
-                this.ChipsPlaced -= raiseAmount;
-                this.HasRaised = true;
-                this.Controls["StatusBox"].Text = "Raised: " + raiseAmount;
-            }
+            this.Chips -= raiseAmount;
+            this.ChipsPlaced += raiseAmount;
+            this.HasRaised = true;
+            this.Controls["StatusBox"].Text = "Raised: " + raiseAmount;
+        }
+
+        public void Fold()
+        {
+            this.HasFolded = true;
+            this.Hand.CurrentCards[0].PictureBox.Visible = false;
+            this.Hand.CurrentCards[1].PictureBox.Visible = false;
+        }
+
+        public virtual void AllIn()
+        {
+            this.Controls["StatusBox"].Text = "ALL IN!";
+            this.IsAllIn = true;
+            this.ChipsPlaced += this.Chips;
+            this.Chips = 0;
         }
 
         public virtual void Check()
@@ -120,7 +120,7 @@ namespace Poker
             this.Controls["StatusBox"].Text = "Checked";
         }
 
-        public void ResetFlags()
+        public virtual void ResetFlags()
         {
             this.HasCalled = false;
             this.HasChecked = false;
@@ -129,11 +129,13 @@ namespace Poker
 
         public abstract void PlayTurn();
 
-        public void SetFlagsForNewTurn()
+        public virtual void SetFlagsForNewTurn()
         {
             this.ResetFlags();
+            this.ChipsPlaced = 0;
             this.HasFolded = false;
             this.WinsRound = false;
+            this.IsAllIn = false;
         }
 
         private void SetupBoardPlace(int placeOnBoard)
