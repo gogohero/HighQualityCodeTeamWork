@@ -35,8 +35,6 @@
 
         readonly Timer Updates = new Timer();
 
-        private Point boardCardsPosition = new Point(300, 180);
-
         private decimal time = 60M;
 
         private int bigBlind = 500;
@@ -131,10 +129,7 @@
 
         private void BeginRound()
         {
-            if (this.players[0].IsInGame)
-            {
-                this.EnableUserButtons();
-            }
+            this.DisableUserButtons();
 
             this.CurrentTurnPart = TurnParts.Flop;
 
@@ -144,24 +139,14 @@
 
             this.deck.Deal(this.players, this.cardsOnBoard);
 
-            int positionCardChangeX = this.boardCardsPosition.X;
-
-            this.PostDealActions(positionCardChangeX);
+            if (this.players[0].IsInGame)
+            {
+                this.EnableUserButtons();
+            }
         }
 
-        private void PostDealActions(int positionCardChangeX)
-        {
-            // Set which cards should be visible to player after initial deal
-            foreach (var card in this.cardsOnBoard)
-            {
-                Point location = new Point(positionCardChangeX, this.boardCardsPosition.Y);
-                positionCardChangeX += 90;
-                card.PictureBox.Location = location;
-            }
-
-            this.players[0].Hand.CurrentCards[0].IsFacingUp = true;
-            this.players[0].Hand.CurrentCards[1].IsFacingUp = true;
-            
+        private void PostDealActions()
+        {   
             // Display changes to each card
             foreach (var card in this.deck.Cards)
             {
