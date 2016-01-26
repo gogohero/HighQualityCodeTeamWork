@@ -1,7 +1,10 @@
 ﻿using System.Windows.Forms;
 namespace Poker.Models
 {
+    using System;
     using System.Threading.Tasks;
+
+    using Poker.Enumerations;
 
     public class Player : Participant
     {
@@ -10,7 +13,13 @@ namespace Poker.Models
         {
         }
 
-        public override void PlayTurn()
+        // Not needed -> leave it empty
+        public override void PlayTurn(
+            ref int currentHighestBet,
+            int playersNotFolded,
+            bool canCheck,
+            TurnParts currentPartOfTurn,
+            Random randomBehavior)
         {
         }
     }

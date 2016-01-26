@@ -43,6 +43,7 @@
                 player.Hand.CurrentCards.Add(this.Cards[toTakeFromDeckIndex]);
                 player.Hand.CurrentCards[0].PictureBox.Location = player.PlaceOnBoard;
                 player.Hand.CurrentCards[0].PictureBox.Visible = true;
+                player.Hand.CurrentCards[0].IsFacingUp = true;
                 player.Hand.CurrentCards[0].PictureBox.Update();
                 Thread.Sleep(300);
                 toTakeFromDeckIndex += 1;
@@ -50,6 +51,7 @@
                 player.Hand.CurrentCards.Add(this.Cards[toTakeFromDeckIndex]);
                 player.Hand.CurrentCards[1].PictureBox.Location = new Point(player.PlaceOnBoard.X + 75, player.PlaceOnBoard.Y);
                 player.Hand.CurrentCards[1].PictureBox.Visible = true;
+                player.Hand.CurrentCards[1].IsFacingUp = true;
                 player.Hand.CurrentCards[1].PictureBox.Update();
                 Thread.Sleep(300);
                 toTakeFromDeckIndex += 1;
@@ -73,7 +75,12 @@
                 cardsOnBoard[i].PictureBox.Update();
                 Thread.Sleep(300);
             }
-
+            foreach (var player in players)
+            {
+                player.Hand.CurrentCards.Add(cardsOnBoard[0]);
+                player.Hand.CurrentCards.Add(cardsOnBoard[1]);
+                player.Hand.CurrentCards.Add(cardsOnBoard[2]);
+            }
             players[0].Hand.CurrentCards[0].IsFacingUp = true;
             players[0].Hand.CurrentCards[1].IsFacingUp = true;
         }

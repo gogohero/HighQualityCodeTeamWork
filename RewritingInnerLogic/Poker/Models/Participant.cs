@@ -8,6 +8,7 @@ namespace Poker
     using System.Windows.Forms;
 
     using Poker.Constants;
+    using Poker.Enumerations;
     using Poker.Interfaces;
     using Poker.TestingAlgorithms;
 
@@ -83,35 +84,49 @@ namespace Poker
             }
         }
 
-        public virtual void Call(int callAmount)
+        public virtual void Call(ref int currentHighestBet)
         {
-            this.Chips -= callAmount;
-            this.ChipsPlaced += callAmount;
+            this.Chips -= currentHighestBet;
+            this.ChipsPlaced += currentHighestBet;
             this.HasCalled = true;
-            this.Controls["StatusBox"].Text = "Called: " + callAmount;
+            this.Controls["StatusBox"].Text = "Called: " + currentHighestBet;
+            this.Controls["ChipsBox"].Text = this.Chips.ToString();
         }
 
-        public virtual void Raise(int raiseAmount)
+        public virtual void Raise(int raiseAmount, ref int currentHighestBet)
         {
-            this.Chips -= raiseAmount;
-            this.ChipsPlaced += raiseAmount;
+            if (raiseAmount > currentHighestBet)
+            {
+                currentHighestBet = raiseAmount;
+            }
+            this.Chips -= currentHighestBet;
+            this.ChipsPlaced += currentHighestBet;
             this.HasRaised = true;
             this.Controls["StatusBox"].Text = "Raised: " + raiseAmount;
+            this.Controls["ChipsBox"].Text = this.Chips.ToString();
         }
 
         public void Fold()
         {
             this.HasFolded = true;
             this.Hand.CurrentCards[0].PictureBox.Visible = false;
+            this.Hand.CurrentCards[0].PictureBox.Update();
             this.Hand.CurrentCards[1].PictureBox.Visible = false;
+            this.Hand.CurrentCards[1].PictureBox.Update();
+            this.Controls["StatusBox"].Text = "Folded";
         }
 
-        public virtual void AllIn()
+        public virtual void AllIn(ref int currentHighestBet)
         {
+            if (this.Chips > currentHighestBet)
+            {
+                currentHighestBet = this.Chips;
+            }
             this.Controls["StatusBox"].Text = "ALL IN!";
             this.IsAllIn = true;
             this.ChipsPlaced += this.Chips;
             this.Chips = 0;
+            this.Controls["ChipsBox"].Text = this.Chips.ToString();
         }
 
         public virtual void Check()
@@ -127,7 +142,8 @@ namespace Poker
             this.HasRaised = false;
         }
 
-        public abstract void PlayTurn();
+        public abstract void PlayTurn(ref int currentHighestBet, int playersNotFolded, bool canCheck, TurnParts currentPartOfTurn, Random randomBehavior);
+
 
         public virtual void SetFlagsForNewTurn()
         {

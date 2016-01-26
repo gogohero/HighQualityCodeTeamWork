@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -22,6 +23,8 @@
     public partial class PokerGameForm : Form
     {
         #region Variables
+
+        private Random randomBehavior = new Random();
 
         private int currentHighestBet;
 
@@ -131,6 +134,11 @@
         {
             this.DisableUserButtons();
 
+            this.currentHighestBet = this.bigBlind;
+
+            this.timer.Stop();
+            this.time = 60;
+
             this.CurrentTurnPart = TurnParts.Flop;
 
             this.CheckForEndOfGame();
@@ -139,15 +147,19 @@
 
             this.deck.Deal(this.players, this.cardsOnBoard);
 
+            this.timer.Start();
+
             if (this.players[0].IsInGame)
             {
                 this.EnableUserButtons();
             }
+
+            this.PostDealActions();
         }
 
         private void PostDealActions()
         {   
-            // Display changes to each card
+            // Display changes to each card to ensure correctness
             foreach (var card in this.deck.Cards)
             {
                 card.PictureBox.Update();
@@ -162,11 +174,13 @@
             {
                 card.IsFacingUp = false;
                 card.PictureBox.Visible = false;
+                card.PictureBox.Update();
             }
 
             foreach (var player in this.players)
             {
-                player.ResetFlags();
+                player.SetFlagsForNewTurn();
+                player.ChipsPlaced = 0;
                 player.Hand.CurrentCards.Clear();
             }
         }
@@ -207,14 +221,20 @@
                     winnersOutput.Remove(winnersOutput.Length - 3, 2);
                     winnersOutput.Append($"are tied for the pot and split {this.textBoxPot.Text}");
 
-                    MessageBox.Show(winnersOutput.ToString());
+                    Task showWinners = new Task(() => MessageBox.Show(winnersOutput.ToString()));
+                    showWinners.Start();
+                    showWinners.Wait();
                 }
                 else
                 {
                     IParticipant winner = this.players.Where(p => p.WinsRound).ToArray()[0];
                     winner.Chips += int.Parse(this.textBoxPot.Text);
 
-                    MessageBox.Show($"{winner.Name} wins the round with {winner.Hand.Strength}");
+                    Task showWinner =
+                        new Task(() => MessageBox.Show($"{winner.Name} wins the round with {winner.Hand.Strength}"));
+                    showWinner.Start();
+                    showWinner.Wait();
+
                 }
             }
         }
@@ -223,6 +243,15 @@
         {
             if (this.CurrentTurnPart == TurnParts.End && int.Parse(this.textBoxPot.Text) > 0)
             {
+                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard(this.players.Where(p => !p.HasFolded && p.IsInGame).ToArray());
+                foreach (var player in this.players)
+                {
+                    foreach (var currentCard in player.Hand.CurrentCards)
+                    {
+                        currentCard.IsFacingUp = true;
+                        currentCard.PictureBox.Update();
+                    }
+                }
                 this.ProcessRoundWinnings();
 
                 this.BeginRound();
@@ -240,35 +269,78 @@
                 {
                     if (!this.players[i].HasActed && this.players[i].IsInGame)
                     {
-                        Task showBotOnTurn = new Task(() =>
-                                            {
-                                                MessageBox.Show($"{this.players[i].Name}'s turn");
-                                            });
+                        Task showBotOnTurn = new Task(
+                            () =>
+                                {
+                                    MessageBox.Show($"{this.players[i].Name}'s turn");
+                                });
                         showBotOnTurn.Start();
 
-                        this.players[i].PlayTurn();
+                        bool anyoneActedNoCheck =
+                            this.players.Any(
+                                p => p.HasRaised || p.HasCalled || p.IsAllIn || this.CurrentTurnPart == TurnParts.Flop);
+
+                        this.players[i].PlayTurn(
+                            ref this.currentHighestBet,
+                            this.players.Count(p => !p.HasFolded),
+                            !anyoneActedNoCheck,
+                            this.CurrentTurnPart,
+                            this.randomBehavior);
                         if (this.players[i].HasRaised)
                         {
-                            this.players.Where(p => p != this.players[i]).ToList().ForEach(p => p.ResetFlags());
+                            for (int j = i - 1; j >= 0; j--)
+                            {
+                                this.players[j].ResetFlags();
+                            }
+                        }
+                        else if (this.players[i].HasCalled && this.players.Any(p => p.HasChecked))
+                        {
+                            foreach (var player in this.players.Where(p => p.HasChecked))
+                            {
+                                player.ResetFlags();
+                            }
                         }
                         showBotOnTurn.Wait();
                     }
+                    this.timer.Start();
                 }
-                foreach (var player in this.players)
+                if(this.players.ToList().TrueForAll(p => p.HasActed))
                 {
-                    player.ResetFlags();
-                }
-                this.timer.Start();
+                    foreach (var player in this.players)
+                    {
+                        player.ResetFlags();
+                    }
+                    this.CurrentTurnPart++;
+
+                    if (this.CurrentTurnPart == TurnParts.Turn)
+                    {
+                        foreach (var player in this.players)
+                        {
+                            this.cardsOnBoard[3].IsFacingUp = true;
+                            this.cardsOnBoard[3].PictureBox.Update();
+
+                            player.Hand.CurrentCards.Add(this.cardsOnBoard[3]);
+                        }
+                    }
+                    else if (this.CurrentTurnPart == TurnParts.River)
+                    {
+                        foreach (var player in this.players)
+                        {
+                            this.cardsOnBoard[4].IsFacingUp = true;
+                            this.cardsOnBoard[4].PictureBox.Update();
+
+                            player.Hand.CurrentCards.Add(this.cardsOnBoard[4]);
+                        }
+                    }
+                }             
             }
         }
 
         private void UpdateTick(object sender, object e)
         {
+            Debug.WriteLine(this.currentHighestBet);
+            Debug.WriteLine(this.CurrentTurnPart);
             this.Turns();
-            foreach (var player in this.players)
-            {
-                player.Controls["ChipsBox"].Text = $"{player.Name} Chips: {player.Chips}";
-            }
 
             int potValue = this.players.Sum(player => player.ChipsPlaced);
 
@@ -289,6 +361,8 @@
             }
         }
 
+        // enable and disable UI buttons
+        // -----------------------------
         private void DisableUserButtons()
         {
             this.buttonCall.Enabled = false;
@@ -305,6 +379,8 @@
             this.buttonRaise.Enabled = true;
         }
 
+        // button methods/events added by default from win forms
+        // -----------------------------------------------------
         private void ButtonFoldClick(object sender, EventArgs e)
         {
             this.players[0].Fold();
@@ -320,11 +396,11 @@
         {
             if (this.players[0].Chips > this.currentHighestBet)
             {
-                this.players[0].Call(this.currentHighestBet);
+                this.players[0].Call(ref this.currentHighestBet);
             }
             else
             {
-                this.players[0].AllIn();
+                this.players[0].AllIn(ref this.currentHighestBet);
                 this.DisableUserButtons();
             }
         }
@@ -345,12 +421,11 @@
             {
                 if (this.players[0].Chips > raiseValue)
                 {
-                    this.players[0].Raise(int.Parse(this.textBoxRaise.Text));
-                    this.currentHighestBet = int.Parse(this.textBoxRaise.Text);
+                    this.players[0].Raise(int.Parse(this.textBoxRaise.Text), ref this.currentHighestBet);
                 }
                 else
                 {
-                    this.players[0].AllIn();
+                    this.players[0].AllIn(ref this.currentHighestBet);
                     this.DisableUserButtons();
                 }
             }

@@ -1,9 +1,12 @@
 ﻿namespace Poker.Interfaces
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Threading.Tasks;
     using System.Windows.Forms;
+
+    using Poker.Enumerations;
 
     public interface IParticipant
     {
@@ -37,18 +40,18 @@
 
         void ResetFlags();
 
-        void PlayTurn();
+        void PlayTurn(ref int currentHighestBet, int playersNotFolded, bool canCheck, TurnParts currentPartOfTurn, Random randomBehavior);
 
         void SetFlagsForNewTurn();
 
         void Check();
 
-        void Call(int callAmount);
+        void Call(ref int currentHighestBet);
 
-        void Raise(int raiseAmount);
+        void Raise(int raiseAmount, ref int currentHighestBet);
 
         void Fold();
 
-        void AllIn();
+        void AllIn(ref int currentHighestBet);
     }
 }
