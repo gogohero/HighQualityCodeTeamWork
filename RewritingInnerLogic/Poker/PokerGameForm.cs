@@ -247,19 +247,33 @@
                 this.BeginRound();
             }
 
-            if (this.players[0].HasActed)
+            if (this.players[0].HasActed || !this.players[0].IsInGame)
             {
+                this.timer.Stop();
+                this.time = 60;
                 for (int i = 1; i < this.players.Length; i++)
                 {
-                    if (this.players[i].HasActed)
+                    if (!this.players[i].HasActed && this.players[i].IsInGame)
                     {
+                        Task showBotOnTurn = new Task(() =>
+                                            {
+                                                MessageBox.Show($"{this.players[i].Name}'s turn");
+                                            });
+                        showBotOnTurn.Start();
+
                         this.players[i].PlayTurn();
                         if (this.players[i].HasRaised)
                         {
                             this.players.Where(p => p != this.players[i]).ToList().ForEach(p => p.ResetFlags());
                         }
-                    }              
+                        showBotOnTurn.Wait();
+                    }
                 }
+                foreach (var player in this.players)
+                {
+                    player.ResetFlags();
+                }
+                this.timer.Start();
             }
         }
 
@@ -270,6 +284,10 @@
             {
                 player.Controls["ChipsBox"].Text = $"{player.Name} Chips: {player.Chips}";
             }
+
+            int potValue = this.players.Sum(player => player.ChipsPlaced);
+
+            this.textBoxPot.Text = potValue.ToString();
         }
 
         private void TimerTick(object sender, object e)
@@ -282,7 +300,7 @@
             if (this.time > 0)
             {
                 this.time -= 0.2M;
-                this.progressBarTimer.Value -= 1;
+                this.progressBarTimer.Value = (int)(this.time * 5);
             }
         }
 
@@ -324,10 +342,6 @@
                 this.players[0].AllIn();
                 this.DisableUserButtons();
             }
-
-            int potValue = this.players.Sum(player => player.ChipsPlaced);
-
-            this.textBoxPot.Text = potValue.ToString();
         }
 
         private void ButtonRaiseClick(object sender, EventArgs e)
@@ -360,10 +374,6 @@
                 MessageBox.Show("Raise amount must be twice as big as the current highest bet!");
                 this.textBoxRaise.Text = (this.currentHighestBet * 2).ToString();
             }
-
-            int potValue = this.players.Sum(player => player.ChipsPlaced);
-
-            this.textBoxPot.Text = potValue.ToString();
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
