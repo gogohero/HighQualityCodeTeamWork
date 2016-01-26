@@ -62,7 +62,7 @@
 
             this.currentHighestBet = this.bigBlind;
 
-            this.CurrentTurnPart = TurnParts.End;
+            this.CurrentTurnPart = TurnParts.BeginGame;
         }
 
         private void InitializeControls()
@@ -140,6 +140,8 @@
             this.time = 60;
 
             this.CurrentTurnPart = TurnParts.Flop;
+
+            this.currentHighestBet = this.bigBlind;
 
             this.CheckForEndOfGame();
 
@@ -227,20 +229,29 @@
                 }
                 else
                 {
-                    IParticipant winner = this.players.Where(p => p.WinsRound).ToArray()[0];
-                    winner.Chips += int.Parse(this.textBoxPot.Text);
-
+                    int winnerIndex = 0;
+                    for (int i = 0; i < this.players.Length; i++)
+                    {
+                        if (this.players[i].WinsRound)
+                        {
+                            winnerIndex = i;
+                        }
+                    }
+                    this.players[winnerIndex].Chips += potSplit;
                     Task showWinner =
-                        new Task(() => MessageBox.Show($"{winner.Name} wins the round with {winner.Hand.Strength}"));
+                        new Task(() => MessageBox.Show($"{this.players[winnerIndex].Name} wins the round with {this.players[winnerIndex].Hand.Strength}"));
                     showWinner.Start();
                     showWinner.Wait();
-
                 }
-            }
+            }        
         }
 
         private void Turns()
         {
+            if (this.CurrentTurnPart == TurnParts.BeginGame)
+            {
+                this.BeginRound();
+            }
             if (this.CurrentTurnPart == TurnParts.End && int.Parse(this.textBoxPot.Text) > 0)
             {
                 CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard(this.players.Where(p => !p.HasFolded && p.IsInGame).ToArray());
@@ -256,12 +267,20 @@
 
                 this.BeginRound();
             }
-            else if (this.CurrentTurnPart == TurnParts.End)
+            else if (this.players.Count(p => p.HasFolded) ==
+                5 - this.players.Count(p => !p.IsInGame || p.IsAllIn))
             {
+                int pot = int.Parse(this.textBoxPot.Text);
+                this.players.First(p => !p.HasFolded && p.IsInGame).Chips += pot;
+                Task showWinner =
+                        new Task(() => MessageBox.Show($"{this.players.First(p => !p.HasFolded && p.IsInGame).Name} wins the round and takes {pot} chips"));
+                showWinner.Start();
+                showWinner.Wait();
+
                 this.BeginRound();
             }
 
-            if (this.players[0].HasActed || !this.players[0].IsInGame)
+            if (this.players[0].HasActed)
             {
                 this.timer.Stop();
                 this.time = 60;
@@ -292,14 +311,23 @@
                             {
                                 this.players[j].ResetFlags();
                             }
+                            foreach (var player in this.players.Where(p => p.HasChecked))
+                            {
+                                player.ResetFlags();
+                            }
                         }
-                        else if (this.players[i].HasCalled && this.players.Any(p => p.HasChecked))
+                        else if (this.players[i].HasCalled)
                         {
                             foreach (var player in this.players.Where(p => p.HasChecked))
                             {
                                 player.ResetFlags();
                             }
                         }
+
+                        int potValue = this.players.Sum(player => player.ChipsPlaced);
+
+                        this.textBoxPot.Text = potValue.ToString();
+
                         showBotOnTurn.Wait();
                     }
                     this.timer.Start();
@@ -342,9 +370,10 @@
             Debug.WriteLine(this.CurrentTurnPart);
             this.Turns();
 
-            int potValue = this.players.Sum(player => player.ChipsPlaced);
-
-            this.textBoxPot.Text = potValue.ToString();
+            foreach (var player in this.players)
+            {
+                player.Controls["ChipsBox"].Text = $"{player.Name} Chips: {player.Chips}";
+            }         
         }
 
         private void TimerTick(object sender, object e)
@@ -421,7 +450,8 @@
             {
                 if (this.players[0].Chips > raiseValue)
                 {
-                    this.players[0].Raise(int.Parse(this.textBoxRaise.Text), ref this.currentHighestBet);
+                    this.players[0].Raise(int.Parse(this.textBoxRaise.Text),
+                                                    ref this.currentHighestBet);
                 }
                 else
                 {

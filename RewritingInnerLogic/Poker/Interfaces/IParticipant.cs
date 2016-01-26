@@ -16,6 +16,8 @@
 
         int ChipsPlaced { get; set; }
 
+        int PreviouslyCalled { get; set; }
+
         IHand Hand { get; set; }
 
         Dictionary<string, Control> Controls { get; set; }

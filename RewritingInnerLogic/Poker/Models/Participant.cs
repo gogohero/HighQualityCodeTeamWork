@@ -18,6 +18,8 @@ namespace Poker
 
         private int chipsPlaced;
 
+        private int previouslyCalled;
+
         protected Participant(string name, int placeOnBoard)
         {
             this.Chips = StartingChips;
@@ -33,6 +35,22 @@ namespace Poker
         public string Name { get; set; }
 
         public int Chips { get; set; }
+
+        public int PreviouslyCalled {
+            get
+            {
+                return this.previouslyCalled;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Previously called value cannot be negative");
+                }
+
+                this.previouslyCalled = value;
+            }
+        }
 
         public IHand Hand { get; set; }
 
@@ -86,28 +104,58 @@ namespace Poker
 
         public virtual void Call(ref int currentHighestBet)
         {
-            this.Chips -= currentHighestBet;
-            this.ChipsPlaced += currentHighestBet;
-            this.HasCalled = true;
-            this.Controls["StatusBox"].Text = "Called: " + currentHighestBet;
-            this.Controls["ChipsBox"].Text = this.Chips.ToString();
+            if (this.Chips > currentHighestBet)
+            {
+                this.ResetFlags();
+                this.Chips -= currentHighestBet;
+                this.ChipsPlaced += currentHighestBet;
+                this.HasCalled = true;
+                this.Controls["StatusBox"].Text = "Called: " + currentHighestBet;
+                this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
+                this.previouslyCalled = currentHighestBet;
+            }
+            else
+            {
+                this.ResetFlags();
+                this.ChipsPlaced += this.Chips;
+                this.Chips = 0;
+                this.IsAllIn = true;
+                this.Controls["StatusBox"].Text = "ALL IN!";
+                this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
+            }
         }
 
         public virtual void Raise(int raiseAmount, ref int currentHighestBet)
         {
             if (raiseAmount > currentHighestBet)
             {
-                currentHighestBet = raiseAmount;
+                raiseAmount -= currentHighestBet;
+                currentHighestBet += raiseAmount;
+
+                if (this.Chips > currentHighestBet)
+                {
+                    this.ResetFlags();
+                    this.Chips -= currentHighestBet;
+                    this.ChipsPlaced += currentHighestBet;
+                    this.HasRaised = true;
+                    this.Controls["StatusBox"].Text = "Raised: " + raiseAmount;
+                    this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
+                }
+                else
+                {
+                    this.ResetFlags();
+                    this.ChipsPlaced += this.Chips;
+                    this.Chips = 0;
+                    this.IsAllIn = true;
+                    this.Controls["StatusBox"].Text = "ALL IN!";
+                    this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
+                }
             }
-            this.Chips -= currentHighestBet;
-            this.ChipsPlaced += currentHighestBet;
-            this.HasRaised = true;
-            this.Controls["StatusBox"].Text = "Raised: " + raiseAmount;
-            this.Controls["ChipsBox"].Text = this.Chips.ToString();
         }
 
         public void Fold()
         {
+            this.ResetFlags();
             this.HasFolded = true;
             this.Hand.CurrentCards[0].PictureBox.Visible = false;
             this.Hand.CurrentCards[0].PictureBox.Update();
@@ -131,6 +179,7 @@ namespace Poker
 
         public virtual void Check()
         {
+            this.ResetFlags();
             this.HasChecked = true;
             this.Controls["StatusBox"].Text = "Checked";
         }

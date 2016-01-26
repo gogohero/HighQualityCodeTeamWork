@@ -26,7 +26,7 @@ namespace Poker.Models
             {
                 this.Raise(currentHighestBet*2, ref currentHighestBet);
             }
-            else if (this.CheckShouldCall(currentHighestBet, playersNotFolded, turnPartFactor, feelingLucky, bluff))
+            else if (this.CheckShouldCall(currentHighestBet, playersNotFolded, turnPartFactor, feelingLucky,                                                                            bluff))
             {
                 this.Call(ref currentHighestBet);
             }
@@ -42,7 +42,7 @@ namespace Poker.Models
 
         private bool CheckShouldRaise(int currentHighestBet, int playersNotFolded, int turnPartFactor, int feelingLucky, int bluff)
         {
-            if (currentHighestBet * 3 < this.Chips)
+            if ((currentHighestBet) * 2 < this.Chips)
             {
                 if (((int)this.Hand.Strength + feelingLucky + turnPartFactor) + (playersNotFolded * 10) > 200)
                 {
@@ -54,7 +54,7 @@ namespace Poker.Models
 
         private bool CheckShouldCall(int currentHighestBet, int playersNotFolded, int turnPartFactor, int feelingLucky, int bluff)
         {
-            if (currentHighestBet * 2 < this.Chips)
+            if ((currentHighestBet) * 2 < this.Chips)
             {
                 if (((int)this.Hand.Strength + feelingLucky + turnPartFactor) + (playersNotFolded * 10) > 130)
                 {
