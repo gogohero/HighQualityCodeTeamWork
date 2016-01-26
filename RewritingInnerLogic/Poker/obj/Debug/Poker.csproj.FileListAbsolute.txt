@@ -51,3 +51,11 @@ E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.AddChips.resources
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache

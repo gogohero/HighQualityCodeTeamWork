@@ -22,3 +22,10 @@ E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tes
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.csprojResolveAssemblyReference.cache
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.dll
 E:\VS projects\abrakadabra\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.pdb
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.Tests.dll
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.Tests.pdb
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.exe
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.pdb
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.csprojResolveAssemblyReference.cache
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.dll
+D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.pdb

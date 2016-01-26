@@ -16,21 +16,21 @@
             this.Cards = this.InitializeDeck();
         }
     
-        public ICard[] Cards { get; }
-
+        public ICard[] Cards { get; set; }
+        /// <summary>
+        /// Shuffle the deck with Fisher-Yates shuffle algorithm
+        /// </summary>
         private void Shuffle()
         {
-            // Fisher-Yates shuffle
-            // one of the most popular mathematically correct shuffle methods
             Random rnd = new Random();
-            int n = this.Cards.Length;
-            while (n > 1)
+            int CardsLength = this.Cards.Length;
+            while (CardsLength > 1)
             {
-                n--;
-                int k = rnd.Next(n + 1);
-                ICard value = this.Cards[k];
-                this.Cards[k] = this.Cards[n];
-                this.Cards[n] = value;
+                CardsLength--;
+                int nextCard = rnd.Next(CardsLength + 1);
+                ICard value = this.Cards[nextCard];
+                this.Cards[nextCard] = this.Cards[CardsLength];
+                this.Cards[CardsLength] = value;
             }
         }
 

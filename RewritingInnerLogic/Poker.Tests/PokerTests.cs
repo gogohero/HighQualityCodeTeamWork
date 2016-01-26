@@ -13,6 +13,25 @@ namespace Poker.Tests
     public class PokerTests
     {
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Testing_Card_Rank_Exception()
+        {
+            ICard card1 = new Card(33, 'S');
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Test_Card_Suit_Exeption()
+        {
+            ICard card = new Card(12, 'M');
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Test_Card_Suit_Letter_Case_Exeption()
+        {
+            ICard card = new Card(12, 's');
+        }
+
+        [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_FourOfAKind_ShouldPass()
         {
             ICard aceOfSpades = new Card(12, 'S');
@@ -340,6 +359,20 @@ namespace Poker.Tests
             CardPowerCalculator.GetCurrentStrengthOfCards(hand);
             Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
         }
+        [TestMethod]
+        public void TestingAlgorithm_Calculate_HighCardPower_2()
+        {
+            ICard card1 = new Card(4, 'H');
+            ICard card2 = new Card(7, 'S');
+            ICard card3 = new Card(6, 'S');
+            ICard card4 = new Card(2, 'S');
+            ICard card5 = new Card(3, 'S');
+            IHand hand = new Hand();
+            IList<ICard> combination = new List<ICard>() { card1, card2, card3, card4, card5 };
+            hand.CurrentCards = combination;
+            CardPowerCalculator.GetCurrentStrengthOfCards(hand);
+            Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
+        }
 
         [TestMethod]
         public void TestingAlgorithm_Check_Deck_InitializesCardsCorrectly_ShouldPass()
@@ -347,6 +380,21 @@ namespace Poker.Tests
             IDeck deck = new Deck();
             int differentCardsCounter = deck.Cards.Count(card => deck.Cards.Count(c => c.Rank == card.Rank && c.Suit == card.Suit) == 1);
             Assert.AreEqual(52, differentCardsCounter);
+        }
+
+        [TestMethod]
+        public void TestDeck_Length()
+        {
+            Deck deck = new Deck();
+            Assert.AreEqual(deck.Cards.Length, 51);
+        }
+
+        [TestMethod]
+        public void Test_Deck_Suffle_Randomness()
+        {
+            Deck one = new Deck();
+            Deck two = new Deck();
+            Assert.AreNotEqual(two.Cards[2],one.Cards[2]);
         }
     }
 }
