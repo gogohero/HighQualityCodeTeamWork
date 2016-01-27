@@ -26,6 +26,18 @@ namespace Poker.Constants
         /// </summary>
         public const int StartingSmallBlind = 250;
 
+        public const string RaiseText = "Raised - ";
+
+        public const string CallText = "Called - ";
+
+        public const string CheckText = "Checked";
+
+        public const string AllInText = "ALL IN!";
+
+        public const string FoldText = "Folded";
+
+        public const string OutOfChipsText = "Out of chips";
+
         public static int BigBlind = StartingBigBlind;
 
         public static int SmallBlind = StartingSmallBlind;
@@ -49,17 +61,5 @@ namespace Poker.Constants
         public static Point Bot4PlaceOnBoard = new Point(780, 130);
 
         public static Point Bot5PlaceOnBoard = new Point(780, 280);
-
-        public const string RaiseText = "Raised - ";
-
-        public const string CallText = "Called - ";
-
-        public const string CheckText = "Checked";
-
-        public const string AllInText = "ALL IN!";
-
-        public const string FoldText = "Folded";
-
-        public const string OutOfChipsText = "Out of chips";
     }
 }

@@ -593,6 +593,14 @@
 
         private void LayoutChange(object sender, LayoutEventArgs e)
         {
+            if (this.players != null)
+            {
+                if (this.players[0].Chips <= GlobalConstants.CurrentHighestBet * 2)
+                {
+                    this.buttonRaise.Text = "All In";
+                    this.buttonRaise.Update();
+                }
+            }
         }
 
         private void PokerGameForm_Load(object sender, EventArgs e)
