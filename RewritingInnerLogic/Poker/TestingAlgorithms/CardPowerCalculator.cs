@@ -38,7 +38,7 @@
             IList<ICard> cards = participantVisibleHand.CurrentCards;
 
             // ---------------------------------------------------------
-            // check for straigth, flush, straigth flush and royal flush
+            // check for straight, flush, straight flush and royal flush
 
             cards = cards.OrderBy(c => c.Rank).ToList();
             int sequentialCards = 0;
@@ -109,7 +109,7 @@
                 }
             }
 
-            // royal flush check -> if not check straight flush -> if not check flush -> if not check straigth
+            // royal flush check -> if not check straight flush -> if not check flush -> if not check straight
             if (sequentialCards >= 5 && sameSuites >= 5)
             {
                 if (highestInSequenceWithoutPairs.Rank == 12)

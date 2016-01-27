@@ -46,7 +46,7 @@
             this.bOptions = new System.Windows.Forms.Button();
             this.buttonBigBlind = new System.Windows.Forms.Button();
             this.textBoxSmallBlind = new System.Windows.Forms.TextBox();
-            this.buttoneSmallBlind = new System.Windows.Forms.Button();
+            this.buttonSmallBlind = new System.Windows.Forms.Button();
             this.textBoxBigBlind = new System.Windows.Forms.TextBox();
             this.bot5Status = new System.Windows.Forms.Label();
             this.bot4Status = new System.Windows.Forms.Label();
@@ -82,7 +82,7 @@
             this.buttonCheck.TabIndex = 2;
             this.buttonCheck.Text = "Check";
             this.buttonCheck.UseVisualStyleBackColor = true;
-            this.buttonCheck.Click += new System.EventHandler(this.ButonCheckClick);
+            this.buttonCheck.Click += new System.EventHandler(this.ButtonCallClick);
             // 
             // buttonCall
             // 
@@ -251,16 +251,16 @@
             this.textBoxSmallBlind.TabIndex = 17;
             this.textBoxSmallBlind.Text = "250";
             // 
-            // buttoneSmallBlind
+            // buttonSmallBlind
             // 
-            this.buttoneSmallBlind.Location = new System.Drawing.Point(16, 122);
-            this.buttoneSmallBlind.Margin = new System.Windows.Forms.Padding(4);
-            this.buttoneSmallBlind.Name = "buttoneSmallBlind";
-            this.buttoneSmallBlind.Size = new System.Drawing.Size(100, 28);
-            this.buttoneSmallBlind.TabIndex = 18;
-            this.buttoneSmallBlind.Text = "Small Blind";
-            this.buttoneSmallBlind.UseVisualStyleBackColor = true;
-            this.buttoneSmallBlind.Click += new System.EventHandler(this.ButtonSmallBlindClick);
+            this.buttonSmallBlind.Location = new System.Drawing.Point(16, 122);
+            this.buttonSmallBlind.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonSmallBlind.Name = "buttonSmallBlind";
+            this.buttonSmallBlind.Size = new System.Drawing.Size(100, 28);
+            this.buttonSmallBlind.TabIndex = 18;
+            this.buttonSmallBlind.Text = "Small Blind";
+            this.buttonSmallBlind.UseVisualStyleBackColor = true;
+            this.buttonSmallBlind.Click += new System.EventHandler(this.ButtonSmallBlindClick);
             // 
             // textBoxBigBlind
             // 
@@ -360,7 +360,7 @@
             this.Controls.Add(this.bot4Status);
             this.Controls.Add(this.bot5Status);
             this.Controls.Add(this.textBoxBigBlind);
-            this.Controls.Add(this.buttoneSmallBlind);
+            this.Controls.Add(this.buttonSmallBlind);
             this.Controls.Add(this.textBoxSmallBlind);
             this.Controls.Add(this.buttonBigBlind);
             this.Controls.Add(this.bOptions);
@@ -408,7 +408,7 @@
     private System.Windows.Forms.Button bOptions;
     private System.Windows.Forms.Button buttonBigBlind;
     private System.Windows.Forms.TextBox textBoxSmallBlind;
-    private System.Windows.Forms.Button buttoneSmallBlind;
+    private System.Windows.Forms.Button buttonSmallBlind;
     private System.Windows.Forms.TextBox textBoxBigBlind;
     private System.Windows.Forms.Label bot5Status;
     private System.Windows.Forms.Label bot4Status;

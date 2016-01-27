@@ -80,7 +80,7 @@
             this.textBoxBigBlind.Visible = false;
             this.textBoxSmallBlind.Visible = false;
             this.buttonBigBlind.Visible = false;
-            this.buttoneSmallBlind.Visible = false;
+            this.buttonSmallBlind.Visible = false;
 
             this.timer.Interval = 200;
             this.timer.Tick += this.TimerTick;
@@ -106,7 +106,7 @@
         {
             this.players = new Participant[6];
             // Assigning players
-            this.players[0] = new Player("Gosho", 1);
+            this.players[0] = new Player("Player", 1);
             this.players[1] = new Bot("Bot 1", 2);
             this.players[2] = new Bot("Bot 2", 3);
             this.players[3] = new Bot("Bot 3", 4);
@@ -416,7 +416,7 @@
             this.DisableUserButtons();
         }
 
-        private void ButonCheckClick(object sender, EventArgs e)
+        private void ButtonCheckClick(object sender, EventArgs e)
         {
             this.players[0].Check();
         }
@@ -504,14 +504,14 @@
                 this.textBoxBigBlind.Visible = true;
                 this.textBoxSmallBlind.Visible = true;
                 this.buttonBigBlind.Visible = true;
-                this.buttoneSmallBlind.Visible = true;
+                this.buttonSmallBlind.Visible = true;
             }
             else
             {
                 this.textBoxBigBlind.Visible = false;
                 this.textBoxSmallBlind.Visible = false;
                 this.buttonBigBlind.Visible = false;
-                this.buttoneSmallBlind.Visible = false;
+                this.buttonSmallBlind.Visible = false;
             }
         }
 

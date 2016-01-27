@@ -20,13 +20,13 @@ namespace Poker.Tests
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Test_Card_Suit_Exeption()
+        public void Test_Card_Suit_Exception()
         {
             ICard card = new Card(12, 'M');
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Test_Card_Suit_Letter_Case_Exeption()
+        public void Test_Card_Suit_Letter_Case_Exception()
         {
             ICard card = new Card(12, 's');
         }
@@ -151,7 +151,7 @@ namespace Poker.Tests
         }
 
         [TestMethod]
-        public void TestingAlgorithm_Calculate_Card_Power_Straigth_ShouldPass()
+        public void TestingAlgorithm_Calculate_Card_Power_Straight_ShouldPass()
         {
             ICard card1 = new Card(12, 'S');
             ICard card2 = new Card(11, 'C');
@@ -181,7 +181,7 @@ namespace Poker.Tests
         }
 
         [TestMethod]
-        public void TestingAlgorithm_Calculate_Card_Power_StraigthFlush_ShouldPass()
+        public void TestingAlgorithm_Calculate_Card_Power_StraightFlush_ShouldPass()
         {
             ICard card1 = new Card(11, 'S');
             ICard card2 = new Card(10, 'S');
@@ -286,7 +286,7 @@ namespace Poker.Tests
         }
 
         [TestMethod]
-        public void TestingAlgorithm_Calculate_HighCard_Straigth_ShouldPass()
+        public void TestingAlgorithm_Calculate_HighCard_Straight_ShouldPass()
         {
             ICard card1 = new Card(11, 'S');
             ICard card2 = new Card(12, 'D');
@@ -301,7 +301,7 @@ namespace Poker.Tests
         }
 
         [TestMethod]
-        public void TestingAlgorithm_Calculate_HighCard_StraigthFlush_ShouldPass()
+        public void TestingAlgorithm_Calculate_HighCard_StraightFlush_ShouldPass()
         {
             ICard card1 = new Card(11, 'S');
             ICard card2 = new Card(7, 'S');
@@ -390,7 +390,7 @@ namespace Poker.Tests
         }
 
         [TestMethod]
-        public void Test_Deck_Suffle_Randomness()
+        public void Test_Deck_Shuffle_Randomness()
         {
             Deck one = new Deck();
             Deck two = new Deck();

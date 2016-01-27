@@ -59,3 +59,6 @@ D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\P
 D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
 D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
 D:\C#\QualityProgrammingCode\Krasinewpoker\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
+C:\Users\Jani\Desktop\Project\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
+C:\Users\Jani\Desktop\Project\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
+C:\Users\Jani\Desktop\Project\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb

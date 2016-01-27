@@ -26,7 +26,7 @@ namespace Poker
             int parsedValue;
             if (int.Parse(textBox1.Text) > 100000000)
             {
-                MessageBox.Show("The maximium chips you can add is 100000000");
+                MessageBox.Show("The maximum chips you can add is 100000000");
                 return;
             }
             if (!int.TryParse(textBox1.Text, out parsedValue))
