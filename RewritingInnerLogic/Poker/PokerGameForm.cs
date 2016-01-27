@@ -5,38 +5,30 @@ namespace Poker
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Drawing;
-    using System.IO;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
-    using Poker.Constants;
     using Poker.Enumerations;
     using Poker.Interfaces;
-    using Poker.Models;
-    using Poker.TestingAlgorithms;
+    using Poker.Models.Cards;
+    using Poker.Models.Entities;
+    using Poker.PowerCalculator;
 
     using Timer = System.Windows.Forms.Timer;
 
     public partial class PokerGameForm : Form
     {
-        #region Variables
-
-        private IList<IParticipant> players;
-
-        private IDeck deck;
-
-        private ICard[] cardsOnBoard;
+        private readonly ICard[] cardsOnBoard;
 
         readonly Timer timer = new Timer();
 
         readonly Timer Updates = new Timer();
 
-        #endregion
+        private IList<IParticipant> players;
+
+        private IDeck deck;
 
         public PokerGameForm()
         {
@@ -120,18 +112,17 @@ namespace Poker
 
         private void BeginRound()
         {
-            this.DisableUserButtons();
-
-            this.UpdateTextBoxes();
-
-
-            this.timer.Stop();
-
             GlobalVariables.CurrentHighestBet = GlobalVariables.BigBlind;
 
             GlobalVariables.TimeForPlayerTurn = 60M;
 
             GlobalVariables.CurrentTurnPart = TurnParts.Flop;
+
+            this.DisableUserButtons();
+
+            this.UpdateTextBoxes();
+
+            this.timer.Stop();
 
             this.CheckForEndOfGame();
 
@@ -222,7 +213,7 @@ namespace Poker
                         winnersOutput.Append($"{player.Name}, ");
                     }
 
-                    winnersOutput.Remove(winnersOutput.Length - 3, 2);
+                    winnersOutput.Remove(winnersOutput.Length - 2, 2);
                     winnersOutput.Append($"are tied for the pot and split {this.textBoxPot.Text}");
 
                     Task showWinners = new Task(() => MessageBox.Show(winnersOutput.ToString()));
@@ -256,7 +247,9 @@ namespace Poker
             }
             if (GlobalVariables.CurrentTurnPart == TurnParts.End && int.Parse(this.textBoxPot.Text) > 0)
             {
-                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard(this.players.Where(p => !p.HasFolded).ToArray());
+                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard
+                    (this.players.Where(p => !p.HasFolded 
+                     || p.IsAllIn).ToArray());
                 foreach (var player in this.players)
                 {
                     foreach (var currentCard in player.Hand.CurrentCards)
@@ -269,15 +262,22 @@ namespace Poker
 
                 this.BeginRound();
             }
-            else if (this.players.Count(p => p.HasFolded) == 5)
+            else if (this.players.Count == this.players.Count(p => p.HasFolded || !p.IsInGame || p.IsAllIn))
             {
-                int pot = int.Parse(this.textBoxPot.Text);
-                this.players.First(p => !p.HasFolded).Chips += pot;
-                Task showWinner =
-                        new Task(() => MessageBox.Show($"{this.players.First(p => !p.HasFolded && p.IsInGame).Name} wins the round and takes {pot} chips"));
-                showWinner.Start();
-                showWinner.Wait();
+                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard
+                    (this.players.Where(p => !p.HasFolded
+                     || p.IsAllIn).ToArray());
 
+                foreach (var player in this.players)
+                {
+                    foreach (var currentCard in player.Hand.CurrentCards)
+                    {
+                        currentCard.IsFacingUp = true;
+                        currentCard.PictureBox.Update();
+                    }
+                }
+                
+                this.ProcessRoundWinnings();
                 this.BeginRound();
             }
 
@@ -314,13 +314,12 @@ namespace Poker
 
                         if (this.players[i].HasRaised)
                         {
-                            for (int j = i - 1; j >= 0; j--)
+                            for (int j = 0; j < this.players.Count; j++)
                             {
-                                this.players[j].ResetFlags();
-                            }
-                            foreach (var player in this.players.Where(p => p.HasChecked))
-                            {
-                                player.ResetFlags();
+                                if (j != i)
+                                {
+                                    this.players[j].ResetFlags();
+                                }                           
                             }
                         }
                         else if (this.players[i].HasCalled)
@@ -334,6 +333,7 @@ namespace Poker
                         int potValue = this.players.Sum(player => player.ChipsPlaced);
 
                         this.textBoxPot.Text = potValue.ToString();
+                        this.textBoxPot.Update();
 
                         showBotOnTurn.Wait();
                     }
@@ -351,6 +351,7 @@ namespace Poker
                     {
                         foreach (var player in this.players)
                         {
+                            player.PreviouslyCalled = 0;
                             this.cardsOnBoard[3].IsFacingUp = true;
                             this.cardsOnBoard[3].PictureBox.Update();
 

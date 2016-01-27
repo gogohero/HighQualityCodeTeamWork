@@ -6,12 +6,9 @@
 // *******************************************************************************
 namespace Poker.Interfaces
 {
-    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
-
-    using Poker.Enumerations;
 
     /// <summary>
     /// Interface IParticipant

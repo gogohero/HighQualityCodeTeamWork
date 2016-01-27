@@ -1,7 +1,8 @@
 ﻿namespace Poker.Interfaces
 {
     using System.Collections.Generic;
-    using Poker.TestingAlgorithms;
+
+    using Poker.Enumerations;
 
     /// <summary>
     /// Interface IHand
@@ -13,6 +14,11 @@
         /// </summary>
         /// <value>The high card.</value>
         ICard HighCard { get; set; }
+
+        /// <summary>
+        /// Gets or sets the kicker which is used to determine the winner in some special cases.
+        /// </summary>
+        ICard Kicker { get; set; }
 
         /// <summary>
         /// Gets or sets the current cards at the hand.

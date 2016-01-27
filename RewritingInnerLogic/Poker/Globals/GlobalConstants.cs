@@ -1,11 +1,6 @@
 ﻿
-namespace Poker.Constants
+namespace Poker.Globals
 {
-    using System;
-    using System.Drawing;
-
-    using Poker.Enumerations;
-
     /// <summary>
     /// The class who initialize global constants for starting chips and blinds.
     /// </summary>

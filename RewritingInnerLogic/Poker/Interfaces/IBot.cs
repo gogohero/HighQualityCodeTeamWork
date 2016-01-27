@@ -1,9 +1,12 @@
 ﻿namespace Poker.Interfaces
 {
     using System;
-
     using Poker.Enumerations;
 
+    /// <summary>
+    /// Interface that every bot should implement. Inherits IParticipant to gain basic functionality. 
+    /// Adds play turn method which makes calculations and decides how the bot will play his turn.
+    /// </summary>
     public interface IBot : IParticipant
     {
         /// <summary>

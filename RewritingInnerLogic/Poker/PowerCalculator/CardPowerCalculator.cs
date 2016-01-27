@@ -1,14 +1,21 @@
-﻿namespace Poker.TestingAlgorithms
+﻿
+namespace Poker.PowerCalculator
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
-    using Interfaces;
+    using Poker.Enumerations;
+    using Poker.Interfaces;
+    using Poker.Models.Cards;
 
     public static class CardPowerCalculator
     {
+        /// <summary>
+        /// A method that compares the strength of cards in each player hands and decides which player(s) win
+        /// </summary>
+        /// <param name="players">A collection implementing the IList interface of the players on board, 
+        /// from which the method will pick the winner(s)</param>
         public static void CompareAllSetsOfCardsOnTheBoard(IList<IParticipant> players) 
         {
             foreach (var player in players.Where(p => !p.HasFolded))
@@ -22,7 +29,7 @@
                 {
                     player.WinsRound = false;
                 }
-                else if (players.Where(p => p.Hand.Strength == player.Hand.Strength).Any(p => p.Hand.HighCard.Rank < player.Hand.HighCard.Rank))
+                else if (players.Where(p => p.Hand.Strength == player.Hand.Strength).Any(p => p.Hand.HighCard.Rank > player.Hand.HighCard.Rank))
                 {
                     player.WinsRound = false;
                 }
@@ -32,8 +39,12 @@
                 }
             }
         }
-
-        // method for setting the strength of any participant current visible hand (his cards in hand + facing up cards from the board)
+     
+        /// <summary>
+        /// A method that does calculations and decides what is the strength of the hand that a single player has
+        /// </summary>
+        /// <param name="participantVisibleHand">The hand of cards for a single player 
+        /// implementing the IHand interface</param>
         public static void GetCurrentStrengthOfCards(IHand participantVisibleHand)
         {
             IList<ICard> cards = participantVisibleHand.CurrentCards;

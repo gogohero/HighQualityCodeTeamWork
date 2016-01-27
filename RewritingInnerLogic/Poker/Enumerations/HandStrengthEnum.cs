@@ -1,4 +1,4 @@
-﻿namespace Poker.TestingAlgorithms
+﻿namespace Poker.Enumerations
 {
     /// <summary>
     /// Enumeration for the strengths of hands

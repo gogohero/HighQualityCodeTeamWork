@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Poker.Constants;
+
 using Poker.Globals;
 using Poker.Models;
 
@@ -9,8 +9,11 @@ namespace Poker.Tests
     using System.Collections.Generic;
     using System.Linq;
 
+    using Poker.Enumerations;
     using Poker.Interfaces;
-    using Poker.TestingAlgorithms;
+    using Poker.Models.Cards;
+    using Poker.Models.Entities;
+    using Poker.PowerCalculator;
 
     [TestClass]
     public class PokerTests
@@ -379,6 +382,7 @@ namespace Poker.Tests
             CardPowerCalculator.GetCurrentStrengthOfCards(hand);
             Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
         }
+
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCardPower_2()
         {
@@ -402,8 +406,6 @@ namespace Poker.Tests
             Assert.AreEqual(52, differentCardsCounter);
         }
 
-      
-
         [TestMethod]
         public void Test_Deck_Shuffle_Randomness()
         {
@@ -417,14 +419,13 @@ namespace Poker.Tests
                                     && two.Cards[45].Rank == one.Cards[45].Rank
                                      && two.Cards[35].Rank == one.Cards[35].Rank);
         }
+
         [TestMethod]
         public void TestDeck_Length()
         {
             Deck deck = new Deck();
-            Assert.AreEqual(deck.Cards.Length, 51);
+            Assert.AreEqual(deck.Cards.Length, 52);
         }
-
-       
 
         [TestMethod]
         public void Test_Global_Constants()
@@ -446,15 +447,6 @@ namespace Poker.Tests
         {
             Bot bot = new Bot("go6o", GlobalVariables.Bot2PlaceOnBoard);
             Assert.AreEqual(GlobalConstants.StartingChips, bot.Chips);
-        }
-
-        [TestMethod]
-        public void Test_Bot_Check_Method()
-        {
-            Bot bot = new Bot("go6o", GlobalVariables.Bot2PlaceOnBoard);
-            bot.Check();
-            Assert.AreEqual(bot.HasChecked, true);
-
         }
     }
 }

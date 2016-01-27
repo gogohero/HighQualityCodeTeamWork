@@ -19,5 +19,7 @@
         /// <param name="players">The players.</param>
         /// <param name="cardsOnBoard">The cards on board.</param>
         void Deal(IList<IParticipant> players, ICard[] cardsOnBoard);
+
+        void Shuffle();
     }
 }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Poker
+﻿namespace Poker
 {
+    using System;
+    using System.Windows.Forms;
+
     static class Program
     {
         /// <summary>
@@ -16,7 +13,8 @@ namespace Poker
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new PokerGameForm());
+            var gameForm = new PokerGameForm();
+            Application.Run(gameForm);
         }
     }
 }

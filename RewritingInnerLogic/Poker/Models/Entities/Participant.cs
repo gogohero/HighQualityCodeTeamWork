@@ -1,15 +1,13 @@
-﻿namespace Poker
+﻿namespace Poker.Models.Entities
 {
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
-    using Poker.Constants;
-    using Poker.Enumerations;
+    using Poker.Globals;
     using Poker.Interfaces;
-    using Poker.TestingAlgorithms;
+    using Poker.Models.Cards;
 
     /// <summary>
     /// Class Participant.
@@ -25,6 +23,11 @@
         /// The chips placed.
         /// </summary>
         private int chipsPlaced;
+
+        /// <summary>
+        /// The amount of chips a player has.
+        /// </summary>
+        private int chips;
 
         /// <summary>
         /// The previously called times.
@@ -62,7 +65,23 @@
         /// Gets or sets the chips.
         /// </summary>
         /// <value>The chips.</value>
-        public int Chips { get; set; }
+        public int Chips
+        {
+            get
+            {
+                return this.chips;
+            }
+
+            set
+            {
+                this.chips = value;
+
+                if (this.chips < 0)
+                {
+                    this.chips = 0;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the previously called.
@@ -113,7 +132,12 @@
         {
             get
             {
-                return this.HasCalled || this.HasChecked || this.HasRaised || this.HasFolded || this.IsAllIn;
+                return this.HasCalled 
+                        || this.HasChecked 
+                        || this.HasRaised 
+                        || this.HasFolded 
+                        || this.IsAllIn 
+                        || !this.IsInGame;
             }
         }
 
@@ -188,11 +212,11 @@
         /// <param name="currentHighestBet">The current highest bet.</param>
         public virtual void Call(int currentHighestBet)
         {
-            if (this.Chips > currentHighestBet)
+            if (this.Chips > currentHighestBet - this.previouslyCalled)
             {
                 this.ResetFlags();
-                this.Chips -= currentHighestBet;
-                this.ChipsPlaced += currentHighestBet;
+                this.Chips -= currentHighestBet - this.previouslyCalled;
+                this.ChipsPlaced += currentHighestBet - this.previouslyCalled;
                 this.HasCalled = true;
                 this.Controls["StatusBox"].Text = GlobalConstants.CallText + currentHighestBet;
                 this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
@@ -213,7 +237,7 @@
         /// Raises the specified raise amount.
         /// </summary>
         /// <param name="raiseAmount">The raise amount.</param>
-        /// <param name="currentHighestBet">The current highest bet.</param>
+        /// <param name="currentHighestBet">The current highest bet on the board.</param>
         public virtual void Raise(int raiseAmount, ref int currentHighestBet)
         {
             if (raiseAmount > currentHighestBet)
@@ -301,6 +325,7 @@
         {
             this.ResetFlags();
             this.ChipsPlaced = 0;
+            this.previouslyCalled = 0;
             this.HasFolded = false;
             this.WinsRound = false;
             this.IsAllIn = false;

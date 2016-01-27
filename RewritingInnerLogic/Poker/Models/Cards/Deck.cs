@@ -1,14 +1,14 @@
-﻿namespace Poker.TestingAlgorithms
+﻿
+namespace Poker.Models.Cards
 {
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.IO;
     using System.Linq;
     using System.Threading;
+    using System.Windows.Forms;
 
     using Poker.Interfaces;
-    using Poker.Models;
 
     /// <summary>
     /// Class Deck.
@@ -24,26 +24,10 @@
         }
 
         /// <summary>
-        /// Gets the cards.
+        /// Gets or sets the cards array.
         /// </summary>
         /// <value>The cards.</value>
         public ICard[] Cards { get; set; }
-        /// <summary>
-        /// Shuffle the deck with Fisher-Yates shuffle algorithm
-        /// </summary>
-        private void Shuffle()
-        {
-            Random rnd = new Random();
-            int cardsLength = this.Cards.Length;
-            while (cardsLength > 1)
-            {
-                cardsLength--;
-                int nextCard = rnd.Next(cardsLength + 1);
-                ICard value = this.Cards[nextCard];
-                this.Cards[nextCard] = this.Cards[cardsLength];
-                this.Cards[cardsLength] = value;
-            }
-        }
 
         /// <summary>
         /// Deals the specified players.
@@ -103,6 +87,23 @@
         }
 
         /// <summary>
+        /// Shuffle the deck with Fisher-Yates shuffle algorithm
+        /// </summary>
+        public void Shuffle()
+        {
+            Random rnd = new Random();
+            int cardsLength = this.Cards.Length;
+            while (cardsLength > 1)
+            {
+                cardsLength--;
+                int nextCard = rnd.Next(cardsLength + 1);
+                ICard value = this.Cards[nextCard];
+                this.Cards[nextCard] = this.Cards[cardsLength];
+                this.Cards[cardsLength] = value;
+            }
+        }
+
+        /// <summary>
         /// Initializes the deck.
         /// </summary>
         /// <returns>ICard[].</returns>
@@ -134,6 +135,46 @@
                 }
             }
 
+            foreach (var card in cards)
+            {
+                string path;
+                string ending = string.Empty;
+                switch (card.Suit)
+                {
+                    case 'S':
+                        ending = "_of_spades.png";
+                        break;
+                    case 'D':
+                        ending = "_of_diamonds.png";
+                        break;
+                    case 'H':
+                        ending = "_of_hearts.png";
+                        break;
+                    case 'C':
+                        ending = "_of_clubs.png";
+                        break;
+                }
+
+                if (card.Rank != 12)
+                {
+                    path = (card.Rank + 2) + ending;
+                }
+                else
+                {
+                    path = "1" + ending;
+                }
+
+                card.FrontImage = Image.FromFile(@"..\..\..\Poker\Resources\Cards\" + path);
+                card.BackImage = Image.FromFile(@"..\..\..\Poker\Resources\Assets\Back\Back.png");
+                card.PictureBox = new PictureBox
+                {
+                    Image = card.BackImage,
+                    Height = 120,
+                    Width = 70,
+                    SizeMode = PictureBoxSizeMode.StretchImage
+                };
+            }
+           
             return cards;
         }
     }

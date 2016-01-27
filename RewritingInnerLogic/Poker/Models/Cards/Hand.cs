@@ -1,6 +1,8 @@
-﻿namespace Poker.TestingAlgorithms
+﻿namespace Poker.Models.Cards
 {
     using System.Collections.Generic;
+
+    using Poker.Enumerations;
     using Poker.Interfaces;
 
     /// <summary>
@@ -9,16 +11,11 @@
     public class Hand : IHand
     {
         /// <summary>
-        /// The _current cards
-        /// </summary>
-        private IList<ICard> currentCards;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Hand"/> class.
         /// </summary>
         public Hand()
         {
-            this.currentCards = new List<ICard>();
+            this.CurrentCards = new List<ICard>();
         }
 
         /// <summary>
@@ -28,21 +25,15 @@
         public ICard HighCard { get; set; }
 
         /// <summary>
+        /// Gets or sets the kicker which is used to determine winner in some special cases.
+        /// </summary>
+        public ICard Kicker { get; set; }
+
+        /// <summary>
         /// Gets or sets the current cards at the hand.
         /// </summary>
         /// <value>The current cards.</value>
-        public IList<ICard> CurrentCards
-        {
-            get
-            {
-                return this.currentCards;
-            }
-
-            set
-            {
-                this.currentCards = value;
-            }
-        }
+        public IList<ICard> CurrentCards { get; set; }
 
         /// <summary>
         /// Gets or sets the strength of the hand.

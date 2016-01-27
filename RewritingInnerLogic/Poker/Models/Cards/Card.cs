@@ -4,12 +4,13 @@
 // ***********************************************************************
 // <copyright file="Card.cs" company="Date">Copyright ©  2015</copyright>
 // ***********************************************************************
-namespace Poker.TestingAlgorithms
+namespace Poker.Models.Cards
 {
     using System;
     using System.Drawing;
     using System.Windows.Forms;
-    using Interfaces;
+
+    using Poker.Interfaces;
 
     /// <summary>
     /// Class Card.
@@ -139,42 +140,7 @@ namespace Poker.TestingAlgorithms
         /// </summary>
         private void SetCorrectImage()
         {
-            string path;
-            string ending = string.Empty;
-            switch (this.Suit)
-            {
-                case 'S':
-                    ending = "_of_spades.png";
-                    break;
-                case 'D':
-                    ending = "_of_diamonds.png";
-                    break;
-                case 'H':
-                    ending = "_of_hearts.png";
-                    break;
-                case 'C':
-                    ending = "_of_clubs.png";
-                    break;
-            }
-
-            if (this.Rank != 12)
-            {
-                path = (this.Rank + 2) + ending;
-            }
-            else
-            {
-                path = "1" + ending;
-            }
-
-            this.FrontImage = Image.FromFile(@"..\..\..\Poker\Resources\Cards\" + path);
-            this.BackImage = Image.FromFile(@"..\..\..\Poker\Resources\Assets\Back\Back.png");
-            this.PictureBox = new PictureBox
-            {
-                Image = this.BackImage,
-                Height = 120,
-                Width = 70,
-                SizeMode = PictureBoxSizeMode.StretchImage
-            };
+          
         }
     }
 }
