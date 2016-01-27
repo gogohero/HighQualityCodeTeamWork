@@ -9,13 +9,23 @@
     using Poker.Interfaces;
     using Poker.Models;
 
+    /// <summary>
+    /// Class Deck.
+    /// </summary>
     public class Deck : IDeck
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Deck"/> class.
+        /// </summary>
         public Deck()
         {
             this.Cards = this.InitializeDeck();
         }
-    
+
+        /// <summary>
+        /// Gets the cards.
+        /// </summary>
+        /// <value>The cards.</value>
         public ICard[] Cards { get; set; }
         /// <summary>
         /// Shuffle the deck with Fisher-Yates shuffle algorithm
@@ -23,17 +33,22 @@
         private void Shuffle()
         {
             Random rnd = new Random();
-            int CardsLength = this.Cards.Length;
-            while (CardsLength > 1)
+            int cardsLength = this.Cards.Length;
+            while (cardsLength > 1)
             {
-                CardsLength--;
-                int nextCard = rnd.Next(CardsLength + 1);
+                cardsLength--;
+                int nextCard = rnd.Next(cardsLength + 1);
                 ICard value = this.Cards[nextCard];
-                this.Cards[nextCard] = this.Cards[CardsLength];
-                this.Cards[CardsLength] = value;
+                this.Cards[nextCard] = this.Cards[cardsLength];
+                this.Cards[cardsLength] = value;
             }
         }
 
+        /// <summary>
+        /// Deals the specified players.
+        /// </summary>
+        /// <param name="players">The players.</param>
+        /// <param name="cardsOnBoard">The cards on board.</param>
         public void Deal(IParticipant[] players, ICard[] cardsOnBoard)
         {
             this.Shuffle();
@@ -85,6 +100,10 @@
             players[0].Hand.CurrentCards[1].IsFacingUp = true;
         }
 
+        /// <summary>
+        /// Initializes the deck.
+        /// </summary>
+        /// <returns>ICard[].</returns>
         private ICard[] InitializeDeck()
         {
             ICard[] cards = new ICard[52];

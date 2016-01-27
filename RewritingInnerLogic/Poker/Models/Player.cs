@@ -1,8 +1,8 @@
-﻿using System.Windows.Forms;
-namespace Poker.Models
+﻿namespace Poker.Models
 {
     using System;
     using System.Threading.Tasks;
+    using System.Windows.Forms;
 
     using Poker.Enumerations;
 
