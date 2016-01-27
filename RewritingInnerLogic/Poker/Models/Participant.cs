@@ -36,14 +36,14 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="placeOnBoard">The place on board.</param>
-        protected Participant(string name, int placeOnBoard)
+        protected Participant(string name, Point placeOnBoard)
         {
             this.Chips = this.startingChips;
             this.Name = name;
             this.Controls = new Dictionary<string, Control>();
             this.Hand = new Hand();
 
-            this.SetupBoardPlace(placeOnBoard);
+            this.PlaceOnBoard = placeOnBoard;
         }
 
         /// <summary>
@@ -194,7 +194,7 @@
                 this.Chips -= currentHighestBet;
                 this.ChipsPlaced += currentHighestBet;
                 this.HasCalled = true;
-                this.Controls["StatusBox"].Text = "Called: " + currentHighestBet;
+                this.Controls["StatusBox"].Text = GlobalConstants.CallText + currentHighestBet;
                 this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
                 this.previouslyCalled = currentHighestBet;
             }
@@ -204,7 +204,7 @@
                 this.ChipsPlaced += this.Chips;
                 this.Chips = 0;
                 this.IsAllIn = true;
-                this.Controls["StatusBox"].Text = "ALL IN!";
+                this.Controls["StatusBox"].Text = GlobalConstants.AllInText;
                 this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
             }
         }
@@ -227,7 +227,7 @@
                     this.Chips -= currentHighestBet;
                     this.ChipsPlaced += currentHighestBet;
                     this.HasRaised = true;
-                    this.Controls["StatusBox"].Text = "Raised: " + raiseAmount;
+                    this.Controls["StatusBox"].Text = GlobalConstants.RaiseText + raiseAmount;
                     this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
                 }
                 else
@@ -236,7 +236,7 @@
                     this.ChipsPlaced += this.Chips;
                     this.Chips = 0;
                     this.IsAllIn = true;
-                    this.Controls["StatusBox"].Text = "ALL IN!";
+                    this.Controls["StatusBox"].Text = GlobalConstants.AllInText;
                     this.Controls["ChipsBox"].Text = $"{this.Name} Chips: {this.Chips}";
                 }
             }
@@ -253,7 +253,7 @@
             this.Hand.CurrentCards[0].PictureBox.Update();
             this.Hand.CurrentCards[1].PictureBox.Visible = false;
             this.Hand.CurrentCards[1].PictureBox.Update();
-            this.Controls["StatusBox"].Text = "Folded";
+            this.Controls["StatusBox"].Text = GlobalConstants.FoldText;
         }
 
         /// <summary>
@@ -267,7 +267,7 @@
                 currentHighestBet = this.Chips;
             }
 
-            this.Controls["StatusBox"].Text = "ALL IN!";
+            this.Controls["StatusBox"].Text = GlobalConstants.AllInText;
             this.IsAllIn = true;
             this.ChipsPlaced += this.Chips;
             this.Chips = 0;
@@ -281,7 +281,7 @@
         {
             this.ResetFlags();
             this.HasChecked = true;
-            this.Controls["StatusBox"].Text = "Checked";
+            this.Controls["StatusBox"].Text = GlobalConstants.CheckText;
         }
 
         /// <summary>
@@ -314,35 +314,6 @@
             this.HasFolded = false;
             this.WinsRound = false;
             this.IsAllIn = false;
-        }
-
-        /// <summary>
-        /// Setups the board place.
-        /// </summary>
-        /// <param name="placeOnBoard">The place on board.</param>
-        private void SetupBoardPlace(int placeOnBoard)
-        {
-            switch (placeOnBoard)
-            {
-                case 1:
-                    this.PlaceOnBoard = new Point(360, 340);
-                    break;
-                case 2:
-                    this.PlaceOnBoard = new Point(120, 280);
-                    break;
-                case 3:
-                    this.PlaceOnBoard = new Point(120, 130);
-                    break;
-                case 4:
-                    this.PlaceOnBoard = new Point(300, 30);
-                    break;
-                case 5:
-                    this.PlaceOnBoard = new Point(780, 130);
-                    break;
-                case 6:
-                    this.PlaceOnBoard = new Point(780, 280);
-                    break;
-            }
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Poker.Tests
 {
-    using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Collections.Generic;
     using System.Linq;
+
     using Poker.Interfaces;
     using Poker.TestingAlgorithms;
-    using Poker.Models;
 
     [TestClass]
     public class PokerTests
@@ -145,6 +145,23 @@ namespace Poker.Tests
             ICard card5 = new Card(9, 'S');
             IHand hand = new Hand();
             IList<ICard> combination = new List<ICard>() { card1, card2, card3, card4, card5 };
+            hand.CurrentCards = combination;
+            CardPowerCalculator.GetCurrentStrengthOfCards(hand);
+            Assert.AreEqual(HandStrengthEnum.Flush, hand.Strength);
+        }
+
+        [TestMethod]
+        public void TestingAlgorithm_Calculate_Card_Power_FlushNotSequential_ShouldPass()
+        {
+            ICard card1 = new Card(12, 'S');
+            ICard card2 = new Card(9, 'S');
+            ICard card3 = new Card(5, 'H');
+            ICard card4 = new Card(10, 'H');
+            ICard card5 = new Card(5, 'S');
+            ICard card6 = new Card(9, 'S');
+            ICard card7 = new Card(2, 'S');
+            IHand hand = new Hand();
+            IList<ICard> combination = new List<ICard>() { card1, card2, card3, card4, card5, card6, card7 };
             hand.CurrentCards = combination;
             CardPowerCalculator.GetCurrentStrengthOfCards(hand);
             Assert.AreEqual(HandStrengthEnum.Flush, hand.Strength);
@@ -386,7 +403,7 @@ namespace Poker.Tests
         public void TestDeck_Length()
         {
             Deck deck = new Deck();
-            Assert.AreEqual(deck.Cards.Length, 51);
+            Assert.AreEqual(deck.Cards.Length, 52);
         }
 
         [TestMethod]
@@ -395,12 +412,6 @@ namespace Poker.Tests
             Deck one = new Deck();
             Deck two = new Deck();
             Assert.AreNotEqual(two.Cards[2],one.Cards[2]);
-        }
-        [TestMethod]
-        public void Test_Bot()
-        {
-           Bot bot = new Bot("bot",2);
-           
         }
     }
 }

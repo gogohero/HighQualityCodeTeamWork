@@ -69,11 +69,13 @@ C:\Users\Jani\Desktop\Project\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\
 C:\Users\Jani\Desktop\Project\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
 C:\Users\Jani\Desktop\Project\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe
 C:\Users\Jani\Desktop\Project\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.pdb
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.AddChips.resources
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
-D:\C#\QualityProgrammingCode\teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.pdb
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.AddChips.resources
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
+E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache

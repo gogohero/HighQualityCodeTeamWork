@@ -22,5 +22,29 @@ namespace Poker.Constants
         /// Initialize global constant for starting small blind.
         /// </summary>
         public const int StartingSmallBlind = 250;
+
+        public static Point PlayerPlaceOnBoard = new Point(360, 340);
+
+        public static Point Bot1PlaceOnBoard = new Point(120, 280);
+
+        public static Point Bot2PlaceOnBoard = new Point(120, 130);
+
+        public static Point Bot3PlaceOnBoard = new Point(300, 30);
+
+        public static Point Bot4PlaceOnBoard = new Point(780, 130);
+
+        public static Point Bot5PlaceOnBoard = new Point(780, 280);
+
+        public const string RaiseText = "Raised - ";
+
+        public const string CallText = "Called - ";
+
+        public const string CheckText = "Checked";
+
+        public const string AllInText = "ALL IN!";
+
+        public const string FoldText = "Folded";
+
+        public const string OutOfChipsText = "Out of chips";
     }
 }

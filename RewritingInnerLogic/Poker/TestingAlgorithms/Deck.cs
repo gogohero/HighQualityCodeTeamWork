@@ -1,6 +1,7 @@
 ﻿namespace Poker.TestingAlgorithms
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -49,7 +50,7 @@
         /// </summary>
         /// <param name="players">The players.</param>
         /// <param name="cardsOnBoard">The cards on board.</param>
-        public void Deal(IParticipant[] players, ICard[] cardsOnBoard)
+        public void Deal(IList<IParticipant> players, ICard[] cardsOnBoard)
         {
             this.Shuffle();
             int toTakeFromDeckIndex = 0;

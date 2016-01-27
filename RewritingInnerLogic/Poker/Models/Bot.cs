@@ -1,6 +1,8 @@
 ﻿namespace Poker.Models
 {
     using System;
+    using System.Drawing;
+
     using Poker.Enumerations;
     using Poker.TestingAlgorithms;
 
@@ -14,7 +16,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="placeOnBoard">The place on board.</param>
-        public Bot(string name, int placeOnBoard)
+        public Bot(string name, Point placeOnBoard)
             : base(name, placeOnBoard)
         {
         }

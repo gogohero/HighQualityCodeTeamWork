@@ -28,7 +28,7 @@
 
         private int currentHighestBet;
 
-        private IParticipant[] players;
+        private IList<IParticipant> players;
 
         private IDeck deck;
 
@@ -106,12 +106,12 @@
         {
             this.players = new Participant[6];
             // Assigning players
-            this.players[0] = new Player("Player", 1);
-            this.players[1] = new Bot("Bot 1", 2);
-            this.players[2] = new Bot("Bot 2", 3);
-            this.players[3] = new Bot("Bot 3", 4);
-            this.players[4] = new Bot("Bot 4", 5);
-            this.players[5] = new Bot("Bot 5", 6);
+            this.players[0] = new Player("Player", GlobalConstants.PlayerPlaceOnBoard);
+            this.players[1] = new Bot("Bot 1", GlobalConstants.Bot1PlaceOnBoard);
+            this.players[2] = new Bot("Bot 2", GlobalConstants.Bot2PlaceOnBoard);
+            this.players[3] = new Bot("Bot 3", GlobalConstants.Bot3PlaceOnBoard);
+            this.players[4] = new Bot("Bot 4", GlobalConstants.Bot4PlaceOnBoard);
+            this.players[5] = new Bot("Bot 5", GlobalConstants.Bot5PlaceOnBoard);
 
             // Adding Chips display control to each player
             this.players[0].Controls.Add("ChipsBox", this.textBoxChips);
@@ -230,7 +230,7 @@
                 else
                 {
                     int winnerIndex = 0;
-                    for (int i = 0; i < this.players.Length; i++)
+                    for (int i = 0; i < this.players.Count; i++)
                     {
                         if (this.players[i].WinsRound)
                         {
@@ -284,7 +284,7 @@
             {
                 this.timer.Stop();
                 this.time = 60;
-                for (int i = 1; i < this.players.Length; i++)
+                for (int i = 1; i < this.players.Count; i++)
                 {
                     if (!this.players[i].HasActed && this.players[i].IsInGame)
                     {
@@ -359,6 +359,7 @@
 
                             player.Hand.CurrentCards.Add(this.cardsOnBoard[4]);
                         }
+                        this.CurrentTurnPart++;
                     }
                 }             
             }

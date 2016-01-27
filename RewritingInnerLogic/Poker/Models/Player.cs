@@ -1,6 +1,7 @@
 ﻿namespace Poker.Models
 {
     using System;
+    using System.Drawing;
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
@@ -8,7 +9,7 @@
 
     public class Player : Participant
     {
-        public Player(string name, int placeOnBoard)
+        public Player(string name, Point placeOnBoard)
             : base(name, placeOnBoard)
         {
         }

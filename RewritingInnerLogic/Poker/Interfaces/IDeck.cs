@@ -1,5 +1,7 @@
 ﻿namespace Poker.Interfaces
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Interface IDeck
     /// </summary>
@@ -16,6 +18,6 @@
         /// </summary>
         /// <param name="players">The players.</param>
         /// <param name="cardsOnBoard">The cards on board.</param>
-        void Deal(IParticipant[] players, ICard[] cardsOnBoard);
+        void Deal(IList<IParticipant> players, ICard[] cardsOnBoard);
     }
 }

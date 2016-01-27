@@ -1,5 +1,6 @@
 ﻿namespace Poker.TestingAlgorithms
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
@@ -10,7 +11,7 @@
     {
         public static void CompareAllSetsOfCardsOnTheBoard(IList<IParticipant> players) 
         {
-            foreach (var player in players)
+            foreach (var player in players.Where(p => !p.HasFolded && p.IsInGame))
             {
                 GetCurrentStrengthOfCards(player.Hand);
             }
@@ -42,7 +43,10 @@
 
             cards = cards.OrderBy(c => c.Rank).ToList();
             int sequentialCards = 0;
-            int sameSuites = 0;
+            int spades = 0;
+            int diamonds = 0;
+            int clubs = 0;
+            int hearts = 0;
             ICard highestInSequenceWithoutPairs = new Card(0, 'S');
             HandStrengthEnum strengthWithoutPairs = HandStrengthEnum.HighCard;
 
@@ -57,10 +61,6 @@
                     {
                         sequentialCards += 1;
                     }
-                    if (cards[i - 1].Suit == cards[i].Suit)
-                    {
-                        sameSuites += 1;
-                    }
                 }
                 else if (i == cards.Count - 2)
                 {
@@ -68,10 +68,6 @@
                     {
                         sequentialCards += 1;
                         foundHigherSequential = true;
-                    }
-                    if (cards[i].Suit == cards[i].Suit)
-                    {
-                        sameSuites += 1;
                     }
                 }
                 if (cards[i].Rank + 1
@@ -85,32 +81,43 @@
                     {
                         foundHigherSequential = true;
                     }
-                    if (cards[i].Suit
-                        == cards[i + 1].Suit)
-                    {
-                        sameSuites += 1;
-                    }
-                }
-                else if (cards[i].Suit
-                         == cards[i + 1].Suit
-                         || cards[i].Suit
-                         == cards[i - 1].Suit)
-                {
-                    sameSuites += 1;
-                    if (highestInSequenceWithoutPairs.Rank < cards[i].Rank)
-                    {
-                        highestInSequenceWithoutPairs = cards[i];
-                    }
                 }
 
                 if (foundHigherSequential)
                 {
                     highestInSequenceWithoutPairs = cards[i + 1];
                 }
+                else
+                {
+                    sequentialCards = 0;
+                }
             }
 
+            for (int i = 0; i < cards.Count; i++)
+            {
+                switch (cards[i].Suit)
+                {
+                    case 'S':
+                        spades += 1;
+                        break;
+                    case 'D':
+                        diamonds += 1;
+                        break;
+                    case 'C':
+                        clubs += 1;
+                        break;
+                    case 'H':
+                        hearts += 1;
+                        break;
+                }
+            }
+
+            int maximumSameSuitCards = Math.Max(
+                Math.Max(diamonds, spades),
+                Math.Max(hearts, clubs));
+
             // royal flush check -> if not check straight flush -> if not check flush -> if not check straight
-            if (sequentialCards >= 5 && sameSuites >= 5)
+            if (sequentialCards >= 5 && maximumSameSuitCards >= 5)
             {
                 if (highestInSequenceWithoutPairs.Rank == 12)
                 {
@@ -121,11 +128,11 @@
                     strengthWithoutPairs = HandStrengthEnum.StraightFlush;
                 }
             }
-            else if (sameSuites >= 5 && (int)participantVisibleHand.Strength < (int)HandStrengthEnum.Flush)
+            else if (maximumSameSuitCards >= 5)
             {
                 strengthWithoutPairs = HandStrengthEnum.Flush;
             }
-            else if (sequentialCards >= 5 && (int)participantVisibleHand.Strength < (int)HandStrengthEnum.Straight)
+            else if (sequentialCards >= 5)
             {
                 strengthWithoutPairs = HandStrengthEnum.Straight;
             }
