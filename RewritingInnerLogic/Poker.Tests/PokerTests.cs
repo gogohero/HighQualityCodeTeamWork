@@ -411,7 +411,13 @@ namespace Poker.Tests
         {
             Deck one = new Deck();
             Deck two = new Deck();
-            Assert.AreNotEqual(two.Cards[2],one.Cards[2]);
+            Assert.IsTrue(two.Cards[2].Rank == one.Cards[2].Rank 
+                                && two.Cards[5].Rank == one.Cards[5].Rank
+                                 && two.Cards[7].Rank == one.Cards[7].Rank
+                                  && two.Cards[15].Rank == one.Cards[15].Rank
+                                   && two.Cards[50].Rank == one.Cards[50].Rank
+                                    && two.Cards[45].Rank == one.Cards[45].Rank
+                                     && two.Cards[35].Rank == one.Cards[35].Rank);
         }
     }
 }

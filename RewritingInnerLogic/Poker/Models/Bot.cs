@@ -4,12 +4,13 @@
     using System.Drawing;
 
     using Poker.Enumerations;
+    using Poker.Interfaces;
     using Poker.TestingAlgorithms;
 
     /// <summary>
     /// Class Bot.
     /// </summary>
-    public class Bot : Participant
+    public class Bot : Participant, IBot
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bot"/> class.
@@ -29,7 +30,7 @@
         /// <param name="canCheck">if set to <c>true</c> [can check].</param>
         /// <param name="currentPartOfTurn">The current part of turn.</param>
         /// <param name="randomBehavior">The random behavior.</param>
-        public override void PlayTurn(ref int currentHighestBet, int playersNotFolded, bool canCheck, TurnParts currentPartOfTurn, Random randomBehavior)
+        public void PlayTurn(ref int currentHighestBet, int playersNotFolded, bool canCheck, TurnParts currentPartOfTurn, Random randomBehavior)
         {
             CardPowerCalculator.GetCurrentStrengthOfCards(this.Hand);
             int feelingLucky = randomBehavior.Next(0, 100);
@@ -42,7 +43,7 @@
             }
             else if (this.CheckShouldCall(currentHighestBet, playersNotFolded, turnPartFactor, feelingLucky, bluff))
             {
-                this.Call(ref currentHighestBet);
+                this.Call(currentHighestBet);
             }
             else if (canCheck)
             {

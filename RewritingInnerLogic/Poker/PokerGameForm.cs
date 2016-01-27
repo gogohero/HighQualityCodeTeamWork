@@ -24,10 +24,6 @@
     {
         #region Variables
 
-        private Random randomBehavior = new Random();
-
-        private int currentHighestBet;
-
         private IList<IParticipant> players;
 
         private IDeck deck;
@@ -37,14 +33,6 @@
         readonly Timer timer = new Timer();
 
         readonly Timer Updates = new Timer();
-
-        private decimal time = 60M;
-
-        private int bigBlind = 500;
-
-        private int smallBlind = 250;
-
-        private TurnParts CurrentTurnPart;
 
         #endregion
 
@@ -60,9 +48,7 @@
 
             this.cardsOnBoard = new ICard[5];
 
-            this.currentHighestBet = this.bigBlind;
-
-            this.CurrentTurnPart = TurnParts.BeginGame;
+            GlobalConstants.CurrentHighestBet = GlobalConstants.StartingBigBlind;
         }
 
         private void InitializeControls()
@@ -89,7 +75,7 @@
             this.Updates.Tick += this.UpdateTick;
             this.Updates.Start();
 
-            this.textBoxRaise.Text = (this.bigBlind * 2).ToString();
+            this.textBoxRaise.Text = (GlobalConstants.BigBlind * 2).ToString();
             this.progressBarTimer.Value = 300;
         }
 
@@ -134,14 +120,16 @@
         {
             this.DisableUserButtons();
 
-            this.currentHighestBet = this.bigBlind;
+            this.UpdateTextBoxes();
+
 
             this.timer.Stop();
-            this.time = 60;
 
-            this.CurrentTurnPart = TurnParts.Flop;
+            GlobalConstants.CurrentHighestBet = GlobalConstants.BigBlind;
 
-            this.currentHighestBet = this.bigBlind;
+            GlobalConstants.TimeForPlayerTurn = 60M;
+
+            GlobalConstants.CurrentTurnPart = TurnParts.Flop;
 
             this.CheckForEndOfGame();
 
@@ -159,6 +147,20 @@
             this.PostDealActions();
         }
 
+        private void UpdateTextBoxes()
+        {
+            foreach (var player in this.players)
+            {
+                player.Controls["ChipsBox"].Text = $"{player.Name} Chips: {player.Chips}";
+                player.Controls["ChipsBox"].Update();
+                player.Controls["StatusBox"].Text = string.Empty;
+                player.Controls["StatusBox"].Update();
+            }
+
+            this.textBoxPot.Text = "0";
+            this.textBoxPot.Update();
+        }
+
         private void PostDealActions()
         {   
             // Display changes to each card to ensure correctness
@@ -170,20 +172,18 @@
 
         private void CleanDeckAndPlayerHands()
         {
-            this.textBoxPot.Text = "0";
+            foreach (var player in this.players)
+            {
+                player.SetFlagsForNewTurn();
+                player.ChipsPlaced = 0;
+                player.Hand.CurrentCards.Clear();
+            }
 
             foreach (var card in this.deck.Cards)
             {
                 card.IsFacingUp = false;
                 card.PictureBox.Visible = false;
                 card.PictureBox.Update();
-            }
-
-            foreach (var player in this.players)
-            {
-                player.SetFlagsForNewTurn();
-                player.ChipsPlaced = 0;
-                player.Hand.CurrentCards.Clear();
             }
         }
 
@@ -248,13 +248,13 @@
 
         private void Turns()
         {
-            if (this.CurrentTurnPart == TurnParts.BeginGame)
+            if (GlobalConstants.CurrentTurnPart == TurnParts.BeginGame)
             {
                 this.BeginRound();
             }
-            if (this.CurrentTurnPart == TurnParts.End && int.Parse(this.textBoxPot.Text) > 0)
+            if (GlobalConstants.CurrentTurnPart == TurnParts.End && int.Parse(this.textBoxPot.Text) > 0)
             {
-                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard(this.players.Where(p => !p.HasFolded && p.IsInGame).ToArray());
+                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard(this.players.Where(p => !p.HasFolded).ToArray());
                 foreach (var player in this.players)
                 {
                     foreach (var currentCard in player.Hand.CurrentCards)
@@ -267,11 +267,10 @@
 
                 this.BeginRound();
             }
-            else if (this.players.Count(p => p.HasFolded) ==
-                5 - this.players.Count(p => !p.IsInGame || p.IsAllIn))
+            else if (this.players.Count(p => p.HasFolded) == 5)
             {
                 int pot = int.Parse(this.textBoxPot.Text);
-                this.players.First(p => !p.HasFolded && p.IsInGame).Chips += pot;
+                this.players.First(p => !p.HasFolded).Chips += pot;
                 Task showWinner =
                         new Task(() => MessageBox.Show($"{this.players.First(p => !p.HasFolded && p.IsInGame).Name} wins the round and takes {pot} chips"));
                 showWinner.Start();
@@ -283,7 +282,7 @@
             if (this.players[0].HasActed)
             {
                 this.timer.Stop();
-                this.time = 60;
+                GlobalConstants.TimeForPlayerTurn = 60M;
                 for (int i = 1; i < this.players.Count; i++)
                 {
                     if (!this.players[i].HasActed && this.players[i].IsInGame)
@@ -297,14 +296,20 @@
 
                         bool anyoneActedNoCheck =
                             this.players.Any(
-                                p => p.HasRaised || p.HasCalled || p.IsAllIn || this.CurrentTurnPart == TurnParts.Flop);
+                                             p => p.HasRaised 
+                                            || p.HasCalled 
+                                            || p.IsAllIn 
+                                            || GlobalConstants.CurrentTurnPart == TurnParts.Flop);
+                        if (this.players[i] is IBot)
+                        {
+                            ((IBot)this.players[i]).PlayTurn(
+                                ref GlobalConstants.CurrentHighestBet,
+                                this.players.Count(p => !p.HasFolded),
+                                !anyoneActedNoCheck,
+                                GlobalConstants.CurrentTurnPart,
+                                GlobalConstants.RandomBehaviorForBots);
+                        }
 
-                        this.players[i].PlayTurn(
-                            ref this.currentHighestBet,
-                            this.players.Count(p => !p.HasFolded),
-                            !anyoneActedNoCheck,
-                            this.CurrentTurnPart,
-                            this.randomBehavior);
                         if (this.players[i].HasRaised)
                         {
                             for (int j = i - 1; j >= 0; j--)
@@ -338,9 +343,9 @@
                     {
                         player.ResetFlags();
                     }
-                    this.CurrentTurnPart++;
+                    GlobalConstants.CurrentTurnPart++;
 
-                    if (this.CurrentTurnPart == TurnParts.Turn)
+                    if (GlobalConstants.CurrentTurnPart == TurnParts.Turn)
                     {
                         foreach (var player in this.players)
                         {
@@ -350,7 +355,7 @@
                             player.Hand.CurrentCards.Add(this.cardsOnBoard[3]);
                         }
                     }
-                    else if (this.CurrentTurnPart == TurnParts.River)
+                    else if (GlobalConstants.CurrentTurnPart == TurnParts.River)
                     {
                         foreach (var player in this.players)
                         {
@@ -359,7 +364,7 @@
 
                             player.Hand.CurrentCards.Add(this.cardsOnBoard[4]);
                         }
-                        this.CurrentTurnPart++;
+                        GlobalConstants.CurrentTurnPart++;
                     }
                 }             
             }
@@ -367,8 +372,8 @@
 
         private void UpdateTick(object sender, object e)
         {
-            Debug.WriteLine(this.currentHighestBet);
-            Debug.WriteLine(this.CurrentTurnPart);
+            Debug.WriteLine(GlobalConstants.CurrentHighestBet);
+            Debug.WriteLine(GlobalConstants.CurrentTurnPart);
             this.Turns();
 
             foreach (var player in this.players)
@@ -384,10 +389,10 @@
                 this.players[0].HasFolded = true;
             }
 
-            if (this.time > 0)
+            if (GlobalConstants.TimeForPlayerTurn > 0)
             {
-                this.time -= 0.2M;
-                this.progressBarTimer.Value = (int)(this.time * 5);
+                GlobalConstants.TimeForPlayerTurn -= 0.2M;
+                this.progressBarTimer.Value = (int)(GlobalConstants.TimeForPlayerTurn * 5);
             }
         }
 
@@ -424,13 +429,13 @@
 
         private void ButtonCallClick(object sender, EventArgs e)
         {
-            if (this.players[0].Chips > this.currentHighestBet)
+            if (this.players[0].Chips > GlobalConstants.CurrentHighestBet)
             {
-                this.players[0].Call(ref this.currentHighestBet);
+                this.players[0].Call(GlobalConstants.CurrentHighestBet);
             }
             else
             {
-                this.players[0].AllIn(ref this.currentHighestBet);
+                this.players[0].AllIn(ref GlobalConstants.CurrentHighestBet);
                 this.DisableUserButtons();
             }
         }
@@ -445,25 +450,25 @@
             catch (FormatException)
             {
                 MessageBox.Show("This is a number only field!");
-                this.textBoxRaise.Text = (this.currentHighestBet * 2).ToString();
+                this.textBoxRaise.Text = (GlobalConstants.CurrentHighestBet * 2).ToString();
             }
-            if (raiseValue >= this.currentHighestBet * 2)
+            if (raiseValue >= GlobalConstants.CurrentHighestBet * 2)
             {
                 if (this.players[0].Chips > raiseValue)
                 {
                     this.players[0].Raise(int.Parse(this.textBoxRaise.Text),
-                                                    ref this.currentHighestBet);
+                                                    ref GlobalConstants.CurrentHighestBet);
                 }
                 else
                 {
-                    this.players[0].AllIn(ref this.currentHighestBet);
+                    this.players[0].AllIn(ref GlobalConstants.CurrentHighestBet);
                     this.DisableUserButtons();
                 }
             }
             else
             {
                 MessageBox.Show("Raise amount must be twice as big as the current highest bet!");
-                this.textBoxRaise.Text = (this.currentHighestBet * 2).ToString();
+                this.textBoxRaise.Text = (GlobalConstants.CurrentHighestBet * 2).ToString();
             }
         }
 
@@ -498,8 +503,8 @@
 
         private void ButtonOptionsClick(object sender, EventArgs e)
         {
-            this.textBoxBigBlind.Text = this.bigBlind.ToString();
-            this.textBoxSmallBlind.Text = this.smallBlind.ToString();
+            this.textBoxBigBlind.Text = GlobalConstants.BigBlind.ToString();
+            this.textBoxSmallBlind.Text = GlobalConstants.SmallBlind.ToString();
             if (this.textBoxBigBlind.Visible == false)
             {
                 this.textBoxBigBlind.Visible = true;
@@ -522,21 +527,21 @@
             if (this.textBoxSmallBlind.Text.Contains(",") || this.textBoxSmallBlind.Text.Contains("."))
             {
                 MessageBox.Show("The Small Blind can be only round number !");
-                this.textBoxSmallBlind.Text = this.smallBlind.ToString();
+                this.textBoxSmallBlind.Text = GlobalConstants.SmallBlind.ToString();
                 return;
             }
 
             if (!int.TryParse(this.textBoxSmallBlind.Text, out parsedValue))
             {
                 MessageBox.Show("This is a number only field");
-                this.textBoxSmallBlind.Text = this.smallBlind.ToString();
+                this.textBoxSmallBlind.Text = GlobalConstants.SmallBlind.ToString();
                 return;
             }
 
             if (int.Parse(this.textBoxSmallBlind.Text) > 100000)
             {
                 MessageBox.Show("The maximum of the Small Blind is 100 000 $");
-                this.textBoxSmallBlind.Text = this.smallBlind.ToString();
+                this.textBoxSmallBlind.Text = GlobalConstants.SmallBlind.ToString();
             }
 
             if (int.Parse(this.textBoxSmallBlind.Text) < 250)
@@ -546,7 +551,7 @@
 
             if (int.Parse(this.textBoxSmallBlind.Text) >= 250 && int.Parse(this.textBoxSmallBlind.Text) <= 100000)
             {
-                this.smallBlind = int.Parse(this.textBoxSmallBlind.Text);
+                GlobalConstants.SmallBlind = int.Parse(this.textBoxSmallBlind.Text);
                 MessageBox.Show("The changes have been saved ! They will become available the next hand you play. ");
             }
         }
@@ -557,21 +562,21 @@
             if (this.textBoxBigBlind.Text.Contains(",") || this.textBoxBigBlind.Text.Contains("."))
             {
                 MessageBox.Show("The Big Blind can be only round number !");
-                this.textBoxBigBlind.Text = this.bigBlind.ToString();
+                this.textBoxBigBlind.Text = GlobalConstants.BigBlind.ToString();
                 return;
             }
 
             if (!int.TryParse(this.textBoxSmallBlind.Text, out parsedValue))
             {
                 MessageBox.Show("This is a number only field");
-                this.textBoxSmallBlind.Text = this.bigBlind.ToString();
+                this.textBoxSmallBlind.Text = GlobalConstants.BigBlind.ToString();
                 return;
             }
 
             if (int.Parse(this.textBoxBigBlind.Text) > 200000)
             {
                 MessageBox.Show("The maximum of the Big Blind is 200 000");
-                this.textBoxBigBlind.Text = this.bigBlind.ToString();
+                this.textBoxBigBlind.Text = GlobalConstants.BigBlind.ToString();
             }
 
             if (int.Parse(this.textBoxBigBlind.Text) < 500)
@@ -581,7 +586,7 @@
 
             if (int.Parse(this.textBoxBigBlind.Text) >= 500 && int.Parse(this.textBoxBigBlind.Text) <= 200000)
             {
-                this.bigBlind = int.Parse(this.textBoxBigBlind.Text);
+                GlobalConstants.BigBlind = int.Parse(this.textBoxBigBlind.Text);
                 MessageBox.Show("The changes have been saved ! They will become available the next hand you play. ");
             }
         }

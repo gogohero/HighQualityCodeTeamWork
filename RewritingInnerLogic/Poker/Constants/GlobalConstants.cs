@@ -1,7 +1,10 @@
 ﻿
 namespace Poker.Constants
 {
+    using System;
     using System.Drawing;
+
+    using Poker.Enumerations;
 
     /// <summary>
     /// The class who initialize global constants for starting chips and blinds.
@@ -22,6 +25,18 @@ namespace Poker.Constants
         /// Initialize global constant for starting small blind.
         /// </summary>
         public const int StartingSmallBlind = 250;
+
+        public static int BigBlind = StartingBigBlind;
+
+        public static int SmallBlind = StartingSmallBlind;
+
+        public static int CurrentHighestBet = 0;
+
+        public static decimal TimeForPlayerTurn = 60M;
+
+        public static TurnParts CurrentTurnPart = TurnParts.BeginGame;
+
+        public static Random RandomBehaviorForBots = new Random();
 
         public static Point PlayerPlaceOnBoard = new Point(360, 340);
 

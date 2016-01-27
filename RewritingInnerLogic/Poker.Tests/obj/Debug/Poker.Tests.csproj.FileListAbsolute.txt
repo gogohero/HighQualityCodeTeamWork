@@ -37,3 +37,11 @@ E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLo
 E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
 E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.exe
 E:\VS projects\abrakadabra\abrakadabra2\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.pdb
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.Tests.dll
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.Tests.pdb
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.exe
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\bin\Debug\Poker.pdb
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.csprojResolveAssemblyReference.cache
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.dll
+E:\VS projects\abrakadabra\mamkamu\HighQualityCodeTeamWork\RewritingInnerLogic\Poker.Tests\obj\Debug\Poker.Tests.pdb

@@ -9,7 +9,6 @@ namespace Poker.Interfaces
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using Poker.Enumerations;
@@ -115,16 +114,6 @@ namespace Poker.Interfaces
         void ResetFlags();
 
         /// <summary>
-        /// Plays the turn.
-        /// </summary>
-        /// <param name="currentHighestBet">The current highest bet.</param>
-        /// <param name="playersNotFolded">The players not folded.</param>
-        /// <param name="canCheck">if set to <c>true</c> [can check].</param>
-        /// <param name="currentPartOfTurn">The current part of turn.</param>
-        /// <param name="randomBehavior">The random behavior.</param>
-        void PlayTurn(ref int currentHighestBet, int playersNotFolded, bool canCheck, TurnParts currentPartOfTurn, Random randomBehavior);
-
-        /// <summary>
         /// Sets the flags for new turn.
         /// </summary>
         void SetFlagsForNewTurn();
@@ -138,7 +127,7 @@ namespace Poker.Interfaces
         /// Calls the specified current highest bet.
         /// </summary>
         /// <param name="currentHighestBet">The current highest bet.</param>
-        void Call(ref int currentHighestBet);
+        void Call(int currentHighestBet);
 
         /// <summary>
         /// Raises the specified raise amount.

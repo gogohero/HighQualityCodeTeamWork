@@ -13,15 +13,5 @@
             : base(name, placeOnBoard)
         {
         }
-
-        // Not needed -> leave it empty
-        public override void PlayTurn(
-            ref int currentHighestBet,
-            int playersNotFolded,
-            bool canCheck,
-            TurnParts currentPartOfTurn,
-            Random randomBehavior)
-        {
-        }
     }
 }

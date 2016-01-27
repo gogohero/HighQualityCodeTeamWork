@@ -11,7 +11,7 @@
     {
         public static void CompareAllSetsOfCardsOnTheBoard(IList<IParticipant> players) 
         {
-            foreach (var player in players.Where(p => !p.HasFolded && p.IsInGame))
+            foreach (var player in players.Where(p => !p.HasFolded))
             {
                 GetCurrentStrengthOfCards(player.Hand);
             }
@@ -22,7 +22,7 @@
                 {
                     player.WinsRound = false;
                 }
-                else if (players.Where(p => p.Hand.Strength == player.Hand.Strength).Any(p => p.Hand.HighCard.Rank > player.Hand.HighCard.Rank))
+                else if (players.Where(p => p.Hand.Strength == player.Hand.Strength).Any(p => p.Hand.HighCard.Rank < player.Hand.HighCard.Rank))
                 {
                     player.WinsRound = false;
                 }
@@ -37,12 +37,16 @@
         public static void GetCurrentStrengthOfCards(IHand participantVisibleHand)
         {
             IList<ICard> cards = participantVisibleHand.CurrentCards;
+            if (!cards.Any())
+            {
+                return;
+            }
 
             // ---------------------------------------------------------
             // check for straight, flush, straight flush and royal flush
 
             cards = cards.OrderBy(c => c.Rank).ToList();
-            int sequentialCards = 0;
+            IDictionary<int, IList<int>> sequentialCards = new Dictionary<int, IList<int>>();
             int spades = 0;
             int diamonds = 0;
             int clubs = 0;
@@ -50,46 +54,46 @@
             ICard highestInSequenceWithoutPairs = new Card(0, 'S');
             HandStrengthEnum strengthWithoutPairs = HandStrengthEnum.HighCard;
 
-            for (int i = 1; i < cards.Count - 1; i++)
+            for (int i = 0; i < cards.Count; i++)
             {
-                bool foundHigherSequential = false;
+                sequentialCards.Add(i, new List<int>());
+                for (int j = i; j < cards.Count - 1; j++)
+                {
+                    if (j != cards.Count - 2)
+                    {
+                        if (cards[j].Rank + 1 == cards[j + 1].Rank)
+                        {
+                            sequentialCards[i].Add(cards[j].Rank);
+                        }
+                        else
+                        {
+                            sequentialCards[i].Add(cards[j].Rank);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (cards[j].Rank + 1 == cards[j + 1].Rank)
+                        {
+                            sequentialCards[i].Add(cards[j].Rank);
+                            sequentialCards[i].Add(cards[j + 1].Rank);
+                        }
+                        else if (cards[j].Rank - 1 == cards[j - 1].Rank)
+                        {
+                            sequentialCards[i].Add(cards[j].Rank);
+                            break;
+                        }
+                    }
+                }
+            }
 
-                // cannot escape the checks for first and last element, otherwise they are skipped
-                if (i == 1)
+            int highestSequenceOfRanksDetected = 0;
+            for (int i = 0; i < sequentialCards.Keys.Count; i++)
+            {
+                if (sequentialCards[i].Count >= highestSequenceOfRanksDetected)
                 {
-                    if (cards[i - 1].Rank + 1 == cards[i].Rank)
-                    {
-                        sequentialCards += 1;
-                    }
-                }
-                else if (i == cards.Count - 2)
-                {
-                    if (cards[i].Rank + 1 == cards[i + 1].Rank)
-                    {
-                        sequentialCards += 1;
-                        foundHigherSequential = true;
-                    }
-                }
-                if (cards[i].Rank + 1
-                        == cards[i + 1].Rank
-                        || cards[i].Rank - 1
-                        == cards[i - 1].Rank)
-                {
-                    sequentialCards += 1;
-                    highestInSequenceWithoutPairs = cards[i];
-                    if (cards[i].Rank + 1 == cards[i + 1].Rank)
-                    {
-                        foundHigherSequential = true;
-                    }
-                }
-
-                if (foundHigherSequential)
-                {
-                    highestInSequenceWithoutPairs = cards[i + 1];
-                }
-                else
-                {
-                    sequentialCards = 0;
+                    highestSequenceOfRanksDetected = sequentialCards[i].Count;
+                    highestInSequenceWithoutPairs = new Card(sequentialCards[i].Max(), 'S');
                 }
             }
 
@@ -117,7 +121,7 @@
                 Math.Max(hearts, clubs));
 
             // royal flush check -> if not check straight flush -> if not check flush -> if not check straight
-            if (sequentialCards >= 5 && maximumSameSuitCards >= 5)
+            if (highestSequenceOfRanksDetected >= 5 && maximumSameSuitCards >= 5)
             {
                 if (highestInSequenceWithoutPairs.Rank == 12)
                 {
@@ -132,7 +136,7 @@
             {
                 strengthWithoutPairs = HandStrengthEnum.Flush;
             }
-            else if (sequentialCards >= 5)
+            else if (highestSequenceOfRanksDetected >= 5)
             {
                 strengthWithoutPairs = HandStrengthEnum.Straight;
             }

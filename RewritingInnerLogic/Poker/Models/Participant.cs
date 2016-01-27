@@ -186,7 +186,7 @@
         /// Calls the specified current highest bet.
         /// </summary>
         /// <param name="currentHighestBet">The current highest bet.</param>
-        public virtual void Call(ref int currentHighestBet)
+        public virtual void Call(int currentHighestBet)
         {
             if (this.Chips > currentHighestBet)
             {
@@ -294,16 +294,6 @@
             this.HasRaised = false;
         }
 
-        /// <summary>
-        /// Plays the turn.
-        /// </summary>
-        /// <param name="currentHighestBet">The current highest bet.</param>
-        /// <param name="playersNotFolded">The players not folded.</param>
-        /// <param name="canCheck">if set to <c>true</c> [can check].</param>
-        /// <param name="currentPartOfTurn">The current part of turn.</param>
-        /// <param name="randomBehavior">The random behavior.</param>
-        public abstract void PlayTurn(ref int currentHighestBet, int playersNotFolded, bool canCheck, TurnParts currentPartOfTurn, Random randomBehavior);
- 
         /// <summary>
         /// Sets the flags for new turn.
         /// </summary>
