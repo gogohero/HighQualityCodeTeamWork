@@ -1,13 +1,13 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+﻿
 namespace Poker.Tests
 {
+    using System;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Collections.Generic;
     using System.Linq;
-
     using Poker.Interfaces;
     using Poker.TestingAlgorithms;
+    using Poker.Models;
 
     [TestClass]
     public class PokerTests
@@ -395,6 +395,12 @@ namespace Poker.Tests
             Deck one = new Deck();
             Deck two = new Deck();
             Assert.AreNotEqual(two.Cards[2],one.Cards[2]);
+        }
+        [TestMethod]
+        public void Test_Bot()
+        {
+           Bot bot = new Bot("bot",2);
+           
         }
     }
 }
