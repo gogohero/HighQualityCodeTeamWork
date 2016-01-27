@@ -99,3 +99,6 @@ E:\VS projects\abrakadabra\Poker\obj\Debug\Poker.AddChips.resources
 E:\VS projects\abrakadabra\Poker\obj\Debug\Poker.PokerGameForm.resources
 E:\VS projects\abrakadabra\Poker\obj\Debug\Poker.Properties.Resources.resources
 E:\VS projects\abrakadabra\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
+D:\C#\QualityProgrammingCode\teamwork\New folder\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
+D:\C#\QualityProgrammingCode\teamwork\New folder\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
+D:\C#\QualityProgrammingCode\teamwork\New folder\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb

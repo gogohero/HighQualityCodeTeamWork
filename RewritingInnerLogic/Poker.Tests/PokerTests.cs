@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Poker.Constants;
+using Poker.Models;
 
 namespace Poker.Tests
 {
@@ -399,12 +401,7 @@ namespace Poker.Tests
             Assert.AreEqual(52, differentCardsCounter);
         }
 
-        [TestMethod]
-        public void TestDeck_Length()
-        {
-            Deck deck = new Deck();
-            Assert.AreEqual(deck.Cards.Length, 52);
-        }
+      
 
         [TestMethod]
         public void Test_Deck_Shuffle_Randomness()
@@ -418,6 +415,45 @@ namespace Poker.Tests
                                    && two.Cards[50].Rank == one.Cards[50].Rank
                                     && two.Cards[45].Rank == one.Cards[45].Rank
                                      && two.Cards[35].Rank == one.Cards[35].Rank);
+        }
+        [TestMethod]
+        public void TestDeck_Length()
+        {
+            Deck deck = new Deck();
+            Assert.AreEqual(deck.Cards.Length, 51);
+        }
+
+       
+
+        [TestMethod]
+        public void Test_Global_Constants()
+        {
+            Assert.AreEqual(GlobalConstants.StartingBigBlind, 500);
+            Assert.AreEqual(GlobalConstants.StartingChips, 10000);
+            Assert.AreEqual(GlobalConstants.StartingSmallBlind, 250);
+        }
+
+        [TestMethod]
+        public void Test_Bot_Name()
+        {
+            Bot bot = new Bot("go6o", 2);
+            Assert.AreEqual("go6o", bot.Name);
+        }
+
+        [TestMethod]
+        public void Test_Bot_Chips()
+        {
+            Bot bot = new Bot("go6o", 2);
+            Assert.AreEqual(GlobalConstants.StartingChips, bot.Chips);
+        }
+
+        [TestMethod]
+        public void Test_Bot_Check_Method()
+        {
+            Bot bot = new Bot("go6o", 2);
+            bot.Check();
+            Assert.AreEqual(bot.HasChecked, true);
+
         }
     }
 }
