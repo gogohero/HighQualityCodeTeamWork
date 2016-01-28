@@ -21,3 +21,6 @@ E:\Teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.cs
 C:\Users\Jani\Desktop\NewProject\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
 C:\Users\Jani\Desktop\NewProject\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
 C:\Users\Jani\Desktop\NewProject\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb
+D:\Programing\KPK Repo\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
+D:\Programing\KPK Repo\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
+D:\Programing\KPK Repo\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb

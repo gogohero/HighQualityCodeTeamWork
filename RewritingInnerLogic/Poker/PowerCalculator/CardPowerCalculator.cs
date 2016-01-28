@@ -17,7 +17,7 @@ namespace Poker.PowerCalculator
     using Poker.Models.Cards;
 
     /// <summary>
-    /// Class CardPowerCalculator.
+    /// Class CardPowerCalculator contains methods for calculating the card power.
     /// </summary>
     public static class CardPowerCalculator
     {

@@ -18,17 +18,17 @@ namespace Poker.Models.Cards
     public class Card : ICard
     {
         /// <summary>
-        /// The rank
+        /// The rank of the card.
         /// </summary>
         private int rank;
 
         /// <summary>
-        /// The suit
+        /// The suit of the card.
         /// </summary>
         private char suit;
 
         /// <summary>
-        /// The picture box
+        /// The picture box of the card.
         /// </summary>
         private PictureBox pictureBox;
 

@@ -55,7 +55,7 @@ namespace Poker.Tests
         }
 
         /// <summary>
-        /// Tests the deck_ deals_ correctly.
+        /// Tests if the deck_ deals_ correctly.
         /// </summary>
         [TestMethod]
         public void TestDeck_Deals_Correctly()
