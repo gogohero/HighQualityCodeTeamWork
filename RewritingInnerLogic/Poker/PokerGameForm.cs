@@ -281,7 +281,7 @@ namespace Poker
                 this.BeginRound();
             }
 
-            if (this.players[0].HasActed)
+            if (this.players[0].HasActed || !this.players[0].IsInGame)
             {
                 this.timer.Stop();
                 GlobalVariables.TimeForPlayerTurn = 60M;
@@ -600,7 +600,11 @@ namespace Poker
                 if (this.players[0].Chips <= GlobalVariables.CurrentHighestBet * 2)
                 {
                     this.buttonRaise.Text = "All In";
-                    this.buttonRaise.Update();
+                   // this.buttonRaise.Update();
+                }
+                else
+                {
+                    this.buttonRaise.Text = "Raise";
                 }
             }
         }
