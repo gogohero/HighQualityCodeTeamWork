@@ -16,7 +16,7 @@ namespace Poker.Tests
     using Poker.PowerCalculator;
 
     [TestClass]
-    public class PokerTests
+    public class PokerTestsAlgorithms
     {
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_FourOfAKind_ShouldPass()

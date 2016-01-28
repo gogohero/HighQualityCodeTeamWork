@@ -15,6 +15,11 @@
     public abstract class Participant : IParticipant
     {
         /// <summary>
+        /// Name of player
+        /// </summary>
+        private string name;
+
+        /// <summary>
         /// The starting chips
         /// </summary>
         private int startingChips = GlobalConstants.StartingChips;
@@ -59,7 +64,22 @@
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                return this.name;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentException("Name cannot be null");
+                }
+
+                this.name = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the chips.
