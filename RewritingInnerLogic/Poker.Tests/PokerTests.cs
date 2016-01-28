@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.Constants;
+using Poker.Globals;
 using Poker.Models;
 
 namespace Poker.Tests
@@ -436,21 +437,21 @@ namespace Poker.Tests
         [TestMethod]
         public void Test_Bot_Name()
         {
-            Bot bot = new Bot("go6o", 2);
+            Bot bot = new Bot("go6o", GlobalVariables.Bot2PlaceOnBoard);
             Assert.AreEqual("go6o", bot.Name);
         }
 
         [TestMethod]
         public void Test_Bot_Chips()
         {
-            Bot bot = new Bot("go6o", 2);
+            Bot bot = new Bot("go6o", GlobalVariables.Bot2PlaceOnBoard);
             Assert.AreEqual(GlobalConstants.StartingChips, bot.Chips);
         }
 
         [TestMethod]
         public void Test_Bot_Check_Method()
         {
-            Bot bot = new Bot("go6o", 2);
+            Bot bot = new Bot("go6o", GlobalVariables.Bot2PlaceOnBoard);
             bot.Check();
             Assert.AreEqual(bot.HasChecked, true);
 

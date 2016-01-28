@@ -50,8 +50,9 @@
     <Compile Include="AddChips.Designer.cs">
       <DependentUpon>AddChips.cs</DependentUpon>
     </Compile>
-    <Compile Include="Constants\GlobalConstants.cs" />
+    <Compile Include="Globals\GlobalConstants.cs" />
     <Compile Include="Enumerations\TurnParts.cs" />
+    <Compile Include="Globals\GlobalVariables.cs" />
     <Compile Include="Interfaces\IBot.cs" />
     <Compile Include="Interfaces\ICard.cs" />
     <Compile Include="Interfaces\IDeck.cs" />

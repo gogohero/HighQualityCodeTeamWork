@@ -102,3 +102,13 @@ E:\VS projects\abrakadabra\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
 D:\C#\QualityProgrammingCode\teamwork\New folder\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
 D:\C#\QualityProgrammingCode\teamwork\New folder\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
 D:\C#\QualityProgrammingCode\teamwork\New folder\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.pdb
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csprojResolveAssemblyReference.cache
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.AddChips.resources
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
+C:\Users\asen\Documents\Visual Studio 2015\Projects\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
