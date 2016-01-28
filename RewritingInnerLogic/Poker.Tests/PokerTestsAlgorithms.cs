@@ -1,23 +1,38 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// *****************************************************************************************
+// Assembly         : Poker
+// Created          : 01-28-2016
+//
+// Last Modified On : 01-28-2016
+// *****************************************************************************************
+// <copyright file="PokerTestsAlgorithms.cs" company="Date"> Copyright ©  2015 </copyright>
+// *****************************************************************************************
 
-using Poker.Globals;
-using Poker.Models;
 
 namespace Poker.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using Poker.Enumerations;
+    using Poker.Globals;
     using Poker.Interfaces;
     using Poker.Models.Cards;
     using Poker.Models.Entities;
+    using Poker.Models;
     using Poker.PowerCalculator;
 
+    /// <summary>
+    /// Class PokerTestsAlgorithms.
+    /// </summary>
     [TestClass]
     public class PokerTestsAlgorithms
     {
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ four of a kind_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_FourOfAKind_ShouldPass()
         {
@@ -32,6 +47,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.FourOfAKind, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ royal flush_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_RoyalFlush_ShouldPass()
         {
@@ -47,6 +65,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.RoyalFlush, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ full house pair first_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_FullHousePairFirst_ShouldPass()
         {
@@ -62,6 +83,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.FullHouse, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ full house three of a kind first_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_FullHouseThreeOfAKindFirst_ShouldPass()
         {
@@ -77,6 +101,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.FullHouse, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ three of a kind_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_ThreeOfAKind_ShouldPass()
         {
@@ -92,6 +119,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.ThreeOfAKind, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ two pair_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_TwoPair_ShouldPass()
         {
@@ -107,6 +137,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.TwoPair, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ pair_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_Pair_ShouldPass()
         {
@@ -122,6 +155,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.Pair, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ flush_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_Flush_ShouldPass()
         {
@@ -137,6 +173,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.Flush, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ flush not sequential_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_FlushNotSequential_ShouldPass()
         {
@@ -154,6 +193,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.Flush, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ straight_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_Straight_ShouldPass()
         {
@@ -169,6 +211,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.Straight, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ high card_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_HighCard_ShouldPass()
         {
@@ -184,6 +229,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.HighCard, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ card_ power_ straight flush_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_StraightFlush_ShouldPass()
         {
@@ -199,6 +247,9 @@ namespace Poker.Tests
             Assert.AreEqual(HandStrengthEnum.StraightFlush, hand.Strength);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ full house three of a kind first_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_FullHouseThreeOfAKindFirst_ShouldPass()
         {
@@ -214,6 +265,9 @@ namespace Poker.Tests
             Assert.AreEqual(card3.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ full house pair first_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_FullHousePairFirst_ShouldPass()
         {
@@ -229,6 +283,9 @@ namespace Poker.Tests
             Assert.AreEqual(card1.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ two pair_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_TwoPair_ShouldPass()
         {
@@ -244,6 +301,9 @@ namespace Poker.Tests
             Assert.AreEqual(card1.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ three of a kind_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_ThreeOfAKind_ShouldPass()
         {
@@ -259,6 +319,9 @@ namespace Poker.Tests
             Assert.AreEqual(card3.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ pair_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_Pair_ShouldPass()
         {
@@ -274,6 +337,9 @@ namespace Poker.Tests
             Assert.AreEqual(card4.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ flush_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_Flush_ShouldPass()
         {
@@ -289,6 +355,9 @@ namespace Poker.Tests
             Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ straight_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_Straight_ShouldPass()
         {
@@ -304,6 +373,9 @@ namespace Poker.Tests
             Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ straight flush_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_StraightFlush_ShouldPass()
         {
@@ -319,6 +391,9 @@ namespace Poker.Tests
             Assert.AreEqual(card1.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ four of a kind_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_FourOfAKind_ShouldPass()
         {
@@ -334,6 +409,9 @@ namespace Poker.Tests
             Assert.AreEqual(card1.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ royal flush_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_RoyalFlush_ShouldPass()
         {
@@ -349,6 +427,9 @@ namespace Poker.Tests
             Assert.AreEqual(card3.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card_ high card power_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCard_HighCardPower_ShouldPass()
         {
@@ -364,6 +445,9 @@ namespace Poker.Tests
             Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ calculate_ high card power_2.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Calculate_HighCardPower_2()
         {
@@ -379,6 +463,9 @@ namespace Poker.Tests
             Assert.AreEqual(card2.Rank, hand.HighCard.Rank);
         }
 
+        /// <summary>
+        /// Testings the algorithm_ check_ deck_ initializes cards correctly_ should pass.
+        /// </summary>
         [TestMethod]
         public void TestingAlgorithm_Check_Deck_InitializesCardsCorrectly_ShouldPass()
         {
@@ -387,6 +474,9 @@ namespace Poker.Tests
             Assert.AreEqual(52, differentCardsCounter);
         }
 
+        /// <summary>
+        /// Test_s the deck_ shuffle_ randomness.
+        /// </summary>
         [TestMethod]
         public void Test_Deck_Shuffle_Randomness()
         {
@@ -403,6 +493,9 @@ namespace Poker.Tests
                                      && two.Cards[35].Rank == one.Cards[35].Rank);
         }
 
+        /// <summary>
+        /// Tests the length of the deck_.
+        /// </summary>
         [TestMethod]
         public void TestDeck_Length()
         {
@@ -410,6 +503,9 @@ namespace Poker.Tests
             Assert.AreEqual(deck.Cards.Length, 52);
         }
 
+        /// <summary>
+        /// Test_s the global_ constants.
+        /// </summary>
         [TestMethod]
         public void Test_Global_Constants()
         {
@@ -418,6 +514,9 @@ namespace Poker.Tests
             Assert.AreEqual(GlobalConstants.StartingSmallBlind, 250);
         }
 
+        /// <summary>
+        /// Test_s the name of the bot_.
+        /// </summary>
         [TestMethod]
         public void Test_Bot_Name()
         {
@@ -425,24 +524,36 @@ namespace Poker.Tests
             Assert.AreEqual("go6o", bot.Name);
         }
 
+        /// <summary>
+        /// Test_s the bot_ chips.
+        /// </summary>
         [TestMethod]
         public void Test_Bot_Chips()
         {
             Bot bot = new Bot("go6o", GlobalVariables.Bot2PlaceOnBoard);
             Assert.AreEqual(GlobalConstants.StartingChips, bot.Chips);
         }
+        /// <summary>
+        /// Testing_s the card_ rank_ exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Testing_Card_Rank_Exception()
         {
             ICard card1 = new Card(33, 'S');
         }
+        /// <summary>
+        /// Test_s the card_ suit_ exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Test_Card_Suit_Exception()
         {
             ICard card = new Card(12, 'M');
         }
+        /// <summary>
+        /// Test_s the card_ suit_ letter_ case_ exception.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Test_Card_Suit_Letter_Case_Exception()

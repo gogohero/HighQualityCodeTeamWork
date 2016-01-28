@@ -1,4 +1,12 @@
-﻿namespace Poker.Interfaces
+﻿// *********************************************************************************************
+// Assembly         : Poker
+// Created          : 01-28-2016
+//
+// Last Modified On : 01-28-2016
+// *********************************************************************************************
+// <copyright file="IDeck.cs" company="Date"> Copyright ©  2015 </copyright>
+// *********************************************************************************************
+namespace Poker.Interfaces
 {
     using System.Collections.Generic;
 
@@ -20,6 +28,9 @@
         /// <param name="cardsOnBoard">The cards on board.</param>
         void Deal(IList<IParticipant> players, ICard[] cardsOnBoard);
 
+        /// <summary>
+        /// Shuffles this instance.
+        /// </summary>
         void Shuffle();
     }
 }

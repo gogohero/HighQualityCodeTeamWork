@@ -1,4 +1,12 @@
-﻿namespace Poker.Interfaces
+﻿// *********************************************************************************************
+// Assembly         : Poker
+// Created          : 01-28-2016
+//
+// Last Modified On : 01-28-2016
+// *********************************************************************************************
+// <copyright file="IBot.cs" company="Date"> Copyright ©  2015 </copyright>
+// *********************************************************************************************
+namespace Poker.Interfaces
 {
     using System;
     using Poker.Enumerations;

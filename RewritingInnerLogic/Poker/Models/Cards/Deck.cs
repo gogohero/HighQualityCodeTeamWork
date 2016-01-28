@@ -1,5 +1,4 @@
-﻿
-namespace Poker.Models.Cards
+﻿namespace Poker.Models.Cards
 {
     using System;
     using System.Collections.Generic;
@@ -143,9 +142,9 @@ namespace Poker.Models.Cards
             ICard[] cards = new ICard[52];
             int cardCounter = 0;
 
-            InitilializeEachCard(cards, cardCounter);
+            this.InitilializeEachCard(cards, cardCounter);
 
-            SetCorrectImagesToCards(cards);
+            this.SetCorrectImagesToCards(cards);
            
             return cards;
         }
@@ -223,6 +222,7 @@ namespace Poker.Models.Cards
                             cards[cardCounter] = new Card(i, 'C');
                             break;
                     }
+
                     cardCounter += 1;
                 }
             }

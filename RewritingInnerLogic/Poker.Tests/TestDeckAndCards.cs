@@ -1,4 +1,12 @@
-﻿namespace Poker.Tests
+﻿// *************************************************************************************
+// Assembly         : Poker
+// Created          : 01-28-2016
+//
+// Last Modified On : 01-28-2016
+// *************************************************************************************
+// <copyright file="TestDeckAndCards.cs" company="Date"> Copyright ©  2015 </copyright>
+// *************************************************************************************
+namespace Poker.Tests
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -11,15 +19,30 @@
     using Poker.Models.Cards;
     using Poker.Models.Entities;
 
+    /// <summary>
+    /// Class TestDeckAndCards.
+    /// </summary>
     [TestClass]
     public class TestDeckAndCards
     {
+        /// <summary>
+        /// The deck
+        /// </summary>
         private IDeck deck;
 
+        /// <summary>
+        /// The players
+        /// </summary>
         private IList<IParticipant> players;
 
+        /// <summary>
+        /// The cards on board
+        /// </summary>
         private ICard[] cardsOnBoard;
 
+        /// <summary>
+        /// Initializes the deck players and cards.
+        /// </summary>
         [TestInitialize]
         public void InitializeDeckPlayersAndCards()
         {
@@ -31,6 +54,9 @@
             this.cardsOnBoard = new ICard[5];
         }
 
+        /// <summary>
+        /// Tests the deck_ deals_ correctly.
+        /// </summary>
         [TestMethod]
         public void TestDeck_Deals_Correctly()
         {

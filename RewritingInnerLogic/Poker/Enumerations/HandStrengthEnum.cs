@@ -1,4 +1,12 @@
-﻿namespace Poker.Enumerations
+﻿// *********************************************************************************************
+// Assembly         : Poker
+// Created          : 01-28-2016
+//
+// Last Modified On : 01-28-2016
+// *********************************************************************************************
+// <copyright file="HandStrengthEnum.cs" company="Date"> Copyright ©  2015 </copyright>
+// *********************************************************************************************
+namespace Poker.Enumerations
 {
     /// <summary>
     /// Enumeration for the strengths of hands

@@ -18,3 +18,6 @@ E:\Teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.Ad
 E:\Teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.PokerGameForm.resources
 E:\Teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.Properties.Resources.resources
 E:\Teamwork\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.csproj.GenerateResource.Cache
+C:\Users\Jani\Desktop\NewProject\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\bin\Debug\Poker.exe.config
+C:\Users\Jani\Desktop\NewProject\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.exe
+C:\Users\Jani\Desktop\NewProject\HighQualityCodeTeamWork\RewritingInnerLogic\Poker\obj\Debug\Poker.pdb

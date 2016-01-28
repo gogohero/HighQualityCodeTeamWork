@@ -1,4 +1,11 @@
-﻿
+﻿// *********************************************************************************************
+// Assembly         : Poker
+// Created          : 01-28-2016
+//
+// Last Modified On : 01-28-2016
+// *********************************************************************************************
+// <copyright file="CardPowerCalculator.cs" company="Date"> Copyright ©  2015 </copyright>
+// *********************************************************************************************
 namespace Poker.PowerCalculator
 {
     using System;
@@ -9,6 +16,9 @@ namespace Poker.PowerCalculator
     using Poker.Interfaces;
     using Poker.Models.Cards;
 
+    /// <summary>
+    /// Class CardPowerCalculator.
+    /// </summary>
     public static class CardPowerCalculator
     {
         /// <summary>
@@ -184,7 +194,6 @@ namespace Poker.PowerCalculator
                         break;
                     }
 
-
                     // check full house -> if not check two pair -> if not results in simple pair
                     if (pairedCardsCounter == 3 
                         && (strengthPairs == HandStrengthEnum.Pair
@@ -213,7 +222,7 @@ namespace Poker.PowerCalculator
                             highestCardPairs = differentCards[i];
                         }
                     }
-                    else if(strengthPairs < HandStrengthEnum.Pair)
+                    else if (strengthPairs < HandStrengthEnum.Pair)
                     {
                         strengthPairs = HandStrengthEnum.Pair;
                         highestCardPairs = differentCards[i];
