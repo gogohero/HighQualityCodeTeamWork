@@ -382,7 +382,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "PokerGameForm";
             this.Text = "GLS Texas Poker";
-            this.Load += new System.EventHandler(this.PokerGameForm_Load);
+            this.Load += new System.EventHandler(this.PokerGameFormLoad);
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.LayoutChange);
             this.ResumeLayout(false);
             this.PerformLayout();

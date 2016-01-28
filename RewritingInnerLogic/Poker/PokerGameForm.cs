@@ -5,6 +5,7 @@ namespace Poker
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -22,9 +23,9 @@ namespace Poker
     {
         private readonly ICard[] cardsOnBoard;
 
-        readonly Timer timer = new Timer();
+        private readonly Timer timer;
 
-        readonly Timer Updates = new Timer();
+        private readonly Timer updates;
 
         private IList<IParticipant> players;
 
@@ -32,6 +33,12 @@ namespace Poker
 
         public PokerGameForm()
         {
+            GlobalVariables.CurrentHighestBet = GlobalConstants.StartingBigBlind;
+
+            this.timer = new Timer();
+
+            this.updates = new Timer();
+
             this.InitializeComponent();
 
             this.InitializeControls();
@@ -41,8 +48,6 @@ namespace Poker
             this.InitializeDeck();
 
             this.cardsOnBoard = new ICard[5];
-
-            GlobalVariables.CurrentHighestBet = GlobalConstants.StartingBigBlind;
         }
 
         private void InitializeControls()
@@ -65,9 +70,9 @@ namespace Poker
             this.timer.Interval = 200;
             this.timer.Tick += this.TimerTick;
             this.timer.Start();
-            this.Updates.Interval = 100;
-            this.Updates.Tick += this.UpdateTick;
-            this.Updates.Start();
+            this.updates.Interval = 100;
+            this.updates.Tick += this.UpdateTick;
+            this.updates.Start();
 
             this.textBoxRaise.Text = (GlobalVariables.BigBlind * 2).ToString();
             this.progressBarTimer.Value = 300;
@@ -116,7 +121,7 @@ namespace Poker
 
             GlobalVariables.TimeForPlayerTurn = 60M;
 
-            GlobalVariables.CurrentTurnPart = TurnParts.Flop;
+            GlobalVariables.CurrentTurnPart = TurnParts.PreFlop;
 
             this.DisableUserButtons();
 
@@ -150,6 +155,8 @@ namespace Poker
                 player.Controls["StatusBox"].Update();
             }
 
+            this.textBoxRaise.Text = (GlobalVariables.BigBlind * 2).ToString();
+            this.textBoxRaise.Update();
             this.textBoxPot.Text = "0";
             this.textBoxPot.Update();
         }
@@ -178,6 +185,7 @@ namespace Poker
                 card.PictureBox.Visible = false;
                 card.PictureBox.Update();
             }
+            this.Update();
         }
 
         private void CheckForEndOfGame()
@@ -245,46 +253,21 @@ namespace Poker
             {
                 this.BeginRound();
             }
-            if (GlobalVariables.CurrentTurnPart == TurnParts.End && int.Parse(this.textBoxPot.Text) > 0)
+            if ((GlobalVariables.CurrentTurnPart == TurnParts.River 
+                || this.players.Count == this.players.Count(p => p.HasFolded || !p.IsInGame || p.IsAllIn)
+                || this.players.Count(p => p.IsInGame && !p.HasFolded) == 1) 
+                && int.Parse(this.textBoxPot.Text) > 0)
             {
-                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard
-                    (this.players.Where(p => !p.HasFolded 
-                     || p.IsAllIn).ToArray());
-                foreach (var player in this.players)
-                {
-                    foreach (var currentCard in player.Hand.CurrentCards)
-                    {
-                        currentCard.IsFacingUp = true;
-                        currentCard.PictureBox.Update();
-                    }
-                }
+                this.GetWinners();
+
                 this.ProcessRoundWinnings();
 
-                this.BeginRound();
-            }
-            else if (this.players.Count == this.players.Count(p => p.HasFolded || !p.IsInGame || p.IsAllIn))
-            {
-                CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard
-                    (this.players.Where(p => !p.HasFolded
-                     || p.IsAllIn).ToArray());
-
-                foreach (var player in this.players)
-                {
-                    foreach (var currentCard in player.Hand.CurrentCards)
-                    {
-                        currentCard.IsFacingUp = true;
-                        currentCard.PictureBox.Update();
-                    }
-                }
-                
-                this.ProcessRoundWinnings();
                 this.BeginRound();
             }
 
             if (this.players[0].HasActed || !this.players[0].IsInGame)
             {
                 this.timer.Stop();
-                GlobalVariables.TimeForPlayerTurn = 60M;
                 for (int i = 1; i < this.players.Count; i++)
                 {
                     if (!this.players[i].HasActed && this.players[i].IsInGame)
@@ -302,15 +285,14 @@ namespace Poker
                                             || p.HasCalled 
                                             || p.IsAllIn 
                                             || GlobalVariables.CurrentTurnPart == TurnParts.Flop);
-                        if (this.players[i] is IBot)
-                        {
-                            ((IBot)this.players[i]).PlayTurn(
-                                ref GlobalVariables.CurrentHighestBet,
-                                this.players.Count(p => !p.HasFolded),
-                                !anyoneActedNoCheck,
-                                GlobalVariables.CurrentTurnPart,
-                                GlobalVariables.RandomBehaviorForBots);
-                        }
+
+                        var bot = this.players[i] as IBot;
+                        bot?.PlayTurn(
+                            ref GlobalVariables.CurrentHighestBet,
+                            this.players.Count(p => !p.HasFolded),
+                            !anyoneActedNoCheck,
+                            GlobalVariables.CurrentTurnPart,
+                            GlobalVariables.RandomBehaviorForBots);
 
                         if (this.players[i].HasRaised)
                         {
@@ -337,6 +319,7 @@ namespace Poker
 
                         showBotOnTurn.Wait();
                     }
+                    GlobalVariables.TimeForPlayerTurn = 60M;
                     this.timer.Start();
                 }
                 if(this.players.ToList().TrueForAll(p => p.HasActed))
@@ -347,7 +330,21 @@ namespace Poker
                     }
                     GlobalVariables.CurrentTurnPart++;
 
-                    if (GlobalVariables.CurrentTurnPart == TurnParts.Turn)
+                    if (GlobalVariables.CurrentTurnPart == TurnParts.Flop)
+                    {
+                        foreach (var player in this.players)
+                        {
+                            player.PreviouslyCalled = 0;
+                            for (int i = 0; i < 3; i++)
+                            {
+                                this.cardsOnBoard[i].IsFacingUp = true;
+                                this.cardsOnBoard[i].PictureBox.Update();
+
+                                player.Hand.CurrentCards.Add(this.cardsOnBoard[i]);
+                            }
+                        }
+                    }
+                    else if (GlobalVariables.CurrentTurnPart == TurnParts.Turn)
                     {
                         foreach (var player in this.players)
                         {
@@ -367,9 +364,21 @@ namespace Poker
 
                             player.Hand.CurrentCards.Add(this.cardsOnBoard[4]);
                         }
-                        GlobalVariables.CurrentTurnPart++;
                     }
                 }             
+            }
+        }
+
+        private void GetWinners()
+        {
+            CardPowerCalculator.CompareAllSetsOfCardsOnTheBoard(this.players.Where(p => !p.HasFolded || p.IsAllIn).ToArray());
+            foreach (var player in this.players)
+            {
+                foreach (var currentCard in player.Hand.CurrentCards)
+                {
+                    currentCard.IsFacingUp = true;
+                    currentCard.PictureBox.Update();
+                }
             }
         }
 
@@ -607,10 +616,17 @@ namespace Poker
                 {
                     this.buttonRaise.Text = "Raise";
                 }
-            }
+
+                if (this.players.Any(p => !p.IsInGame && p is Player))
+                {
+                    var form = new AddChips();
+                    form.Activate();
+                    form.Update();
+                }
+            }           
         }
 
-        private void PokerGameForm_Load(object sender, EventArgs e)
+        private void PokerGameFormLoad(object sender, EventArgs e)
         {
         }
     }

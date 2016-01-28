@@ -19,25 +19,6 @@ namespace Poker.Tests
     public class PokerTests
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Testing_Card_Rank_Exception()
-        {
-            ICard card1 = new Card(33, 'S');
-        }
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Test_Card_Suit_Exception()
-        {
-            ICard card = new Card(12, 'M');
-        }
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Test_Card_Suit_Letter_Case_Exception()
-        {
-            ICard card = new Card(12, 's');
-        }
-
-        [TestMethod]
         public void TestingAlgorithm_Calculate_Card_Power_FourOfAKind_ShouldPass()
         {
             ICard aceOfSpades = new Card(12, 'S');
@@ -410,8 +391,10 @@ namespace Poker.Tests
         public void Test_Deck_Shuffle_Randomness()
         {
             Deck one = new Deck();
+            one.Shuffle();
             Deck two = new Deck();
-            Assert.IsTrue(two.Cards[2].Rank == one.Cards[2].Rank 
+            two.Shuffle();
+            Assert.IsFalse(two.Cards[2].Rank == one.Cards[2].Rank 
                                 && two.Cards[5].Rank == one.Cards[5].Rank
                                  && two.Cards[7].Rank == one.Cards[7].Rank
                                   && two.Cards[15].Rank == one.Cards[15].Rank
@@ -447,6 +430,24 @@ namespace Poker.Tests
         {
             Bot bot = new Bot("go6o", GlobalVariables.Bot2PlaceOnBoard);
             Assert.AreEqual(GlobalConstants.StartingChips, bot.Chips);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Testing_Card_Rank_Exception()
+        {
+            ICard card1 = new Card(33, 'S');
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Test_Card_Suit_Exception()
+        {
+            ICard card = new Card(12, 'M');
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Test_Card_Suit_Letter_Case_Exception()
+        {
+            ICard card = new Card(12, 's');
         }
     }
 }

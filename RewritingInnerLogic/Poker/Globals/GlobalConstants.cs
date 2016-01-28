@@ -31,8 +31,6 @@ namespace Poker.Globals
 
         public const string FoldText = "Folded";
 
-        public const string OutOfChipsText = "Out of chips";
-
-     
+        public const string OutOfChipsText = "Out of chips";   
     }
 }

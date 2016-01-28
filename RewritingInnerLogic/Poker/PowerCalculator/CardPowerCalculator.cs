@@ -55,7 +55,6 @@ namespace Poker.PowerCalculator
 
             // ---------------------------------------------------------
             // check for straight, flush, straight flush and royal flush
-
             cards = cards.OrderBy(c => c.Rank).ToList();
             IDictionary<int, IList<int>> sequentialCards = new Dictionary<int, IList<int>>();
             int spades = 0;
@@ -89,7 +88,7 @@ namespace Poker.PowerCalculator
                             sequentialCards[i].Add(cards[j].Rank);
                             sequentialCards[i].Add(cards[j + 1].Rank);
                         }
-                        else if (cards[j].Rank - 1 == cards[j - 1].Rank)
+                        else if (j != 0 && cards[j].Rank - 1 == cards[j - 1].Rank)
                         {
                             sequentialCards[i].Add(cards[j].Rank);
                             break;
@@ -101,7 +100,8 @@ namespace Poker.PowerCalculator
             int highestSequenceOfRanksDetected = 0;
             for (int i = 0; i < sequentialCards.Keys.Count; i++)
             {
-                if (sequentialCards[i].Count >= highestSequenceOfRanksDetected)
+                if (sequentialCards[i].Count >= highestSequenceOfRanksDetected 
+                    && sequentialCards[i].Count > 0)
                 {
                     highestSequenceOfRanksDetected = sequentialCards[i].Count;
                     highestInSequenceWithoutPairs = new Card(sequentialCards[i].Max(), 'S');

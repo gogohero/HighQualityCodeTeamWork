@@ -1,6 +1,10 @@
 ﻿
 namespace Poker.Enumerations
 {
+    /// <summary>
+    /// Enumeration for turns in a classic Poker game. 
+    /// First is negative because it is the beginning of the game.
+    /// </summary>
     public enum TurnParts
     {
         /// <summary>
@@ -9,7 +13,12 @@ namespace Poker.Enumerations
         BeginGame = -1,
 
         /// <summary>
-        /// The flop where 3 cards are dealt
+        /// Represents the post deal turn
+        /// </summary>
+        PreFlop,
+
+        /// <summary>
+        /// The flop where 3 cards are turned upside
         /// </summary>
         Flop,
 
@@ -19,13 +28,9 @@ namespace Poker.Enumerations
         Turn,
 
         /// <summary>
-        /// The river where all 5 cards on the board are facing up. Bets stop here
+        /// The river where all 5 cards on the board are facing up. 
+        /// Bets stop here and winners are evaluated
         /// </summary>
-        River,
-
-        /// <summary>
-        /// The end where the winner is evaluated and gets the chips from the pot
-        /// </summary>
-        End
+        River
     }
 }

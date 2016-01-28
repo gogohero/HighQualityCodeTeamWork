@@ -41,8 +41,6 @@ namespace Poker.Models.Cards
         {
             this.Rank = rank;
             this.Suit = suit;
-
-            this.SetCorrectImage();
         }
 
         /// <summary>
@@ -133,14 +131,6 @@ namespace Poker.Models.Cards
             {
                 this.pictureBox = value;
             }
-        }
-
-        /// <summary>
-        /// Sets the correct image.
-        /// </summary>
-        private void SetCorrectImage()
-        {
-          
         }
     }
 }

@@ -4,11 +4,14 @@
     using System.Drawing;
     using Poker.Enumerations;
 
+    /// <summary>
+    /// Holds all variables in the game that need only one instance.
+    /// </summary>
     public static class GlobalVariables
     {
         public static int BigBlind = GlobalConstants.StartingBigBlind;
 
-        public static int SmallBlind =GlobalConstants.StartingSmallBlind;
+        public static int SmallBlind = GlobalConstants.StartingSmallBlind;
 
         public static int CurrentHighestBet = 0;
 
@@ -29,5 +32,7 @@
         public static Point Bot4PlaceOnBoard = new Point(780, 130);
 
         public static Point Bot5PlaceOnBoard = new Point(780, 280);
+
+        public static Point BoardCardsPlace = new Point(300, 180);
     }
 }

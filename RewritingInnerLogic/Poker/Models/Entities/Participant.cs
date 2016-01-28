@@ -179,7 +179,7 @@
         {
             get
             {
-                return this.Chips > 0;
+                return this.Chips > 0 || this.IsAllIn;
             }
         }
 

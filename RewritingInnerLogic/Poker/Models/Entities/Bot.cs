@@ -30,7 +30,7 @@
         /// <param name="canCheck">if set to <c>true</c> the bot [can check] 
         /// (true only if no one has called or raised before him and the turn part is past the flop).</param>
         /// <param name="currentPartOfTurn">The current part of the turn.</param>
-        /// <param name="randomBehavior">The random behavior thats one of the factors in the bots decision making.</param>
+        /// <param name="randomBehavior">The random behavior that's one of the factors in the bots decision making.</param>
         public void PlayTurn(ref int currentHighestBet, int playersNotFolded, bool canCheck, TurnParts currentPartOfTurn, Random randomBehavior)
         {
             CardPowerCalculator.GetCurrentStrengthOfCards(this.Hand);
@@ -63,18 +63,16 @@
         /// <param name="turnPartFactor">The turn part factor.</param>
         /// <param name="feelingLucky">The feeling lucky.</param>
         /// <param name="bluff">The bluff.</param>
-        /// <returns><c>true</c> if current highest bet * 2 is smaller than bot current chips and  the bluff is bigger than 8,  <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if current highest bet * 2 is smaller than bot current chips 
+        /// and the bluff is bigger than 7,  <c>false</c> otherwise.</returns>
         private bool CheckShouldRaise(int playersNotFolded, int turnPartFactor, int feelingLucky, int bluff)
         {
-            if (this.ChipsPlaced * 1.5 < this.Chips)
+            if (((int)this.Hand.Strength + feelingLucky + turnPartFactor) + (playersNotFolded * 10) > 200)
             {
-                if (((int)this.Hand.Strength + feelingLucky + turnPartFactor) + (playersNotFolded * 10) > 200)
-                {
-                    return true;
-                }
+                return true;
             }
 
-            return bluff > 8;
+            return bluff > 7;
         }
 
         /// <summary>
@@ -84,18 +82,17 @@
         /// <param name="turnPartFactor">The turn part factor.</param>
         /// <param name="feelingLucky">The feeling lucky.</param>
         /// <param name="bluff">The bluff.</param>
-        /// <returns><c>true</c> if current highest bet * 2 is smaller than bot current chips and  the bluff is bigger than 6, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if current highest bet * 2 is smaller than bot current chips 
+        /// and the bluff is bigger than 5, <c>false</c> otherwise.</returns>
         private bool CheckShouldCall(int playersNotFolded, int turnPartFactor, int feelingLucky, int bluff)
         {
-            if (this.ChipsPlaced < this.Chips)
+            if (((int)this.Hand.Strength + feelingLucky + turnPartFactor) 
+                + (playersNotFolded * 10) > 150)
             {
-                if (((int)this.Hand.Strength + feelingLucky + turnPartFactor) + (playersNotFolded * 10) > 150)
-                {
-                    return true;
-                }
+                return true;
             }
 
-            return bluff > 6;
+            return bluff > 5;
         }
     }
 }
